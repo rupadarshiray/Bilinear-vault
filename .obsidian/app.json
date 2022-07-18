@@ -1,0 +1,18 @@
+{
+  "readableLineLength": false,
+  "promptDelete": true,
+  "spellcheck": true,
+  "spellcheckLanguages": [
+    "en-GB"
+  ],
+  "tabSize": 4,
+  "showFrontmatter": true,
+  "trashOption": "local",
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": true,
+  "attachmentFolderPath": "./Attachments",
+  "userIgnoreFilters": [
+    "dotfiles/"
+  ],
+  "communityThemeSortOrder": "release"
+}

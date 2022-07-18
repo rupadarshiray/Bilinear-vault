@@ -1,0 +1,5 @@
+{
+  "folder": "/",
+  "template": "dotfiles/% new",
+  "format": "YYYYMMDD HHmmss"
+}
