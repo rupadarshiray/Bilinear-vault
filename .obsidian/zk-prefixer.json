@@ -1,5 +1,5 @@
 {
-  "folder": "/",
+  "folder": "Fleeting notes",
   "template": "dotfiles/% new",
-  "format": "YYYYMMDD HHmmss"
+  "format": "YYYYMMDDHHmmss"
 }

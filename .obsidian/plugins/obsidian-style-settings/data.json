@@ -5,5 +5,6 @@
   "sanctum@@settings": 70,
   "sanctum@@community-theme": 70,
   "sanctum@@community-plugin": 70,
-  "sanctum@@dark-mode-palette": "sanctum-sea"
+  "sanctum@@dark-mode-palette": "sanctum-sea",
+  "minimal-style@@base@@dark": "#1D3239"
 }

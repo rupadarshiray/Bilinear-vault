@@ -1,0 +1,5 @@
+{
+  "folder": "Daily notes",
+  "template": "dotfiles/Templates/% daily note",
+  "autorun": true
+}

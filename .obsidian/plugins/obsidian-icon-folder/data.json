@@ -4,7 +4,10 @@
     "iconPacksPath": ".obsidian/plugins/obsidian-icon-folder/icons",
     "fontSize": 16,
     "iconColor": null,
-    "recentlyUsedIcons": [],
+    "recentlyUsedIcons": [
+      "RiBook3Line",
+      "RiInboxArchiveLine"
+    ],
     "recentlyUsedIconsSize": 5,
     "rules": [],
     "extraPadding": {
@@ -13,5 +16,7 @@
       "bottom": 2,
       "left": 2
     }
-  }
+  },
+  "Fleeting notes": "RiInboxArchiveLine",
+  "Daily notes": "RiBook3Line"
 }

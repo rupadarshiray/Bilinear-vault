@@ -5,6 +5,7 @@
   "alphaSortAsc": true,
   "altLinkFields": [],
   "CSVPaths": "",
+  "createIndexIndent": "  ",
   "dateFormat": "YYYY-MM-DD",
   "dateNoteFormat": "yyyy-MM-dd",
   "dateNoteField": "next",
@@ -28,6 +29,7 @@
   "hierarchyNotes": [
     ""
   ],
+  "hierarchyNoteIsParent": false,
   "HNUpField": "",
   "indexNotes": [
     ""

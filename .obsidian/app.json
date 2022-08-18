@@ -1,6 +1,6 @@
 {
   "readableLineLength": false,
-  "promptDelete": true,
+  "promptDelete": false,
   "spellcheck": true,
   "spellcheckLanguages": [
     "en-GB"
@@ -14,5 +14,5 @@
   "userIgnoreFilters": [
     "dotfiles/"
   ],
-  "communityThemeSortOrder": "release"
+  "communityThemeSortOrder": "download"
 }

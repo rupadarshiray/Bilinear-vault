@@ -1,5 +1,5 @@
 {
-  "folder": "Excalidraw",
+  "folder": "Fleeting notes",
   "embedUseExcalidrawFolder": false,
   "templateFilePath": "Excalidraw/Template.excalidraw",
   "scriptFolderPath": "Excalidraw/Scripts",
@@ -70,7 +70,7 @@
   "mdCSS": "",
   "scriptEngineSettings": {},
   "defaultTrayMode": false,
-  "previousRelease": "1.7.2",
+  "previousRelease": "1.7.13",
   "showReleaseNotes": true,
   "mathjaxSourceURL": "https://cdn.jsdelivr.net/npm/mathjax@3.2.1/es5/tex-svg.js"
 }

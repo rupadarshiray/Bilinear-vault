@@ -2625,6 +2625,8 @@ async function wait(delay) {
  * @param name official Name of the Icon (https://feathericons.com/)
  * @param attr SVG Attributes for the Icon. The default should work for most usecases.
  * @returns {string} Icon name
+ *
+ * @deprecated As of Obsidian 0.13.27 this is no longer needed, because Obsidian ships with `lucide`, a maintained fork of feather. (https://lucide.dev/)
  */
 function addFeatherIcon(name, attr = { viewBox: "0 0 24 24", width: "100", height: "100" }) {
     if (feather.icons[name]) {
@@ -2651,12 +2653,11 @@ async function copy(content, success = () => new obsidian.Notice("Copied to clip
 }
 /**
  * Check if `noteName` is the name of a note that exists in the vault.
- * @param  {App} app
  * @param  {string} noteName Basename of the note to search for.
  * @param  {string} [sourcePath=""] Optional file path to start searching from. Default is the current file.
  * @returns boolean
  */
-const isInVault = (app, noteName, sourcePath = "") => !!app.metadataCache.getFirstLinkpathDest(noteName, sourcePath);
+const isInVault = (noteName, sourcePath = "") => !!app.metadataCache.getFirstLinkpathDest(noteName, sourcePath);
 /**
  * When hovering a link going to `to`, show the Obsidian hover-preview of that note.
  *
@@ -2669,7 +2670,7 @@ const isInVault = (app, noteName, sourcePath = "") => !!app.metadataCache.getFir
  */
 function hoverPreview(event, view, to) {
     const targetEl = event.target;
-    view.app.workspace.trigger("hover-link", {
+    app.workspace.trigger("hover-link", {
         event,
         source: view.getViewType(),
         hoverParent: view,
@@ -2679,57 +2680,36 @@ function hoverPreview(event, view, to) {
 }
 /**
  * Create a new markdown note named `newName` in the user's preffered new-note-folder.
- * @param  {App} app
  * @param  {string} newName Name of new note (with or without '.md')
  * @param  {string} [currFilePath=""] File path of the current note. Use an empty string if there is no active file.
  * @returns {Promise<TFile>} new TFile
  */
-async function createNewMDNote(app, newName, currFilePath = "") {
+async function createNewMDNote(newName, currFilePath = "") {
     const newFileFolder = app.fileManager.getNewFileParent(currFilePath).path;
     const newFilePath = obsidian.normalizePath(`${newFileFolder}${newFileFolder === "/" ? "" : "/"}${addMD(newName)}`);
     return await app.vault.create(newFilePath, "");
 }
 /**
- * Add '.md' to a `noteName` if it isn't already there.
+ * Add '.md' to `noteName` if it isn't already there.
  * @param  {string} noteName with or without '.md' on the end.
  * @returns {string} noteName with '.md' on the end.
  */
 const addMD = (noteName) => {
-    let withMD = noteName.slice();
-    if (!withMD.endsWith(".md")) {
-        withMD += ".md";
-    }
-    return withMD;
-};
-/**
- * Strip '.md' off the end of a note name to get its basename.
- *
- * Works with the edgecase where a note has '.md' in its basename: `Obsidian.md.md`, for example.
- * @param  {string} noteName with or without '.md' on the end.
- * @returns {string} noteName without '.md'
- */
-const stripMD = (noteName) => {
-    if (noteName.endsWith(".md")) {
-        return noteName.split(".md").slice(0, -1).join(".md");
-    }
-    else
-        return noteName;
+    return noteName.match(/\.MD$|\.md$/m) ? noteName : noteName + ".md";
 };
 /**
  * When clicking a link, check if that note is already open in another leaf, and switch to that leaf, if so. Otherwise, open the note in a new pane.
- * @param  {App} app
- * @param  {string} dest Basename of note to open
+ * @param  {string} dest Name of note to open. If you want to open a non-md note, be sure to add the file extension.
  * @param  {MouseEvent} event
  * @param  {{createNewFile:boolean}} [options={createNewFile:true}] Whether or not to create `dest` file if it doesn't exist. If `false`, simply return from the function.
  * @returns Promise
  */
-async function openOrSwitch(app, dest, event, options = { createNewFile: true }) {
+async function openOrSwitch(dest, event, options = { createNewFile: true }) {
     const { workspace } = app;
-    const destStripped = stripMD(dest);
-    let destFile = app.metadataCache.getFirstLinkpathDest(destStripped, "");
+    let destFile = app.metadataCache.getFirstLinkpathDest(dest, "");
     // If dest doesn't exist, make it
     if (!destFile && options.createNewFile) {
-        destFile = await createNewMDNote(app, destStripped);
+        destFile = await createNewMDNote(dest);
     }
     else if (!destFile && !options.createNewFile)
         return;
@@ -2737,9 +2717,10 @@ async function openOrSwitch(app, dest, event, options = { createNewFile: true })
     const leavesWithDestAlreadyOpen = [];
     // For all open leaves, if the leave's basename is equal to the link destination, rather activate that leaf instead of opening it in two panes
     workspace.iterateAllLeaves((leaf) => {
-        var _a, _b;
+        var _a;
         if (leaf.view instanceof obsidian.MarkdownView) {
-            if (((_b = (_a = leaf.view) === null || _a === void 0 ? void 0 : _a.file) === null || _b === void 0 ? void 0 : _b.basename) === destStripped) {
+            const file = (_a = leaf.view) === null || _a === void 0 ? void 0 : _a.file;
+            if (file && file.basename + "." + file.extension === dest) {
                 leavesWithDestAlreadyOpen.push(leaf);
             }
         }
@@ -2754,18 +2735,18 @@ async function openOrSwitch(app, dest, event, options = { createNewFile: true })
         const leaf = event.ctrlKey || event.getModifierState("Meta")
             ? workspace.splitActiveLeaf()
             : workspace.getUnpinnedLeaf();
+        //@ts-expect-error
         await leaf.openFile(destFile, { active: true, mode });
     }
 }
 /**
  * Open your view on the chosen `side` if it isn't already open
- * @param  {App} app
  * @param  {string} viewType
  * @param  {Constructor<YourView>} viewClass The class constructor of your view
  * @param  {"left"|"right"} [side="right"]
  * @returns {Promise<YourView>} The opened view
  */
-async function openView(app, viewType, viewClass, side = "right") {
+async function openView(viewType, viewClass, side = "right") {
     let leaf = null;
     for (leaf of app.workspace.getLeavesOfType(viewType)) {
         if (leaf.view instanceof viewClass) {
@@ -2788,24 +2769,22 @@ async function openView(app, viewType, viewClass, side = "right") {
  * Check if `app.metadataCache.ResolvedLinks` have fully initalised.
  *
  * Used with {@link waitForResolvedLinks}.
- * @param {App} app
  * @param  {number} noFiles Number of files in your vault.
  * @returns {boolean}
  */
-function resolvedLinksComplete(app, noFiles) {
+function resolvedLinksComplete(noFiles) {
     const { resolvedLinks } = app.metadataCache;
     return Object.keys(resolvedLinks).length === noFiles;
 }
 /**
  * Wait for `app.metadataCache.ResolvedLinks` to have fully initialised.
- * @param {App} app
  * @param  {number} [delay=1000] Number of milliseconds to wait between each check.
  * @param {number} [max=50] Maximum number of iterations to check before throwing an error and breaking out of the loop.
  */
-async function waitForResolvedLinks(app, delay = 1000, max = 50) {
+async function waitForResolvedLinks(delay = 1000, max = 50) {
     const noFiles = app.vault.getMarkdownFiles().length;
     let i = 0;
-    while (!resolvedLinksComplete(app, noFiles) && i < max) {
+    while (!resolvedLinksComplete(noFiles) && i < max) {
         await wait(delay);
         i++;
     }
@@ -3077,6 +3056,7 @@ const DEFAULT_SETTINGS = {
     alphaSortAsc: true,
     altLinkFields: [],
     CSVPaths: "",
+    createIndexIndent: '  ',
     dateFormat: "YYYY-MM-DD",
     dateNoteFormat: "yyyy-MM-dd",
     dateNoteField: "next",
@@ -3098,6 +3078,7 @@ const DEFAULT_SETTINGS = {
     gridHeatmap: false,
     heatmapColour: getComputedStyle(document.body).getPropertyValue("--text-accent"),
     hierarchyNotes: [""],
+    hierarchyNoteIsParent: false,
     HNUpField: "",
     indexNotes: [""],
     namingSystemField: "",
@@ -5209,7 +5190,8 @@ function escapeRegex(string) {
     return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
-const getCurrFile = () => { var _a; return (_a = app.workspace.getActiveFile()) !== null && _a !== void 0 ? _a : app.workspace.getMostRecentlyActiveFile(); };
+const getSettings = () => app.plugins.plugins.breadcrumbs.settings;
+const getCurrFile = () => app.workspace.getActiveFile();
 /**
  * Get basename from a **Markdown** `path`
  * @param  {string} path
@@ -5302,7 +5284,6 @@ const dropHash = (tag) => tag.startsWith("#") ? tag.slice(1) : tag;
 const addHash = (tag) => (tag.startsWith("#") ? tag : `#${tag}`);
 function getAlt(node, plugin) {
     var _a;
-    const { app } = plugin;
     const { altLinkFields, showAllAliases } = plugin.settings;
     if (altLinkFields.length) {
         const file = app.metadataCache.getFirstLinkpathDest(node, "");
@@ -5321,7 +5302,6 @@ function getAlt(node, plugin) {
 }
 async function waitForCache(plugin) {
     var _a;
-    const { app } = plugin;
     if (app.plugins.enabledPlugins.has("dataview")) {
         let basename;
         while (!basename || !app.plugins.plugins.dataview.api.page(basename)) {
@@ -5333,9 +5313,9 @@ async function waitForCache(plugin) {
         await waitForResolvedLinks(app);
     }
 }
-const linkClass = (app, to, realQ = true) => `internal-link BC-Link ${isInVault(app, to) ? "" : "is-unresolved"} ${realQ ? "" : "BC-Implied"}`;
-const getDVApi = (plugin) => { var _a; return (_a = plugin.app.plugins.plugins.dataview) === null || _a === void 0 ? void 0 : _a.api; };
-function isInsideYaml(app) {
+const linkClass = (to, realQ = true) => `internal-link BC-Link ${isInVault(to) ? "" : "is-unresolved"} ${realQ ? "" : "BC-Implied"}`;
+const getDVApi = (plugin) => { var _a; return (_a = app.plugins.plugins.dataview) === null || _a === void 0 ? void 0 : _a.api; };
+function isInsideYaml() {
     const { workspace, metadataCache } = app;
     const { activeLeaf } = workspace;
     const { state: { mode }, } = activeLeaf.getViewState();
@@ -5513,14 +5493,19 @@ function removeCycles(g, startNode) {
     graphologyTraversal.dfsFromNode(copy, startNode, (n) => {
         copy.forEachOutNeighbor(n, (t) => {
             if (t === prevNode && copy.hasEdge(t, prevNode)) {
-                copy.dropEdge(t, prevNode);
+                try {
+                    copy.dropEdge(t, prevNode);
+                }
+                catch (error) {
+                    console.error(t, prevNode, error);
+                }
             }
         });
         prevNode = n;
     });
     return copy;
 }
-function buildObsGraph(app) {
+function buildObsGraph() {
     const ObsG = new graphology_umd_min.MultiGraph();
     const { resolvedLinks, unresolvedLinks } = app.metadataCache;
     for (const source in resolvedLinks) {
@@ -5727,7 +5712,7 @@ async function getCSVRows(plugin) {
     if (CSVPaths === "")
         return CSVRows;
     const fullPath = obsidian.normalizePath(CSVPaths);
-    const content = await plugin.app.vault.adapter.read(fullPath);
+    const content = await app.vault.adapter.read(fullPath);
     const lines = content.split("\n");
     const headers = lines[0].split(",").map((head) => head.trim());
     lines.slice(1).forEach((row) => {
@@ -5756,7 +5741,7 @@ function addCSVCrumbs(g, CSVRows, dir, field) {
 function addDataviewNotesToGraph(plugin, eligableAlts, frontms, mainG) {
     const { settings } = plugin;
     const { userHiers, dataviewNoteField } = settings;
-    const dv = getDVApi(plugin);
+    const dv = getDVApi();
     if (!dv && eligableAlts.length) {
         new obsidian.Notice(DATAVIEW_MISSING);
         return;
@@ -14333,7 +14318,7 @@ const getSubsFromFolder = (folder) => {
     return { otherNotes, subFolders };
 };
 function addFolderNotesToGraph(plugin, folderNotes, frontms, mainG) {
-    const { settings, app } = plugin;
+    const { settings } = plugin;
     const { userHiers } = settings;
     const fields = getFields(userHiers);
     folderNotes.forEach((altFile) => {
@@ -14377,7 +14362,7 @@ function addFolderNotesToGraph(plugin, folderNotes, frontms, mainG) {
                 const { otherNotes, subFolders } = getSubsFromFolder(currFolder);
                 const folderNote = currFolder.name;
                 const targets = otherNotes.map(getDVBasename);
-                // if (!isInVault(app, folderNote, folderNote)) continue;
+                // if (!isInVault( folderNote, folderNote)) continue;
                 const sourceOrder = 9999; // getSourceOrder(altFile);
                 const targetOrder = 9999; //  getTargetOrder(frontms, basename);
                 const parentFolderNote = currFolder.parent.name;
@@ -14398,11 +14383,13 @@ function addFolderNotesToGraph(plugin, folderNotes, frontms, mainG) {
     });
 }
 
-async function getHierarchyNoteItems(plugin, file) {
-    const { listItems } = plugin.app.metadataCache.getFileCache(file);
+async function getHierarchyNoteItems(file) {
+    const { listItems } = app.metadataCache.getFileCache(file);
     if (!listItems)
         return [];
-    const lines = (await plugin.app.vault.cachedRead(file)).split("\n");
+    const basename = getDVBasename(file);
+    const { hierarchyNoteIsParent } = getSettings();
+    const lines = (await app.vault.cachedRead(file)).split("\n");
     const hierarchyNoteItems = [];
     const afterBulletReg = new RegExp(/\s*[+*-]\s(.*$)/);
     const dropWikiLinksReg = new RegExp(/\[\[(.*?)\]\]/);
@@ -14426,7 +14413,7 @@ async function getHierarchyNoteItems(plugin, file) {
         else {
             hierarchyNoteItems.push({
                 note,
-                parent: null,
+                parent: hierarchyNoteIsParent ? basename : null,
                 field,
             });
         }
@@ -14468,7 +14455,7 @@ function addHNsToGraph(settings, hnArr, mainG) {
 // TODO I think it'd be better to do this whole thing as an obj instead of JugglLink[]
 // => {[note: string]: {type: string, linksInLine: string[]}[]}
 async function getJugglLinks(plugin, files) {
-    const { settings, app, db } = plugin;
+    const { settings, db } = plugin;
     db.start2G("getJugglLinks");
     const { userHiers } = settings;
     // Add Juggl links
@@ -14529,7 +14516,7 @@ function addJugglLinksToGraph(settings, jugglLinks, frontms, mainG) {
 }
 
 function addLinkNotesToGraph(plugin, eligableAlts, frontms, mainG) {
-    const { app, settings } = plugin;
+    const { settings } = plugin;
     const { userHiers } = settings;
     const fields = getFields(userHiers);
     eligableAlts.forEach((altFile) => {
@@ -14580,7 +14567,7 @@ function addRegexNotesToGraph(plugin, eligableAlts, frontms, mainG) {
     });
 }
 
-const getAllTags = (app, file, withHash = true) => {
+const getAllTags = (file, withHash = true) => {
     var _a, _b;
     const { tags, frontmatter } = app.metadataCache.getFileCache(file);
     const allTags = [];
@@ -14594,7 +14581,7 @@ const getAllTags = (app, file, withHash = true) => {
     return allTags.map((t) => (withHash ? "#" : "") + t.toLowerCase());
 };
 function addTagNotesToGraph(plugin, eligableAlts, frontms, mainG) {
-    const { settings, app } = plugin;
+    const { settings } = plugin;
     const { userHiers, tagNoteField } = settings;
     const fields = getFields(userHiers);
     eligableAlts.forEach((altFile) => {
@@ -14604,7 +14591,7 @@ function addTagNotesToGraph(plugin, eligableAlts, frontms, mainG) {
         const tag = addHash(altFile[BC_TAG_NOTE].trim().toLowerCase());
         loglevel.info({ tag });
         const hasThisTag = (file) => {
-            const allTags = getAllTags(app, file);
+            const allTags = getAllTags(file);
             return altFile[BC_TAG_NOTE_EXACT] !== undefined
                 ? allTags.includes(tag)
                 : allTags.some((t) => t.includes(tag));
@@ -14659,28 +14646,28 @@ function add_css$d() {
 
 function get_each_context$9(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[9] = list[i].field;
-	child_ctx[10] = list[i].real;
-	child_ctx[11] = list[i].to;
+	child_ctx[8] = list[i].field;
+	child_ctx[9] = list[i].real;
+	child_ctx[10] = list[i].to;
 	return child_ctx;
 }
 
 function get_each_context_1$6(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[9] = list[i].field;
-	child_ctx[10] = list[i].real;
-	child_ctx[11] = list[i].to;
+	child_ctx[8] = list[i].field;
+	child_ctx[9] = list[i].real;
+	child_ctx[10] = list[i].to;
 	return child_ctx;
 }
 
-// (15:6) {#each prev as { field, real, to }}
+// (14:6) {#each prev as { field, real, to }}
 function create_each_block_1$6(ctx) {
 	let div;
 	let strong;
-	let t0_value = /*field*/ ctx[9] + "";
+	let t0_value = /*field*/ ctx[8] + "";
 	let t0;
 	let t1;
-	let t2_value = /*to*/ ctx[11] + "";
+	let t2_value = /*to*/ ctx[10] + "";
 	let t2;
 	let t3;
 	let div_class_value;
@@ -14688,11 +14675,11 @@ function create_each_block_1$6(ctx) {
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[5](/*to*/ ctx[11], ...args);
+		return /*click_handler*/ ctx[4](/*to*/ ctx[10], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[6](/*to*/ ctx[11], ...args);
+		return /*mouseover_handler*/ ctx[5](/*to*/ ctx[10], ...args);
 	}
 
 	return {
@@ -14703,7 +14690,7 @@ function create_each_block_1$6(ctx) {
 			t1 = space();
 			t2 = text(t2_value);
 			t3 = space();
-			attr(div, "class", div_class_value = "" + (linkClass(/*app*/ ctx[2], /*to*/ ctx[11], /*real*/ ctx[10]) + " BC-prev" + " svelte-11g23nm"));
+			attr(div, "class", div_class_value = "" + (linkClass(/*to*/ ctx[10], /*real*/ ctx[9]) + " BC-prev" + " svelte-11g23nm"));
 		},
 		m(target, anchor) {
 			insert(target, div, anchor);
@@ -14724,10 +14711,10 @@ function create_each_block_1$6(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*prev*/ 2 && t0_value !== (t0_value = /*field*/ ctx[9] + "")) set_data(t0, t0_value);
-			if (dirty & /*prev*/ 2 && t2_value !== (t2_value = /*to*/ ctx[11] + "")) set_data(t2, t2_value);
+			if (dirty & /*prev*/ 2 && t0_value !== (t0_value = /*field*/ ctx[8] + "")) set_data(t0, t0_value);
+			if (dirty & /*prev*/ 2 && t2_value !== (t2_value = /*to*/ ctx[10] + "")) set_data(t2, t2_value);
 
-			if (dirty & /*prev*/ 2 && div_class_value !== (div_class_value = "" + (linkClass(/*app*/ ctx[2], /*to*/ ctx[11], /*real*/ ctx[10]) + " BC-prev" + " svelte-11g23nm"))) {
+			if (dirty & /*prev*/ 2 && div_class_value !== (div_class_value = "" + (linkClass(/*to*/ ctx[10], /*real*/ ctx[9]) + " BC-prev" + " svelte-11g23nm"))) {
 				attr(div, "class", div_class_value);
 			}
 		},
@@ -14739,14 +14726,14 @@ function create_each_block_1$6(ctx) {
 	};
 }
 
-// (29:6) {#each next as { field, real, to }}
+// (28:6) {#each next as { field, real, to }}
 function create_each_block$9(ctx) {
 	let div;
-	let t0_value = /*to*/ ctx[11] + "";
+	let t0_value = /*to*/ ctx[10] + "";
 	let t0;
 	let t1;
 	let strong;
-	let t2_value = /*field*/ ctx[9] + "";
+	let t2_value = /*field*/ ctx[8] + "";
 	let t2;
 	let t3;
 	let div_class_value;
@@ -14754,11 +14741,11 @@ function create_each_block$9(ctx) {
 	let dispose;
 
 	function click_handler_1(...args) {
-		return /*click_handler_1*/ ctx[7](/*to*/ ctx[11], ...args);
+		return /*click_handler_1*/ ctx[6](/*to*/ ctx[10], ...args);
 	}
 
 	function mouseover_handler_1(...args) {
-		return /*mouseover_handler_1*/ ctx[8](/*to*/ ctx[11], ...args);
+		return /*mouseover_handler_1*/ ctx[7](/*to*/ ctx[10], ...args);
 	}
 
 	return {
@@ -14769,7 +14756,7 @@ function create_each_block$9(ctx) {
 			strong = element("strong");
 			t2 = text(t2_value);
 			t3 = space();
-			attr(div, "class", div_class_value = "" + (linkClass(/*app*/ ctx[2], /*to*/ ctx[11], /*real*/ ctx[10]) + " BC-next" + " svelte-11g23nm"));
+			attr(div, "class", div_class_value = "" + (linkClass(/*to*/ ctx[10], /*real*/ ctx[9]) + " BC-next" + " svelte-11g23nm"));
 		},
 		m(target, anchor) {
 			insert(target, div, anchor);
@@ -14790,10 +14777,10 @@ function create_each_block$9(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*next*/ 1 && t0_value !== (t0_value = /*to*/ ctx[11] + "")) set_data(t0, t0_value);
-			if (dirty & /*next*/ 1 && t2_value !== (t2_value = /*field*/ ctx[9] + "")) set_data(t2, t2_value);
+			if (dirty & /*next*/ 1 && t0_value !== (t0_value = /*to*/ ctx[10] + "")) set_data(t0, t0_value);
+			if (dirty & /*next*/ 1 && t2_value !== (t2_value = /*field*/ ctx[8] + "")) set_data(t2, t2_value);
 
-			if (dirty & /*next*/ 1 && div_class_value !== (div_class_value = "" + (linkClass(/*app*/ ctx[2], /*to*/ ctx[11], /*real*/ ctx[10]) + " BC-next" + " svelte-11g23nm"))) {
+			if (dirty & /*next*/ 1 && div_class_value !== (div_class_value = "" + (linkClass(/*to*/ ctx[10], /*real*/ ctx[9]) + " BC-next" + " svelte-11g23nm"))) {
 				attr(div, "class", div_class_value);
 			}
 		},
@@ -14866,7 +14853,7 @@ function create_fragment$m(ctx) {
 			}
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*linkClass, app, prev, openOrSwitch, hoverPreview, activeLeafView*/ 14) {
+			if (dirty & /*linkClass, prev, openOrSwitch, hoverPreview, activeLeafView*/ 6) {
 				each_value_1 = /*prev*/ ctx[1];
 				let i;
 
@@ -14889,7 +14876,7 @@ function create_fragment$m(ctx) {
 				each_blocks_1.length = each_value_1.length;
 			}
 
-			if (dirty & /*linkClass, app, next, openOrSwitch, hoverPreview, activeLeafView*/ 13) {
+			if (dirty & /*linkClass, next, openOrSwitch, hoverPreview, activeLeafView*/ 5) {
 				each_value = /*next*/ ctx[0];
 				let i;
 
@@ -14928,15 +14915,14 @@ function instance$m($$self, $$props, $$invalidate) {
 	let { plugin } = $$props;
 	let { next } = $$props;
 	let { prev } = $$props;
-	const { app } = plugin;
 	const activeLeafView = app.workspace.activeLeaf.view;
-	const click_handler = async (to, e) => await openOrSwitch(app, to, e);
+	const click_handler = async (to, e) => await openOrSwitch(to, e);
 	const mouseover_handler = (to, e) => hoverPreview(e, activeLeafView, to);
-	const click_handler_1 = async (to, e) => await openOrSwitch(app, to, e);
+	const click_handler_1 = async (to, e) => await openOrSwitch(to, e);
 	const mouseover_handler_1 = (to, e) => hoverPreview(e, activeLeafView, to);
 
 	$$self.$$set = $$props => {
-		if ("plugin" in $$props) $$invalidate(4, plugin = $$props.plugin);
+		if ("plugin" in $$props) $$invalidate(3, plugin = $$props.plugin);
 		if ("next" in $$props) $$invalidate(0, next = $$props.next);
 		if ("prev" in $$props) $$invalidate(1, prev = $$props.prev);
 	};
@@ -14944,7 +14930,6 @@ function instance$m($$self, $$props, $$invalidate) {
 	return [
 		next,
 		prev,
-		app,
 		activeLeafView,
 		plugin,
 		click_handler,
@@ -14958,7 +14943,7 @@ class NextPrev extends SvelteComponent {
 	constructor(options) {
 		super();
 		if (!document.getElementById("svelte-11g23nm-style")) add_css$d();
-		init(this, options, instance$m, create_fragment$m, safe_not_equal, { plugin: 4, next: 0, prev: 1 });
+		init(this, options, instance$m, create_fragment$m, safe_not_equal, { plugin: 3, next: 0, prev: 1 });
 	}
 }
 
@@ -14973,16 +14958,16 @@ function add_css$c() {
 
 function get_each_context$8(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[25] = list[i];
-	child_ctx[27] = i;
+	child_ctx[24] = list[i];
+	child_ctx[26] = i;
 	return child_ctx;
 }
 
 function get_each_context_1$5(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[28] = list[i].value;
-	child_ctx[29] = list[i].first;
-	child_ctx[30] = list[i].last;
+	child_ctx[27] = list[i].value;
+	child_ctx[28] = list[i].first;
+	child_ctx[29] = list[i].last;
 	return child_ctx;
 }
 
@@ -14990,7 +14975,7 @@ function get_each_context_1$5(ctx, list, i) {
 function create_each_block_1$5(ctx) {
 	let div1;
 	let div0;
-	let t0_value = (getAlt(/*value*/ ctx[28], /*plugin*/ ctx[0]) ?? dropDendron(/*value*/ ctx[28], /*settings*/ ctx[5])) + "";
+	let t0_value = (getAlt(/*value*/ ctx[27], /*plugin*/ ctx[0]) ?? dropDendron(/*value*/ ctx[27], /*settings*/ ctx[5])) + "";
 	let t0;
 	let div0_class_value;
 	let t1;
@@ -15000,11 +14985,11 @@ function create_each_block_1$5(ctx) {
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[13](/*value*/ ctx[28], ...args);
+		return /*click_handler*/ ctx[12](/*value*/ ctx[27], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[14](/*value*/ ctx[28], ...args);
+		return /*mouseover_handler*/ ctx[13](/*value*/ ctx[27], ...args);
 	}
 
 	return {
@@ -15013,11 +14998,11 @@ function create_each_block_1$5(ctx) {
 			div0 = element("div");
 			t0 = text(t0_value);
 			t1 = space();
-			attr(div0, "class", div0_class_value = "" + (null_to_empty(linkClass(/*app*/ ctx[6], /*value*/ ctx[28])) + " svelte-c6w3ih"));
-			attr(div1, "class", div1_class_value = "BC-trail-grid-item " + (/*value*/ ctx[28] === "" ? "BC-filler" : "") + " svelte-c6w3ih");
+			attr(div0, "class", div0_class_value = "" + (null_to_empty(linkClass(/*value*/ ctx[27])) + " svelte-c6w3ih"));
+			attr(div1, "class", div1_class_value = "BC-trail-grid-item " + (/*value*/ ctx[27] === "" ? "BC-filler" : "") + " svelte-c6w3ih");
 
-			attr(div1, "style", div1_style_value = "\r\n              grid-area: " + (/*first*/ ctx[29] + 1) + " / " + (/*i*/ ctx[27] + 1) + " /\r\n                  " + (/*last*/ ctx[30] + 2) + " / " + (/*i*/ ctx[27] + 2) + ";\r\n              " + (/*gridHeatmap*/ ctx[7]
-			? `background-color: ${/*toColour*/ ctx[10](/*value*/ ctx[28])}`
+			attr(div1, "style", div1_style_value = "\r\n              grid-area: " + (/*first*/ ctx[28] + 1) + " / " + (/*i*/ ctx[26] + 1) + " /\r\n                  " + (/*last*/ ctx[29] + 2) + " / " + (/*i*/ ctx[26] + 2) + ";\r\n              " + (/*gridHeatmap*/ ctx[6]
+			? `background-color: ${/*toColour*/ ctx[9](/*value*/ ctx[27])}`
 			: ""));
 		},
 		m(target, anchor) {
@@ -15037,18 +15022,18 @@ function create_each_block_1$5(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty[0] & /*allRuns, plugin*/ 17 && t0_value !== (t0_value = (getAlt(/*value*/ ctx[28], /*plugin*/ ctx[0]) ?? dropDendron(/*value*/ ctx[28], /*settings*/ ctx[5])) + "")) set_data(t0, t0_value);
+			if (dirty[0] & /*allRuns, plugin*/ 17 && t0_value !== (t0_value = (getAlt(/*value*/ ctx[27], /*plugin*/ ctx[0]) ?? dropDendron(/*value*/ ctx[27], /*settings*/ ctx[5])) + "")) set_data(t0, t0_value);
 
-			if (dirty[0] & /*allRuns*/ 16 && div0_class_value !== (div0_class_value = "" + (null_to_empty(linkClass(/*app*/ ctx[6], /*value*/ ctx[28])) + " svelte-c6w3ih"))) {
+			if (dirty[0] & /*allRuns*/ 16 && div0_class_value !== (div0_class_value = "" + (null_to_empty(linkClass(/*value*/ ctx[27])) + " svelte-c6w3ih"))) {
 				attr(div0, "class", div0_class_value);
 			}
 
-			if (dirty[0] & /*allRuns*/ 16 && div1_class_value !== (div1_class_value = "BC-trail-grid-item " + (/*value*/ ctx[28] === "" ? "BC-filler" : "") + " svelte-c6w3ih")) {
+			if (dirty[0] & /*allRuns*/ 16 && div1_class_value !== (div1_class_value = "BC-trail-grid-item " + (/*value*/ ctx[27] === "" ? "BC-filler" : "") + " svelte-c6w3ih")) {
 				attr(div1, "class", div1_class_value);
 			}
 
-			if (dirty[0] & /*allRuns*/ 16 && div1_style_value !== (div1_style_value = "\r\n              grid-area: " + (/*first*/ ctx[29] + 1) + " / " + (/*i*/ ctx[27] + 1) + " /\r\n                  " + (/*last*/ ctx[30] + 2) + " / " + (/*i*/ ctx[27] + 2) + ";\r\n              " + (/*gridHeatmap*/ ctx[7]
-			? `background-color: ${/*toColour*/ ctx[10](/*value*/ ctx[28])}`
+			if (dirty[0] & /*allRuns*/ 16 && div1_style_value !== (div1_style_value = "\r\n              grid-area: " + (/*first*/ ctx[28] + 1) + " / " + (/*i*/ ctx[26] + 1) + " /\r\n                  " + (/*last*/ ctx[29] + 2) + " / " + (/*i*/ ctx[26] + 2) + ";\r\n              " + (/*gridHeatmap*/ ctx[6]
+			? `background-color: ${/*toColour*/ ctx[9](/*value*/ ctx[27])}`
 			: ""))) {
 				attr(div1, "style", div1_style_value);
 			}
@@ -15064,7 +15049,7 @@ function create_each_block_1$5(ctx) {
 // (44:4) {#each transposedTrails as col, i}
 function create_each_block$8(ctx) {
 	let each_1_anchor;
-	let each_value_1 = /*allRuns*/ ctx[4][/*i*/ ctx[27]];
+	let each_value_1 = /*allRuns*/ ctx[4][/*i*/ ctx[26]];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_1.length; i += 1) {
@@ -15087,8 +15072,8 @@ function create_each_block$8(ctx) {
 			insert(target, each_1_anchor, anchor);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*allRuns, gridHeatmap, toColour, app, activeLeafView, plugin, settings*/ 1521) {
-				each_value_1 = /*allRuns*/ ctx[4][/*i*/ ctx[27]];
+			if (dirty[0] & /*allRuns, gridHeatmap, toColour, activeLeafView, plugin, settings*/ 753) {
+				each_value_1 = /*allRuns*/ ctx[4][/*i*/ ctx[26]];
 				let i;
 
 				for (i = 0; i < each_value_1.length; i += 1) {
@@ -15177,7 +15162,7 @@ function create_fragment$l(ctx) {
 			button0.disabled = button0_disabled_value = /*depth*/ ctx[1] === 1;
 			attr(span1, "class", "tree-item-flair");
 			attr(button1, "class", "BC-depth-button svelte-c6w3ih");
-			button1.disabled = button1_disabled_value = /*depth*/ ctx[1] === /*maxLength*/ ctx[9];
+			button1.disabled = button1_disabled_value = /*depth*/ ctx[1] === /*maxLength*/ ctx[8];
 			attr(span2, "class", "BC-grid-options-options svelte-c6w3ih");
 			attr(div1, "class", "BC-grid-options svelte-c6w3ih");
 			attr(div2, "class", "BC-grid-wrapper svelte-c6w3ih");
@@ -15207,15 +15192,15 @@ function create_fragment$l(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					listen(button0, "click", /*click_handler_1*/ ctx[15]),
-					listen(button1, "click", /*click_handler_2*/ ctx[16])
+					listen(button0, "click", /*click_handler_1*/ ctx[14]),
+					listen(button1, "click", /*click_handler_2*/ ctx[15])
 				];
 
 				mounted = true;
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*allRuns, gridHeatmap, toColour, app, activeLeafView, plugin, settings, transposedTrails*/ 1529) {
+			if (dirty[0] & /*allRuns, gridHeatmap, toColour, activeLeafView, plugin, settings, transposedTrails*/ 761) {
 				each_value = /*transposedTrails*/ ctx[3];
 				let i;
 
@@ -15252,7 +15237,7 @@ function create_fragment$l(ctx) {
 
 			if (dirty[0] & /*depth*/ 2) set_data(t5, /*depth*/ ctx[1]);
 
-			if (dirty[0] & /*depth*/ 2 && button1_disabled_value !== (button1_disabled_value = /*depth*/ ctx[1] === /*maxLength*/ ctx[9])) {
+			if (dirty[0] & /*depth*/ 2 && button1_disabled_value !== (button1_disabled_value = /*depth*/ ctx[1] === /*maxLength*/ ctx[8])) {
 				button1.disabled = button1_disabled_value;
 			}
 		},
@@ -15274,7 +15259,7 @@ function instance$l($$self, $$props, $$invalidate) {
 	
 	let { sortedTrails } = $$props;
 	let { plugin } = $$props;
-	const { settings, app, mainG } = plugin;
+	const { settings, mainG } = plugin;
 	const { userHiers, gridHeatmap, heatmapColour, gridDefaultDepth } = settings;
 	const activeLeafView = app.workspace.activeLeaf.view;
 	const allCells = [...new Set(sortedTrails.flat())];
@@ -15294,18 +15279,18 @@ function instance$l($$self, $$props, $$invalidate) {
 
 	let slicedTrails = sortedTrails;
 	const toColour = value => heatmapColour + Math.round(children[value] * 200 + 55).toString(16);
-	const click_handler = async (value, e) => await openOrSwitch(app, value, e);
+	const click_handler = async (value, e) => await openOrSwitch(value, e);
 	const mouseover_handler = (value, e) => hoverPreview(e, activeLeafView, value);
 	const click_handler_1 = () => $$invalidate(1, depth -= 1);
 	const click_handler_2 = () => $$invalidate(1, depth += 1);
 
 	$$self.$$set = $$props => {
-		if ("sortedTrails" in $$props) $$invalidate(11, sortedTrails = $$props.sortedTrails);
+		if ("sortedTrails" in $$props) $$invalidate(10, sortedTrails = $$props.sortedTrails);
 		if ("plugin" in $$props) $$invalidate(0, plugin = $$props.plugin);
 	};
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty[0] & /*sortedTrails, depth, slicedTrails*/ 2054) {
+		if ($$self.$$.dirty[0] & /*sortedTrails, depth, slicedTrails*/ 1030) {
 			{
 				$$invalidate(2, slicedTrails = []);
 
@@ -15317,10 +15302,10 @@ function instance$l($$self, $$props, $$invalidate) {
 		}
 
 		if ($$self.$$.dirty[0] & /*slicedTrails, depth*/ 6) {
-			$$invalidate(12, paddedTrails = slicedTrails.map(trail => padArray(trail, depth)));
+			$$invalidate(11, paddedTrails = slicedTrails.map(trail => padArray(trail, depth)));
 		}
 
-		if ($$self.$$.dirty[0] & /*paddedTrails*/ 4096) {
+		if ($$self.$$.dirty[0] & /*paddedTrails*/ 2048) {
 			$$invalidate(3, transposedTrails = transpose(paddedTrails));
 		}
 
@@ -15336,7 +15321,6 @@ function instance$l($$self, $$props, $$invalidate) {
 		transposedTrails,
 		allRuns,
 		settings,
-		app,
 		gridHeatmap,
 		activeLeafView,
 		maxLength,
@@ -15354,7 +15338,7 @@ class TrailGrid extends SvelteComponent {
 	constructor(options) {
 		super();
 		if (!document.getElementById("svelte-c6w3ih-style")) add_css$c();
-		init(this, options, instance$l, create_fragment$l, safe_not_equal, { sortedTrails: 11, plugin: 0 }, [-1, -1]);
+		init(this, options, instance$l, create_fragment$l, safe_not_equal, { sortedTrails: 10, plugin: 0 }, [-1, -1]);
 	}
 }
 
@@ -15369,21 +15353,21 @@ function add_css$b() {
 
 function get_each_context$7(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
+	child_ctx[13] = list[i];
 	return child_ctx;
 }
 
 function get_each_context_1$4(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[17] = list[i];
-	child_ctx[19] = i;
+	child_ctx[16] = list[i];
+	child_ctx[18] = i;
 	return child_ctx;
 }
 
 // (26:8) {:else}
 function create_else_block$3(ctx) {
 	let each_1_anchor;
-	let each_value_1 = /*trail*/ ctx[14];
+	let each_value_1 = /*trail*/ ctx[13];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_1.length; i += 1) {
@@ -15406,8 +15390,8 @@ function create_else_block$3(ctx) {
 			insert(target, each_1_anchor, anchor);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*trailSeperator, trailsToShow, openOrSwitch, app, hoverPreview, view, getAlt, plugin, dropDendron, settings*/ 378) {
-				each_value_1 = /*trail*/ ctx[14];
+			if (dirty & /*trailSeperator, trailsToShow, openOrSwitch, hoverPreview, view, getAlt, plugin, dropDendron, settings*/ 186) {
+				each_value_1 = /*trail*/ ctx[13];
 				let i;
 
 				for (i = 0; i < each_value_1.length; i += 1) {
@@ -15443,7 +15427,7 @@ function create_if_block_1$4(ctx) {
 	return {
 		c() {
 			span = element("span");
-			span.textContent = `${/*noPathMessage*/ ctx[7]}`;
+			span.textContent = `${/*noPathMessage*/ ctx[6]}`;
 			attr(span, "class", "BC-empty-trail");
 		},
 		m(target, anchor) {
@@ -15463,7 +15447,7 @@ function create_if_block_2$3(ctx) {
 	return {
 		c() {
 			span = element("span");
-			span.textContent = `${" " + /*trailSeperator*/ ctx[8] + " "}`;
+			span.textContent = `${" " + /*trailSeperator*/ ctx[7] + " "}`;
 			attr(span, "class", "BC-trail-sep");
 		},
 		m(target, anchor) {
@@ -15479,7 +15463,7 @@ function create_if_block_2$3(ctx) {
 // (27:10) {#each trail as crumb, i}
 function create_each_block_1$4(ctx) {
 	let span;
-	let t0_value = (getAlt(/*crumb*/ ctx[17], /*plugin*/ ctx[1]) ?? dropDendron(/*crumb*/ ctx[17], /*settings*/ ctx[4])) + "";
+	let t0_value = (getAlt(/*crumb*/ ctx[16], /*plugin*/ ctx[1]) ?? dropDendron(/*crumb*/ ctx[16], /*settings*/ ctx[4])) + "";
 	let t0;
 	let t1;
 	let if_block_anchor;
@@ -15487,14 +15471,14 @@ function create_each_block_1$4(ctx) {
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[9](/*crumb*/ ctx[17], ...args);
+		return /*click_handler*/ ctx[8](/*crumb*/ ctx[16], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[10](/*crumb*/ ctx[17], ...args);
+		return /*mouseover_handler*/ ctx[9](/*crumb*/ ctx[16], ...args);
 	}
 
-	let if_block = /*i*/ ctx[19] < /*trail*/ ctx[14].length - 1 && create_if_block_2$3(ctx);
+	let if_block = /*i*/ ctx[18] < /*trail*/ ctx[13].length - 1 && create_if_block_2$3(ctx);
 
 	return {
 		c() {
@@ -15523,9 +15507,9 @@ function create_each_block_1$4(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*trailsToShow, plugin*/ 10 && t0_value !== (t0_value = (getAlt(/*crumb*/ ctx[17], /*plugin*/ ctx[1]) ?? dropDendron(/*crumb*/ ctx[17], /*settings*/ ctx[4])) + "")) set_data(t0, t0_value);
+			if (dirty & /*trailsToShow, plugin*/ 10 && t0_value !== (t0_value = (getAlt(/*crumb*/ ctx[16], /*plugin*/ ctx[1]) ?? dropDendron(/*crumb*/ ctx[16], /*settings*/ ctx[4])) + "")) set_data(t0, t0_value);
 
-			if (/*i*/ ctx[19] < /*trail*/ ctx[14].length - 1) {
+			if (/*i*/ ctx[18] < /*trail*/ ctx[13].length - 1) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 				} else {
@@ -15555,7 +15539,7 @@ function create_each_block$7(ctx) {
 	let t;
 
 	function select_block_type(ctx, dirty) {
-		if (!/*trail*/ ctx[14].length) return create_if_block_1$4;
+		if (!/*trail*/ ctx[13].length) return create_if_block_1$4;
 		return create_else_block$3;
 	}
 
@@ -15615,8 +15599,8 @@ function create_if_block$7(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					listen(button, "click", /*click_handler_1*/ ctx[11]),
-					listen(button, "contextmenu", /*contextmenu_handler*/ ctx[12])
+					listen(button, "click", /*click_handler_1*/ ctx[10]),
+					listen(button, "contextmenu", /*contextmenu_handler*/ ctx[11])
 				];
 
 				mounted = true;
@@ -15672,7 +15656,7 @@ function create_fragment$k(ctx) {
 			if (if_block) if_block.m(span, null);
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*noPathMessage, trailsToShow, trailSeperator, openOrSwitch, app, hoverPreview, view, getAlt, plugin, dropDendron, settings*/ 506) {
+			if (dirty & /*noPathMessage, trailsToShow, trailSeperator, openOrSwitch, hoverPreview, view, getAlt, plugin, dropDendron, settings*/ 250) {
 				each_value = /*trailsToShow*/ ctx[3];
 				let i;
 
@@ -15723,11 +15707,11 @@ function instance$k($$self, $$props, $$invalidate) {
 	
 	let { sortedTrails } = $$props;
 	let { plugin } = $$props;
-	const { settings, app } = plugin;
+	const { settings } = plugin;
 	const { view } = app.workspace.activeLeaf;
 	let { showAll, noPathMessage, trailSeperator } = settings;
 	let trail_length = showAll;
-	const click_handler = async (crumb, e) => await openOrSwitch(app, crumb, e);
+	const click_handler = async (crumb, e) => await openOrSwitch(crumb, e);
 	const mouseover_handler = (crumb, e) => hoverPreview(e, view, crumb);
 	const click_handler_1 = () => $$invalidate(2, trail_length = getTrailLength(trail_length));
 
@@ -15757,7 +15741,6 @@ function instance$k($$self, $$props, $$invalidate) {
 		trail_length,
 		trailsToShow,
 		settings,
-		app,
 		view,
 		noPathMessage,
 		trailSeperator,
@@ -32982,16 +32965,16 @@ var lodash = createCommonjsModule(function (module, exports) {
 function addAliasesToIndex(plugin, index) {
     var _a, _b, _c, _d;
     const { aliasesInIndex } = plugin.settings;
-    const copy = index.slice();
-    const lines = copy.split("\n");
-    for (let line of lines) {
-        if (aliasesInIndex) {
-            const note = line.split("- ")[1];
+    const lines = index.slice().split("\n");
+    if (aliasesInIndex) {
+        for (let line of lines) {
+            const [indent, ...content] = line.split("- ");
+            const note = content.join("- ");
             if (!note)
                 continue;
-            const currFile = plugin.app.metadataCache.getFirstLinkpathDest(note, "");
+            const currFile = app.metadataCache.getFirstLinkpathDest(note, "");
             if (currFile !== null) {
-                const cache = plugin.app.metadataCache.getFileCache(currFile);
+                const cache = app.metadataCache.getFileCache(currFile);
                 const alias = (_b = (_a = cache === null || cache === void 0 ? void 0 : cache.frontmatter) === null || _a === void 0 ? void 0 : _a.alias) !== null && _b !== void 0 ? _b : [];
                 const aliases = (_d = (_c = cache === null || cache === void 0 ? void 0 : cache.frontmatter) === null || _c === void 0 ? void 0 : _c.aliases) !== null && _d !== void 0 ? _d : [];
                 const allAliases = [...[alias].flat(3), ...[aliases].flat(3)];
@@ -33009,12 +32992,12 @@ function addAliasesToIndex(plugin, index) {
  * @param {boolean} asWikilinks - Whether to use wikilinks instead of plain text.
  * @returns A string.
  */
-function createIndex(allPaths, asWikilinks) {
+function createIndex(allPaths, asWikilinks, indent = "  ") {
     let index = "";
     const copy = lodash.cloneDeep(allPaths);
     const reversed = copy.map((path) => path.reverse());
     reversed.forEach((path) => path.shift());
-    const indent = "  ";
+    const realIndent = indent === '\\t' ? '\t' : indent;
     const visited = {};
     reversed.forEach((path) => {
         for (let depth = 0; depth < path.length; depth++) {
@@ -33024,7 +33007,7 @@ function createIndex(allPaths, asWikilinks) {
                 visited[currNode].includes(depth))
                 continue;
             else {
-                index += `${indent.repeat(depth)}- ${asWikilinks ? makeWiki(currNode) : currNode}\n`;
+                index += `${realIndent.repeat(depth)}- ${asWikilinks ? makeWiki(currNode) : currNode}\n`;
                 if (!visited.hasOwnProperty(currNode))
                     visited[currNode] = [];
                 visited[currNode].push(depth);
@@ -33035,17 +33018,17 @@ function createIndex(allPaths, asWikilinks) {
 }
 async function copyLocalIndex(plugin) {
     const { settings, closedG } = plugin;
-    const { wikilinkIndex } = settings;
+    const { wikilinkIndex, createIndexIndent } = settings;
     const { basename } = getCurrFile();
     const onlyDowns = getSubInDirs(closedG, "down");
     const allPaths = dfsAllPaths(onlyDowns, basename);
-    const index = addAliasesToIndex(plugin, createIndex(allPaths, wikilinkIndex));
+    const index = addAliasesToIndex(plugin, createIndex(allPaths, wikilinkIndex, createIndexIndent));
     loglevel.info({ index });
     await copy(index);
 }
 async function copyGlobalIndex(plugin) {
     const { settings, closedG } = plugin;
-    const { wikilinkIndex } = settings;
+    const { wikilinkIndex, createIndexIndent } = settings;
     const onlyDowns = getSubInDirs(closedG, "down");
     const onlyUps = getSubInDirs(closedG, "up");
     const sinks = getSinks(onlyUps);
@@ -33054,7 +33037,7 @@ async function copyGlobalIndex(plugin) {
         globalIndex += terminal + "\n";
         const allPaths = dfsAllPaths(onlyDowns, terminal);
         globalIndex +=
-            addAliasesToIndex(plugin, createIndex(allPaths, wikilinkIndex)) + "\n";
+            addAliasesToIndex(plugin, createIndex(allPaths, wikilinkIndex, createIndexIndent)) + "\n";
     });
     loglevel.info({ globalIndex });
     await copy(globalIndex);
@@ -33062,8 +33045,8 @@ async function copyGlobalIndex(plugin) {
 const indexToLinePairs = (index, flat = false) => index
     .split("\n")
     .map((line) => {
-    const pair = line.split("- ");
-    return [flat ? "" : pair[0], pair.slice(1).join("- ")];
+    const [indent, ...content] = line.split("- ");
+    return [flat ? "" : indent, content.join("- ")];
 })
     .filter((pair) => pair[1] !== "");
 
@@ -33426,7 +33409,7 @@ class BCStore extends obsidian.Component {
 }
 function createJuggl(plugin, target, initialNodes, args, depthMap = null) {
     try {
-        const jugglPlugin = getPlugin(plugin.app);
+        const jugglPlugin = getPlugin(app);
         if (!jugglPlugin) {
             // TODO: Error handling
             return;
@@ -33435,7 +33418,7 @@ function createJuggl(plugin, target, initialNodes, args, depthMap = null) {
             if (key in args && args[key] === undefined)
                 args[key] = JUGGL_CB_DEFAULTS[key];
         }
-        const bcStore = new BCStore(plugin.mainG, plugin.app.metadataCache, depthMap);
+        const bcStore = new BCStore(plugin.mainG, app.metadataCache, depthMap);
         const stores = {
             coreStore: bcStore,
             dataStores: [bcStore],
@@ -33542,15 +33525,16 @@ function createJugglTrail(plugin, target, paths, source, args) {
                 const sub = getSubInDirs(plugin.mainG, "down", "up");
                 const closed = getReflexiveClosure(sub, plugin.settings.userHiers);
                 const subClosed = getSubInDirs(closed, "down");
+                const { createIndexIndent } = plugin.settings;
                 const allPaths = dfsAllPaths(subClosed, source);
-                const index = createIndex(allPaths, false);
+                const index = createIndex(allPaths, false, createIndexIndent);
                 const lines = index
                     .split("\n")
                     .map((line) => {
-                    const pair = line.split("- ");
-                    return pair.slice(1).join("- ");
+                    const [indent, ...content] = line.split("- ");
+                    return content.join("- ");
                 })
-                    .filter((pair) => pair && pair !== "");
+                    .filter((pair) => pair);
                 let depthMapDown = createDepthMap(allPaths, source);
                 const maxDepthDown = Math.max(...Object.values(depthMapDown));
                 depthDown = new JugglDepth({
@@ -33755,7 +33739,7 @@ function getTrailLength(curr, offset = 1) {
 async function drawTrail(plugin) {
     var _a, _b, _c, _d, _e;
     try {
-        const { settings, db, app, mainG } = plugin;
+        const { settings, db, mainG } = plugin;
         const { showBCs, noPathMessage, respectReadableLineLength, showTrail, showGrid, showJuggl, showPrevNext, showBCsInEditLPMode, } = settings;
         db.start2G("drawTrail");
         const activeMDView = app.workspace.getActiveViewOfType(obsidian.MarkdownView);
@@ -33764,20 +33748,15 @@ async function drawTrail(plugin) {
             !activeMDView ||
             (mode !== "preview" && !showBCsInEditLPMode)) {
             (_a = activeMDView === null || activeMDView === void 0 ? void 0 : activeMDView.containerEl.querySelector(".BC-trail")) === null || _a === void 0 ? void 0 : _a.remove();
-            db.end2G();
-            return;
+            return db.end2G();
         }
         const { file } = activeMDView;
         const { frontmatter } = (_b = app.metadataCache.getFileCache(file)) !== null && _b !== void 0 ? _b : {};
-        if ((frontmatter === null || frontmatter === void 0 ? void 0 : frontmatter[BC_HIDE_TRAIL]) || (frontmatter === null || frontmatter === void 0 ? void 0 : frontmatter["kanban-plugin"])) {
-            db.end2G();
-            return;
-        }
+        if ((frontmatter === null || frontmatter === void 0 ? void 0 : frontmatter[BC_HIDE_TRAIL]) || (frontmatter === null || frontmatter === void 0 ? void 0 : frontmatter["kanban-plugin"]))
+            return db.end2G();
         const { basename } = file;
-        if (!mainG.hasNode(basename)) {
-            db.end2G();
-            return;
-        }
+        if (!mainG.hasNode(basename))
+            return db.end2G();
         const view = mode === "preview"
             ? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
             : activeMDView.contentEl.querySelector("div.markdown-source-view");
@@ -33799,10 +33778,8 @@ async function drawTrail(plugin) {
                 prev.push(i);
         });
         const noItems = !sortedTrails.length && !next.length && !prev.length;
-        if (noItems && noPathMessage === "") {
-            db.end2G();
-            return;
-        }
+        if (noItems && noPathMessage === "")
+            return db.end2G();
         const selectorForMaxWidth = mode === "preview"
             ? ".markdown-preview-view.is-readable-line-width .markdown-preview-sizer"
             : "";
@@ -33858,13 +33835,11 @@ async function drawTrail(plugin) {
         trailDiv.empty();
         if (settings.indexNotes.includes(basename)) {
             trailDiv.innerText = "Index Note";
-            db.end2G();
-            return;
+            return db.end2G();
         }
         if (noItems) {
             trailDiv.innerText = noPathMessage;
-            db.end2G();
-            return;
+            return db.end2G();
         }
         const targetProps = {
             target: trailDiv,
@@ -33893,14 +33868,14 @@ async function drawTrail(plugin) {
 
 function getDVMetadataCache(plugin, files) {
     const { db } = plugin;
-    const api = getDVApi(plugin);
+    const api = getDVApi();
     db.start1G("getDVMetadataCache");
     const frontms = files.map((file) => api.page(file.path));
     db.end1G({ frontms });
     return frontms;
 }
 function getObsMetadataCache(plugin, files) {
-    const { app, db } = plugin;
+    const { db } = plugin;
     db.start1G("getObsMetadataCache");
     const frontms = files.map((file) => {
         const { frontmatter } = app.metadataCache.getFileCache(file);
@@ -33909,6 +33884,7 @@ function getObsMetadataCache(plugin, files) {
     db.end1G({ frontms });
     return frontms;
 }
+const isDVProxy = (item) => typeof item.defaultComparator === "function";
 /**
  * Keep unwrapping a proxied item until it isn't one anymore
  * @param  {RawValue} item
@@ -33918,36 +33894,24 @@ function unproxy(item) {
     const queue = [item];
     while (queue.length) {
         const currItem = queue.shift();
-        // @ts-ignore
-        if (typeof currItem.defaultComparator === "function") {
-            const possibleUnproxied = Object.assign({}, currItem);
-            const { values } = possibleUnproxied;
-            if (values)
-                queue.push(...values);
-            else
-                unproxied.push(possibleUnproxied);
-        }
-        else {
+        if (isDVProxy(currItem))
+            queue.push(...currItem.values);
+        else
             unproxied.push(currItem);
-        }
     }
     return unproxied;
 }
 /**
  * Given a `dvCache[field]` value, parse the link(s) out of it
- * @param  {string|string[]|string[][]|dvLink|dvLink[]|Pos|TFile} value
- * @param  {BCSettings} settings
+ * @param {string | string[] | string[][] | dvLink | dvLink[] | Pos | TFile} value
  */
 function parseFieldValue(value) {
-    if (value === undefined)
+    if (!value)
         return [];
     const parsed = [];
     try {
-        const rawValuesPreFlat = value;
-        if (!rawValuesPreFlat)
-            return [];
-        if (typeof rawValuesPreFlat === "string") {
-            const splits = rawValuesPreFlat.match(splitLinksRegex);
+        if (typeof value === "string") {
+            const splits = value.match(splitLinksRegex);
             if (splits !== null) {
                 const linkNames = splits.map((link) => getBaseFromMDPath(link.match(dropHeaderOrAlias)[1]));
                 parsed.push(...linkNames);
@@ -33991,7 +33955,7 @@ function parseFieldValue(value) {
 async function buildMainG(plugin) {
     const mainG = new graphology_umd_min.MultiGraph();
     try {
-        const { settings, app, db } = plugin;
+        const { settings, db } = plugin;
         const { userHiers, CSVPaths, parseJugglLinksWithoutJuggl, hierarchyNotes } = settings;
         db.start2G("initGraphs");
         if (userHiers.length === 0) {
@@ -34052,14 +34016,14 @@ async function buildMainG(plugin) {
                         continue;
                     for (const child of folder.children) {
                         if (child instanceof obsidian.TFile) {
-                            addHNsToGraph(settings, await getHierarchyNoteItems(plugin, child), mainG);
+                            addHNsToGraph(settings, await getHierarchyNoteItems(child), mainG);
                         }
                     }
                 }
                 else {
                     const file = app.metadataCache.getFirstLinkpathDest(noteOrFolder, "");
                     if (file)
-                        addHNsToGraph(settings, await getHierarchyNoteItems(plugin, file), mainG);
+                        addHNsToGraph(settings, await getHierarchyNoteItems(file), mainG);
                 }
             }
         }
@@ -34079,7 +34043,7 @@ async function buildMainG(plugin) {
         db.end2G();
         // plugin.addNamingSystemNotesToGraph(frontms, mainG);
         db.start2G("Traverse Notes");
-        addTraverseNotesToGraph(plugin, eligableAlts[BC_TRAVERSE_NOTE], mainG, buildObsGraph(app));
+        addTraverseNotesToGraph(plugin, eligableAlts[BC_TRAVERSE_NOTE], mainG, buildObsGraph());
         db.end2G();
         db.start2G("Dendron Notes");
         addDendronNotesToGraph(plugin, frontms, mainG);
@@ -34263,34 +34227,34 @@ function add_css$9() {
 
 function get_each_context$6(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
+	child_ctx[13] = list[i];
 	return child_ctx;
 }
 
 function get_each_context_1$3(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[17] = list[i].field;
-	child_ctx[18] = list[i].impliedItems;
-	child_ctx[19] = list[i].realItems;
+	child_ctx[16] = list[i].field;
+	child_ctx[17] = list[i].impliedItems;
+	child_ctx[18] = list[i].realItems;
 	return child_ctx;
 }
 
 function get_each_context_2(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[22] = list[i].alt;
-	child_ctx[23] = list[i].cls;
-	child_ctx[24] = list[i].implied;
-	child_ctx[25] = list[i].to;
-	child_ctx[26] = list[i].parent;
+	child_ctx[21] = list[i].alt;
+	child_ctx[22] = list[i].cls;
+	child_ctx[23] = list[i].implied;
+	child_ctx[24] = list[i].to;
+	child_ctx[25] = list[i].parent;
 	return child_ctx;
 }
 
 function get_each_context_3(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[22] = list[i].alt;
-	child_ctx[23] = list[i].cls;
-	child_ctx[24] = list[i].implied;
-	child_ctx[25] = list[i].to;
+	child_ctx[21] = list[i].alt;
+	child_ctx[22] = list[i].cls;
+	child_ctx[23] = list[i].implied;
+	child_ctx[24] = list[i].to;
 	return child_ctx;
 }
 
@@ -34299,14 +34263,14 @@ function create_if_block$4(ctx) {
 	let div1;
 	let div0;
 	let h4;
-	let t0_value = /*field*/ ctx[17] + "";
+	let t0_value = /*field*/ ctx[16] + "";
 	let t0;
 	let t1;
 	let t2;
 	let t3;
-	let if_block0 = /*showRelationType*/ ctx[8] && create_if_block_5(ctx);
-	let if_block1 = /*realItems*/ ctx[19].length && create_if_block_4(ctx);
-	let if_block2 = /*showImpliedRelations*/ ctx[5] && /*impliedItems*/ ctx[18].length && create_if_block_1$3(ctx);
+	let if_block0 = /*showRelationType*/ ctx[7] && create_if_block_5(ctx);
+	let if_block1 = /*realItems*/ ctx[18].length && create_if_block_4(ctx);
+	let if_block2 = /*showImpliedRelations*/ ctx[4] && /*impliedItems*/ ctx[17].length && create_if_block_1$3(ctx);
 
 	return {
 		c() {
@@ -34337,10 +34301,10 @@ function create_if_block$4(ctx) {
 			if (if_block2) if_block2.m(div1, null);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*hierSquares*/ 1 && t0_value !== (t0_value = /*field*/ ctx[17] + "")) set_data(t0, t0_value);
-			if (/*showRelationType*/ ctx[8]) if_block0.p(ctx, dirty);
+			if (dirty & /*hierSquares*/ 1 && t0_value !== (t0_value = /*field*/ ctx[16] + "")) set_data(t0, t0_value);
+			if (/*showRelationType*/ ctx[7]) if_block0.p(ctx, dirty);
 
-			if (/*realItems*/ ctx[19].length) {
+			if (/*realItems*/ ctx[18].length) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 				} else {
@@ -34353,7 +34317,7 @@ function create_if_block$4(ctx) {
 				if_block1 = null;
 			}
 
-			if (/*showImpliedRelations*/ ctx[5] && /*impliedItems*/ ctx[18].length) {
+			if (/*showImpliedRelations*/ ctx[4] && /*impliedItems*/ ctx[17].length) {
 				if (if_block2) {
 					if_block2.p(ctx, dirty);
 				} else {
@@ -34378,7 +34342,7 @@ function create_if_block$4(ctx) {
 // (32:14) {#if showRelationType}
 function create_if_block_5(ctx) {
 	let h6;
-	let t_value = (/*realItems*/ ctx[19].length ? "Real" : "Implied") + "";
+	let t_value = (/*realItems*/ ctx[18].length ? "Real" : "Implied") + "";
 	let t;
 
 	return {
@@ -34392,7 +34356,7 @@ function create_if_block_5(ctx) {
 			append(h6, t);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*hierSquares*/ 1 && t_value !== (t_value = (/*realItems*/ ctx[19].length ? "Real" : "Implied") + "")) set_data(t, t_value);
+			if (dirty & /*hierSquares*/ 1 && t_value !== (t_value = (/*realItems*/ ctx[18].length ? "Real" : "Implied") + "")) set_data(t, t_value);
 		},
 		d(detaching) {
 			if (detaching) detach(h6);
@@ -34403,7 +34367,7 @@ function create_if_block_5(ctx) {
 // (38:12) {#if realItems.length}
 function create_if_block_4(ctx) {
 	let ol;
-	let each_value_3 = /*realItems*/ ctx[19];
+	let each_value_3 = /*realItems*/ ctx[18];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_3.length; i += 1) {
@@ -34428,8 +34392,8 @@ function create_if_block_4(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty & /*hierSquares, rlLeaf, openOrSwitch, app, hoverPreview, matrixView, dropPathNDendron, settings*/ 93) {
-				each_value_3 = /*realItems*/ ctx[19];
+			if (dirty & /*hierSquares, rlLeaf, openOrSwitch, hoverPreview, matrixView, dropPathNDendron, settings*/ 45) {
+				each_value_3 = /*realItems*/ ctx[18];
 				let i;
 
 				for (i = 0; i < each_value_3.length; i += 1) {
@@ -34462,7 +34426,7 @@ function create_if_block_4(ctx) {
 function create_each_block_3(ctx) {
 	let li;
 	let div;
-	let t0_value = (/*alt*/ ctx[22] ?? dropPathNDendron(/*to*/ ctx[25], /*settings*/ ctx[4])) + "";
+	let t0_value = (/*alt*/ ctx[21] ?? dropPathNDendron(/*to*/ ctx[24], /*settings*/ ctx[3])) + "";
 	let t0;
 	let div_class_value;
 	let div_aria_label_value;
@@ -34472,11 +34436,11 @@ function create_each_block_3(ctx) {
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[9](/*to*/ ctx[25], ...args);
+		return /*click_handler*/ ctx[8](/*to*/ ctx[24], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[10](/*to*/ ctx[25], ...args);
+		return /*mouseover_handler*/ ctx[9](/*to*/ ctx[24], ...args);
 	}
 
 	return {
@@ -34485,9 +34449,9 @@ function create_each_block_3(ctx) {
 			div = element("div");
 			t0 = text(t0_value);
 			t1 = space();
-			attr(div, "class", div_class_value = "" + (/*cls*/ ctx[23] + " " + (/*implied*/ ctx[24] ?? "") + " svelte-1p44ezg"));
-			attr(div, "aria-label", div_aria_label_value = /*alt*/ ctx[22] ? /*to*/ ctx[25] : "");
-			attr(div, "aria-label-position", div_aria_label_position_value = /*rlLeaf*/ ctx[6] ? "left" : "right");
+			attr(div, "class", div_class_value = "" + (/*cls*/ ctx[22] + " " + (/*implied*/ ctx[23] ?? "") + " svelte-1p44ezg"));
+			attr(div, "aria-label", div_aria_label_value = /*alt*/ ctx[21] ? /*to*/ ctx[24] : "");
+			attr(div, "aria-label-position", div_aria_label_position_value = /*rlLeaf*/ ctx[5] ? "left" : "right");
 			attr(li, "class", "svelte-1p44ezg");
 		},
 		m(target, anchor) {
@@ -34507,13 +34471,13 @@ function create_each_block_3(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*hierSquares*/ 1 && t0_value !== (t0_value = (/*alt*/ ctx[22] ?? dropPathNDendron(/*to*/ ctx[25], /*settings*/ ctx[4])) + "")) set_data(t0, t0_value);
+			if (dirty & /*hierSquares*/ 1 && t0_value !== (t0_value = (/*alt*/ ctx[21] ?? dropPathNDendron(/*to*/ ctx[24], /*settings*/ ctx[3])) + "")) set_data(t0, t0_value);
 
-			if (dirty & /*hierSquares*/ 1 && div_class_value !== (div_class_value = "" + (/*cls*/ ctx[23] + " " + (/*implied*/ ctx[24] ?? "") + " svelte-1p44ezg"))) {
+			if (dirty & /*hierSquares*/ 1 && div_class_value !== (div_class_value = "" + (/*cls*/ ctx[22] + " " + (/*implied*/ ctx[23] ?? "") + " svelte-1p44ezg"))) {
 				attr(div, "class", div_class_value);
 			}
 
-			if (dirty & /*hierSquares*/ 1 && div_aria_label_value !== (div_aria_label_value = /*alt*/ ctx[22] ? /*to*/ ctx[25] : "")) {
+			if (dirty & /*hierSquares*/ 1 && div_aria_label_value !== (div_aria_label_value = /*alt*/ ctx[21] ? /*to*/ ctx[24] : "")) {
 				attr(div, "aria-label", div_aria_label_value);
 			}
 		},
@@ -34533,8 +34497,8 @@ function create_if_block_1$3(ctx) {
 	let t2;
 	let ol;
 	let ol_start_value;
-	let if_block = /*impliedItems*/ ctx[18].length && create_if_block_2$2(ctx);
-	let each_value_2 = /*impliedItems*/ ctx[18];
+	let if_block = /*impliedItems*/ ctx[17].length && create_if_block_2$2(ctx);
+	let each_value_2 = /*impliedItems*/ ctx[17];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_2.length; i += 1) {
@@ -34557,7 +34521,7 @@ function create_if_block_1$3(ctx) {
 
 			attr(h4, "class", "BC-Matrix-header svelte-1p44ezg");
 			attr(div, "class", "BC-Matrix-headers svelte-1p44ezg");
-			attr(ol, "start", ol_start_value = /*realItems*/ ctx[19].length + 1);
+			attr(ol, "start", ol_start_value = /*realItems*/ ctx[18].length + 1);
 			attr(ol, "class", "svelte-1p44ezg");
 		},
 		m(target, anchor) {
@@ -34573,7 +34537,7 @@ function create_if_block_1$3(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			if (/*impliedItems*/ ctx[18].length) {
+			if (/*impliedItems*/ ctx[17].length) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 				} else {
@@ -34586,8 +34550,8 @@ function create_if_block_1$3(ctx) {
 				if_block = null;
 			}
 
-			if (dirty & /*treatCurrNodeAsImpliedSibling, hierSquares, currFile, rlLeaf, openOrSwitch, app, hoverPreview, matrixView, dropPathNDendron, settings*/ 223) {
-				each_value_2 = /*impliedItems*/ ctx[18];
+			if (dirty & /*treatCurrNodeAsImpliedSibling, hierSquares, currFile, rlLeaf, openOrSwitch, hoverPreview, matrixView, dropPathNDendron, settings*/ 111) {
+				each_value_2 = /*impliedItems*/ ctx[17];
 				let i;
 
 				for (i = 0; i < each_value_2.length; i += 1) {
@@ -34609,7 +34573,7 @@ function create_if_block_1$3(ctx) {
 				each_blocks.length = each_value_2.length;
 			}
 
-			if (dirty & /*hierSquares*/ 1 && ol_start_value !== (ol_start_value = /*realItems*/ ctx[19].length + 1)) {
+			if (dirty & /*hierSquares*/ 1 && ol_start_value !== (ol_start_value = /*realItems*/ ctx[18].length + 1)) {
 				attr(ol, "start", ol_start_value);
 			}
 		},
@@ -34626,7 +34590,7 @@ function create_if_block_1$3(ctx) {
 // (60:16) {#if impliedItems.length}
 function create_if_block_2$2(ctx) {
 	let if_block_anchor;
-	let if_block = /*showRelationType*/ ctx[8] && /*realItems*/ ctx[19].length && create_if_block_3$1();
+	let if_block = /*showRelationType*/ ctx[7] && /*realItems*/ ctx[18].length && create_if_block_3$1();
 
 	return {
 		c() {
@@ -34638,7 +34602,7 @@ function create_if_block_2$2(ctx) {
 			insert(target, if_block_anchor, anchor);
 		},
 		p(ctx, dirty) {
-			if (/*showRelationType*/ ctx[8] && /*realItems*/ ctx[19].length) {
+			if (/*showRelationType*/ ctx[7] && /*realItems*/ ctx[18].length) {
 				if (if_block) ; else {
 					if_block = create_if_block_3$1();
 					if_block.c();
@@ -34679,7 +34643,7 @@ function create_if_block_3$1(ctx) {
 function create_each_block_2(ctx) {
 	let li;
 	let div;
-	let t_value = (/*alt*/ ctx[22] ?? dropPathNDendron(/*to*/ ctx[25], /*settings*/ ctx[4])) + "";
+	let t_value = (/*alt*/ ctx[21] ?? dropPathNDendron(/*to*/ ctx[24], /*settings*/ ctx[3])) + "";
 	let t;
 	let div_class_value;
 	let div_aria_label_value;
@@ -34689,11 +34653,11 @@ function create_each_block_2(ctx) {
 	let dispose;
 
 	function click_handler_1(...args) {
-		return /*click_handler_1*/ ctx[11](/*to*/ ctx[25], ...args);
+		return /*click_handler_1*/ ctx[10](/*to*/ ctx[24], ...args);
 	}
 
 	function mouseover_handler_1(...args) {
-		return /*mouseover_handler_1*/ ctx[12](/*to*/ ctx[25], ...args);
+		return /*mouseover_handler_1*/ ctx[11](/*to*/ ctx[24], ...args);
 	}
 
 	return {
@@ -34701,11 +34665,11 @@ function create_each_block_2(ctx) {
 			li = element("li");
 			div = element("div");
 			t = text(t_value);
-			attr(div, "class", div_class_value = "" + (/*cls*/ ctx[23] + " " + (/*implied*/ ctx[24] ?? "") + " svelte-1p44ezg"));
-			attr(div, "aria-label", div_aria_label_value = (/*alt*/ ctx[22] ? `${/*to*/ ctx[25]}\n` : "") + (/*parent*/ ctx[26] ? "↑ " + /*parent*/ ctx[26] : ""));
-			attr(div, "aria-label-position", div_aria_label_position_value = /*rlLeaf*/ ctx[6] ? "left" : "right");
+			attr(div, "class", div_class_value = "" + (/*cls*/ ctx[22] + " " + (/*implied*/ ctx[23] ?? "") + " svelte-1p44ezg"));
+			attr(div, "aria-label", div_aria_label_value = (/*alt*/ ctx[21] ? `${/*to*/ ctx[24]}\n` : "") + (/*parent*/ ctx[25] ? "↑ " + /*parent*/ ctx[25] : ""));
+			attr(div, "aria-label-position", div_aria_label_position_value = /*rlLeaf*/ ctx[5] ? "left" : "right");
 
-			attr(li, "class", li_class_value = "BC-Implied " + (/*treatCurrNodeAsImpliedSibling*/ ctx[7] && /*to*/ ctx[25] === /*currFile*/ ctx[1].basename
+			attr(li, "class", li_class_value = "BC-Implied " + (/*treatCurrNodeAsImpliedSibling*/ ctx[6] && /*to*/ ctx[24] === /*currFile*/ ctx[1].basename
 			? "BC-active-note"
 			: "") + " svelte-1p44ezg");
 		},
@@ -34725,17 +34689,17 @@ function create_each_block_2(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*hierSquares*/ 1 && t_value !== (t_value = (/*alt*/ ctx[22] ?? dropPathNDendron(/*to*/ ctx[25], /*settings*/ ctx[4])) + "")) set_data(t, t_value);
+			if (dirty & /*hierSquares*/ 1 && t_value !== (t_value = (/*alt*/ ctx[21] ?? dropPathNDendron(/*to*/ ctx[24], /*settings*/ ctx[3])) + "")) set_data(t, t_value);
 
-			if (dirty & /*hierSquares*/ 1 && div_class_value !== (div_class_value = "" + (/*cls*/ ctx[23] + " " + (/*implied*/ ctx[24] ?? "") + " svelte-1p44ezg"))) {
+			if (dirty & /*hierSquares*/ 1 && div_class_value !== (div_class_value = "" + (/*cls*/ ctx[22] + " " + (/*implied*/ ctx[23] ?? "") + " svelte-1p44ezg"))) {
 				attr(div, "class", div_class_value);
 			}
 
-			if (dirty & /*hierSquares*/ 1 && div_aria_label_value !== (div_aria_label_value = (/*alt*/ ctx[22] ? `${/*to*/ ctx[25]}\n` : "") + (/*parent*/ ctx[26] ? "↑ " + /*parent*/ ctx[26] : ""))) {
+			if (dirty & /*hierSquares*/ 1 && div_aria_label_value !== (div_aria_label_value = (/*alt*/ ctx[21] ? `${/*to*/ ctx[24]}\n` : "") + (/*parent*/ ctx[25] ? "↑ " + /*parent*/ ctx[25] : ""))) {
 				attr(div, "aria-label", div_aria_label_value);
 			}
 
-			if (dirty & /*hierSquares, currFile*/ 3 && li_class_value !== (li_class_value = "BC-Implied " + (/*treatCurrNodeAsImpliedSibling*/ ctx[7] && /*to*/ ctx[25] === /*currFile*/ ctx[1].basename
+			if (dirty & /*hierSquares, currFile*/ 3 && li_class_value !== (li_class_value = "BC-Implied " + (/*treatCurrNodeAsImpliedSibling*/ ctx[6] && /*to*/ ctx[24] === /*currFile*/ ctx[1].basename
 			? "BC-active-note"
 			: "") + " svelte-1p44ezg")) {
 				attr(li, "class", li_class_value);
@@ -34752,7 +34716,7 @@ function create_each_block_2(ctx) {
 // (26:6) {#each squares as { field, impliedItems, realItems }}
 function create_each_block_1$3(ctx) {
 	let if_block_anchor;
-	let if_block = (/*realItems*/ ctx[19].length || /*showImpliedRelations*/ ctx[5] && /*impliedItems*/ ctx[18].length) && create_if_block$4(ctx);
+	let if_block = (/*realItems*/ ctx[18].length || /*showImpliedRelations*/ ctx[4] && /*impliedItems*/ ctx[17].length) && create_if_block$4(ctx);
 
 	return {
 		c() {
@@ -34764,7 +34728,7 @@ function create_each_block_1$3(ctx) {
 			insert(target, if_block_anchor, anchor);
 		},
 		p(ctx, dirty) {
-			if (/*realItems*/ ctx[19].length || /*showImpliedRelations*/ ctx[5] && /*impliedItems*/ ctx[18].length) {
+			if (/*realItems*/ ctx[18].length || /*showImpliedRelations*/ ctx[4] && /*impliedItems*/ ctx[17].length) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 				} else {
@@ -34788,7 +34752,7 @@ function create_each_block_1$3(ctx) {
 function create_each_block$6(ctx) {
 	let div;
 	let t;
-	let each_value_1 = /*squares*/ ctx[14];
+	let each_value_1 = /*squares*/ ctx[13];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_1.length; i += 1) {
@@ -34816,8 +34780,8 @@ function create_each_block$6(ctx) {
 			append(div, t);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*hierSquares, treatCurrNodeAsImpliedSibling, currFile, rlLeaf, openOrSwitch, app, hoverPreview, matrixView, dropPathNDendron, settings, showRelationType, showImpliedRelations*/ 511) {
-				each_value_1 = /*squares*/ ctx[14];
+			if (dirty & /*hierSquares, treatCurrNodeAsImpliedSibling, currFile, rlLeaf, openOrSwitch, hoverPreview, matrixView, dropPathNDendron, settings, showRelationType, showImpliedRelations*/ 255) {
+				each_value_1 = /*squares*/ ctx[13];
 				let i;
 
 				for (i = 0; i < each_value_1.length; i += 1) {
@@ -34896,7 +34860,7 @@ function create_fragment$g(ctx) {
 			if (dirty & /*matrixView*/ 4) matrixbuttons_changes.matrixView = /*matrixView*/ ctx[2];
 			matrixbuttons.$set(matrixbuttons_changes);
 
-			if (dirty & /*hierSquares, treatCurrNodeAsImpliedSibling, currFile, rlLeaf, openOrSwitch, app, hoverPreview, matrixView, dropPathNDendron, settings, showRelationType, showImpliedRelations*/ 511) {
+			if (dirty & /*hierSquares, treatCurrNodeAsImpliedSibling, currFile, rlLeaf, openOrSwitch, hoverPreview, matrixView, dropPathNDendron, settings, showRelationType, showImpliedRelations*/ 255) {
 				each_value = /*hierSquares*/ ctx[0];
 				let i;
 
@@ -34950,11 +34914,11 @@ function instance$g($$self, $$props, $$invalidate) {
 	let { currFile } = $$props;
 	let { matrixView } = $$props;
 	const { plugin } = matrixView;
-	const { app, settings } = plugin;
+	const { settings } = plugin;
 	const { showImpliedRelations, rlLeaf, treatCurrNodeAsImpliedSibling, showRelationType } = settings;
-	const click_handler = async (to, e) => await openOrSwitch(app, to, e);
+	const click_handler = async (to, e) => await openOrSwitch(to, e);
 	const mouseover_handler = (to, event) => hoverPreview(event, matrixView, to);
-	const click_handler_1 = async (to, e) => await openOrSwitch(app, to, e);
+	const click_handler_1 = async (to, e) => await openOrSwitch(to, e);
 	const mouseover_handler_1 = (to, e) => hoverPreview(e, matrixView, to);
 
 	$$self.$$set = $$props => {
@@ -34967,7 +34931,6 @@ function instance$g($$self, $$props, $$invalidate) {
 		hierSquares,
 		currFile,
 		matrixView,
-		app,
 		settings,
 		showImpliedRelations,
 		rlLeaf,
@@ -35021,7 +34984,7 @@ class MatrixView extends obsidian.ItemView {
         this.toInternalLinkObj = (to, realQ = true, parent, implied) => {
             return {
                 to,
-                cls: linkClass(this.app, to, realQ),
+                cls: linkClass(to, realQ),
                 alt: this.getAlt(to),
                 order: this.getOrder(to),
                 parent,
@@ -35043,7 +35006,7 @@ class MatrixView extends obsidian.ItemView {
     }
     async onload() {
         super.onload();
-        const { plugin, app } = this;
+        const { plugin } = this;
         app.workspace.onLayoutReady(() => {
             setTimeout(async () => await this.draw(), app.plugins.plugins.dataview
                 ? app.plugins.plugins.dataview.api
@@ -35065,12 +35028,12 @@ class MatrixView extends obsidian.ItemView {
         return Promise.resolve();
     }
     getAlt(node) {
-        const { app, plugin } = this;
+        const { plugin } = this;
         const { altLinkFields, showAllAliases } = plugin.settings;
         if (!altLinkFields.length)
             return null;
         // dv First
-        const dv = getDVApi(plugin);
+        const dv = getDVApi();
         if (dv) {
             const page = dv.page(node);
             if (!page)
@@ -35215,15 +35178,15 @@ class MatrixView extends obsidian.ItemView {
 }
 
 class BCAPI {
-    constructor(app, plugin) {
+    constructor(plugin) {
         this.DIRECTIONS = DIRECTIONS;
         this.ARROW_DIRECTIONS = ARROW_DIRECTIONS;
-        this.buildObsGraph = () => buildObsGraph(this.app);
+        this.buildObsGraph = buildObsGraph;
         this.refreshIndex = async () => await refreshIndex(this.plugin);
         this.getSubInDirs = (dirs, g = this.mainG) => getSubInDirs(g, ...dirs);
         this.getSubForFields = (fields, g = this.mainG) => getSubForFields(g, fields);
         this.dfsAllPaths = (fromNode, g) => { var _a; if (fromNode === void 0) { fromNode = (_a = getCurrFile()) === null || _a === void 0 ? void 0 : _a.basename; } if (g === void 0) { g = this.mainG; } return dfsAllPaths(g, fromNode); };
-        this.createIndex = (allPaths, wikilinks = false) => createIndex(allPaths, wikilinks);
+        this.createIndex = (allPaths, wikilinks = false, indent = '  ') => createIndex(allPaths, wikilinks, indent);
         this.getMatrixNeighbours = (fromNode) => { var _a; if (fromNode === void 0) { fromNode = (_a = getCurrFile()) === null || _a === void 0 ? void 0 : _a.basename; } return getMatrixNeighbours(this.plugin, fromNode); };
         this.getOppDir = (dir) => getOppDir(dir);
         this.getOppFields = (field) => {
@@ -35232,7 +35195,6 @@ class BCAPI {
         };
         this.getFieldInfo = (field) => getFieldInfo(this.plugin.settings.userHiers, field);
         this.getFields = (dir) => getFields(this.plugin.settings.userHiers, dir !== null && dir !== void 0 ? dir : "all");
-        this.app = app;
         this.plugin = plugin;
         this.mainG = this.plugin.mainG;
         this.closedG = this.plugin.closedG;
@@ -35251,7 +35213,7 @@ function add_css$8() {
 	append(document.head, style);
 }
 
-// (22:2) {#if rel === "up"}
+// (21:2) {#if rel === "up"}
 function create_if_block_2$1(ctx) {
 	let if_block_anchor;
 
@@ -35292,7 +35254,7 @@ function create_if_block_2$1(ctx) {
 	};
 }
 
-// (25:4) {:else}
+// (24:4) {:else}
 function create_else_block$2(ctx) {
 	let div;
 	let pre;
@@ -35320,7 +35282,7 @@ function create_else_block$2(ctx) {
 	};
 }
 
-// (23:4) {#if hnItem.depth === 0}
+// (22:4) {#if hnItem.depth === 0}
 function create_if_block_3(ctx) {
 	let div;
 
@@ -35339,7 +35301,7 @@ function create_if_block_3(ctx) {
 	};
 }
 
-// (46:27) 
+// (45:27) 
 function create_if_block_1$2(ctx) {
 	let div;
 	let pre;
@@ -35367,7 +35329,7 @@ function create_if_block_1$2(ctx) {
 	};
 }
 
-// (40:2) {#if rel === "same"}
+// (39:2) {#if rel === "same"}
 function create_if_block$3(ctx) {
 	let div;
 	let pre;
@@ -35584,7 +35546,7 @@ function instance$f($$self, $$props, $$invalidate) {
 	let inputEl;
 
 	//@ts-ignore
-	let newItem = modal.app.workspace.activeLeaf.view.file.basename;
+	let newItem = app.workspace.activeLeaf.view.file.basename;
 
 	const buildNewItem = (newItem, depth = hnItem.depth, preview = false) => `${(" ").repeat(Math.round(depth / (preview ? 2 : 1)))}- ${preview ? newItem || "<Empty>" : makeWiki(newItem)}`;
 
@@ -35611,7 +35573,7 @@ function instance$f($$self, $$props, $$invalidate) {
 			return;
 		} else {
 			try {
-				const content = await modal.app.vault.read(file);
+				const content = await app.vault.read(file);
 				const lines = content.split("\n");
 				const lineNo = rel === "up" ? hnItem.lineNo : hnItem.lineNo + 1;
 
@@ -35620,7 +35582,7 @@ function instance$f($$self, $$props, $$invalidate) {
 				: rel === "down" ? hnItem.depth + 4 : hnItem.depth;
 
 				lines.splice(lineNo, 0, buildNewItem(newItem, depth));
-				await modal.app.vault.modify(file, lines.join("\n"));
+				await app.vault.modify(file, lines.join("\n"));
 				modal.close();
 			} catch(err) {
 				console$1.error(err);
@@ -35669,7 +35631,7 @@ class ModifyHNItemComp extends SvelteComponent {
 }
 
 class ModifyHierItemModal extends obsidian.Modal {
-    constructor(app, plugin, hnItem, file, rel) {
+    constructor(plugin, hnItem, file, rel) {
         super(app);
         this.plugin = plugin;
         this.modal = this;
@@ -35698,9 +35660,8 @@ class ModifyHierItemModal extends obsidian.Modal {
 }
 
 class HierarchyNoteManipulator extends obsidian.FuzzySuggestModal {
-    constructor(app, plugin, hierNoteName) {
+    constructor(plugin, hierNoteName) {
         super(app);
-        this.app = app;
         this.plugin = plugin;
         this.settings = this.plugin.settings;
         this.hierNoteName = hierNoteName;
@@ -35715,7 +35676,6 @@ class HierarchyNoteManipulator extends obsidian.FuzzySuggestModal {
         this.scope.register(["Shift"], "ArrowDown", chooseOverride);
     }
     async onOpen() {
-        const { app } = this;
         this.setPlaceholder("HN Manipulator");
         this.setInstructions([
             { command: "Shift + Enter", purpose: "Jump to item" },
@@ -35760,7 +35720,7 @@ class HierarchyNoteManipulator extends obsidian.FuzzySuggestModal {
         try {
             this.lines.splice(item.lineNo, 1);
             this.listItems.splice(item.lineNo, 1);
-            await this.app.vault.modify(this.file, this.lines.join("\n"));
+            await app.vault.modify(this.file, this.lines.join("\n"));
             new obsidian.Notice("Item deleted Succesfully");
         }
         catch (err) {
@@ -35775,7 +35735,7 @@ class HierarchyNoteManipulator extends obsidian.FuzzySuggestModal {
         else if (evt instanceof KeyboardEvent &&
             evt.key == "Enter" &&
             evt.shiftKey) {
-            const view = this.app.workspace.getActiveViewOfType(obsidian.MarkdownView);
+            const view = app.workspace.getActiveViewOfType(obsidian.MarkdownView);
             const { editor } = view !== null && view !== void 0 ? view : {};
             if (!editor)
                 return;
@@ -35798,16 +35758,15 @@ class HierarchyNoteManipulator extends obsidian.FuzzySuggestModal {
                 if (evt.key === "ArrowRight")
                     rel = "same";
             }
-            new ModifyHierItemModal(this.app, this.plugin, item, this.file, rel).open();
+            new ModifyHierItemModal(this.plugin, item, this.file, rel).open();
             this.close();
         }
     }
 }
 
 class HierarchyNoteSelectorModal extends obsidian.FuzzySuggestModal {
-    constructor(app, plugin) {
+    constructor(plugin) {
         super(app);
-        this.app = app;
         this.plugin = plugin;
         this.settings = this.plugin.settings;
     }
@@ -35821,7 +35780,7 @@ class HierarchyNoteSelectorModal extends obsidian.FuzzySuggestModal {
         else if (hierarchyNotes.length === 1 &&
             !hierarchyNotes[0].endsWith("/")) {
             this.close();
-            new HierarchyNoteManipulator(this.app, this.plugin, hierarchyNotes[0]).open();
+            new HierarchyNoteManipulator(this.plugin, hierarchyNotes[0]).open();
         }
         else {
             super.onOpen();
@@ -35832,8 +35791,8 @@ class HierarchyNoteSelectorModal extends obsidian.FuzzySuggestModal {
         if (hierarchyNotes.length == 1 && hierarchyNotes[0].endsWith("/")) {
             // this is a folder
             let folder = hierarchyNotes[0].slice(0, -1);
-            if (this.plugin.app.plugins.plugins.dataview != undefined) {
-                let pages = this.plugin.app.plugins.plugins.dataview.api.pages(`"${folder}"`);
+            if (app.plugins.plugins.dataview != undefined) {
+                let pages = app.plugins.plugins.dataview.api.pages(`"${folder}"`);
                 return pages.values.map((page) => page.file.path);
             }
             else {
@@ -35850,7 +35809,7 @@ class HierarchyNoteSelectorModal extends obsidian.FuzzySuggestModal {
         super.renderSuggestion(item, el);
     }
     onChooseItem(item, evt) {
-        new HierarchyNoteManipulator(this.app, this.plugin, item).open();
+        new HierarchyNoteManipulator(this.plugin, item).open();
         this.close();
     }
 }
@@ -35874,14 +35833,14 @@ function create_fragment$e(ctx) {
 		},
 		m(target, anchor) {
 			insert(target, div, anchor);
-			/*div_binding*/ ctx[3](div);
+			/*div_binding*/ ctx[2](div);
 		},
 		p: noop,
 		i: noop,
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(div);
-			/*div_binding*/ ctx[3](null);
+			/*div_binding*/ ctx[2](null);
 		}
 	};
 }
@@ -35924,7 +35883,6 @@ function instance$e($$self, $$props, $$invalidate) {
 	};
 
 	let { path } = $$props;
-	let { app } = $$props;
 
 	function getContent(note) {
 		return __awaiter(this, void 0, void 0, function* () {
@@ -35948,17 +35906,16 @@ function instance$e($$self, $$props, $$invalidate) {
 
 	$$self.$$set = $$props => {
 		if ("path" in $$props) $$invalidate(1, path = $$props.path);
-		if ("app" in $$props) $$invalidate(2, app = $$props.app);
 	};
 
-	return [el, path, app, div_binding];
+	return [el, path, div_binding];
 }
 
 class RenderMarkdown extends SvelteComponent {
 	constructor(options) {
 		super();
 		if (!document.getElementById("svelte-7e9i10-style")) add_css$7();
-		init(this, options, instance$e, create_fragment$e, safe_not_equal, { path: 1, app: 2 });
+		init(this, options, instance$e, create_fragment$e, safe_not_equal, { path: 1 });
 	}
 }
 
@@ -35973,8 +35930,8 @@ function add_css$6() {
 
 function get_each_context$5(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[18] = list[i][0];
-	child_ctx[19] = list[i][1];
+	child_ctx[17] = list[i][0];
+	child_ctx[18] = list[i][1];
 	return child_ctx;
 }
 
@@ -35988,7 +35945,7 @@ function create_if_block_2(ctx) {
 	return {
 		c() {
 			h3 = element("h3");
-			t0 = text(/*dir*/ ctx[9]);
+			t0 = text(/*dir*/ ctx[8]);
 			t1 = text(" of ");
 			t2 = text(/*basename*/ ctx[4]);
 		},
@@ -36017,7 +35974,7 @@ function create_if_block$2(ctx) {
 	const if_blocks = [];
 
 	function select_block_type(ctx, dirty) {
-		if (/*content*/ ctx[8] === "open" || /*content*/ ctx[8] === "closed") return 0;
+		if (/*content*/ ctx[7] === "open" || /*content*/ ctx[7] === "closed") return 0;
 		return 1;
 	}
 
@@ -36053,16 +36010,16 @@ function create_if_block$2(ctx) {
 	};
 }
 
-// (47:6) {:else}
+// (46:6) {:else}
 function create_else_block$1(ctx) {
 	let div;
 	let pre;
-	let t0_value = /*indent*/ ctx[18] + "-" + "";
+	let t0_value = /*indent*/ ctx[17] + "-" + "";
 	let t0;
 	let t1;
 	let span;
 	let a;
-	let t2_value = dropDendron(/*link*/ ctx[19], /*settings*/ ctx[5]) + "";
+	let t2_value = dropDendron(/*link*/ ctx[18], /*settings*/ ctx[5]) + "";
 	let t2;
 	let a_class_value;
 	let t3;
@@ -36070,11 +36027,11 @@ function create_else_block$1(ctx) {
 	let dispose;
 
 	function click_handler_1(...args) {
-		return /*click_handler_1*/ ctx[16](/*link*/ ctx[19], ...args);
+		return /*click_handler_1*/ ctx[15](/*link*/ ctx[18], ...args);
 	}
 
 	function mouseover_handler_1(...args) {
-		return /*mouseover_handler_1*/ ctx[17](/*link*/ ctx[19], ...args);
+		return /*mouseover_handler_1*/ ctx[16](/*link*/ ctx[18], ...args);
 	}
 
 	return {
@@ -36088,11 +36045,7 @@ function create_else_block$1(ctx) {
 			t2 = text(t2_value);
 			t3 = space();
 			attr(pre, "class", "indent svelte-1df5nr5");
-
-			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*app*/ ctx[6], /*link*/ ctx[19])
-			? ""
-			: "is-unresolved") + " svelte-1df5nr5");
-
+			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*link*/ ctx[18]) ? "" : "is-unresolved") + " svelte-1df5nr5");
 			attr(span, "class", "internal-link");
 		},
 		m(target, anchor) {
@@ -36116,12 +36069,10 @@ function create_else_block$1(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*lines*/ 1 && t0_value !== (t0_value = /*indent*/ ctx[18] + "-" + "")) set_data(t0, t0_value);
-			if (dirty & /*lines*/ 1 && t2_value !== (t2_value = dropDendron(/*link*/ ctx[19], /*settings*/ ctx[5]) + "")) set_data(t2, t2_value);
+			if (dirty & /*lines*/ 1 && t0_value !== (t0_value = /*indent*/ ctx[17] + "-" + "")) set_data(t0, t0_value);
+			if (dirty & /*lines*/ 1 && t2_value !== (t2_value = dropDendron(/*link*/ ctx[18], /*settings*/ ctx[5]) + "")) set_data(t2, t2_value);
 
-			if (dirty & /*lines*/ 1 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*app*/ ctx[6], /*link*/ ctx[19])
-			? ""
-			: "is-unresolved") + " svelte-1df5nr5")) {
+			if (dirty & /*lines*/ 1 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*link*/ ctx[18]) ? "" : "is-unresolved") + " svelte-1df5nr5")) {
 				attr(a, "class", a_class_value);
 			}
 		},
@@ -36139,14 +36090,14 @@ function create_else_block$1(ctx) {
 function create_if_block_1$1(ctx) {
 	let div;
 	let pre;
-	let t0_value = /*indent*/ ctx[18] + "";
+	let t0_value = /*indent*/ ctx[17] + "";
 	let t0;
 	let t1;
 	let details;
 	let summary;
 	let span;
 	let a;
-	let t2_value = dropDendron(/*link*/ ctx[19], /*settings*/ ctx[5]) + "";
+	let t2_value = dropDendron(/*link*/ ctx[18], /*settings*/ ctx[5]) + "";
 	let t2;
 	let a_class_value;
 	let t3;
@@ -36157,19 +36108,14 @@ function create_if_block_1$1(ctx) {
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[14](/*link*/ ctx[19], ...args);
+		return /*click_handler*/ ctx[13](/*link*/ ctx[18], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[15](/*link*/ ctx[19], ...args);
+		return /*mouseover_handler*/ ctx[14](/*link*/ ctx[18], ...args);
 	}
 
-	rendermarkdown = new RenderMarkdown({
-			props: {
-				app: /*app*/ ctx[6],
-				path: /*link*/ ctx[19]
-			}
-		});
+	rendermarkdown = new RenderMarkdown({ props: { path: /*link*/ ctx[18] } });
 
 	return {
 		c() {
@@ -36186,13 +36132,9 @@ function create_if_block_1$1(ctx) {
 			create_component(rendermarkdown.$$.fragment);
 			t4 = space();
 			attr(pre, "class", "indent svelte-1df5nr5");
-
-			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*app*/ ctx[6], /*link*/ ctx[19])
-			? ""
-			: "is-unresolved") + " svelte-1df5nr5");
-
+			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*link*/ ctx[18]) ? "" : "is-unresolved") + " svelte-1df5nr5");
 			attr(span, "class", "internal-link");
-			details.open = /*content*/ ctx[8] === "open";
+			details.open = /*content*/ ctx[7] === "open";
 			attr(details, "class", "svelte-1df5nr5");
 		},
 		m(target, anchor) {
@@ -36221,17 +36163,15 @@ function create_if_block_1$1(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if ((!current || dirty & /*lines*/ 1) && t0_value !== (t0_value = /*indent*/ ctx[18] + "")) set_data(t0, t0_value);
-			if ((!current || dirty & /*lines*/ 1) && t2_value !== (t2_value = dropDendron(/*link*/ ctx[19], /*settings*/ ctx[5]) + "")) set_data(t2, t2_value);
+			if ((!current || dirty & /*lines*/ 1) && t0_value !== (t0_value = /*indent*/ ctx[17] + "")) set_data(t0, t0_value);
+			if ((!current || dirty & /*lines*/ 1) && t2_value !== (t2_value = dropDendron(/*link*/ ctx[18], /*settings*/ ctx[5]) + "")) set_data(t2, t2_value);
 
-			if (!current || dirty & /*lines*/ 1 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*app*/ ctx[6], /*link*/ ctx[19])
-			? ""
-			: "is-unresolved") + " svelte-1df5nr5")) {
+			if (!current || dirty & /*lines*/ 1 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*link*/ ctx[18]) ? "" : "is-unresolved") + " svelte-1df5nr5")) {
 				attr(a, "class", a_class_value);
 			}
 
 			const rendermarkdown_changes = {};
-			if (dirty & /*lines*/ 1) rendermarkdown_changes.path = /*link*/ ctx[19];
+			if (dirty & /*lines*/ 1) rendermarkdown_changes.path = /*link*/ ctx[18];
 			rendermarkdown.$set(rendermarkdown_changes);
 		},
 		i(local) {
@@ -36254,7 +36194,7 @@ function create_if_block_1$1(ctx) {
 
 // (24:2) {#each lines as [indent, link]}
 function create_each_block$5(ctx) {
-	let show_if = meetsConditions(/*indent*/ ctx[18], /*link*/ ctx[19], /*froms*/ ctx[1], /*min*/ ctx[2], /*max*/ ctx[3]);
+	let show_if = meetsConditions(/*indent*/ ctx[17], /*link*/ ctx[18], /*froms*/ ctx[1], /*min*/ ctx[2], /*max*/ ctx[3]);
 	let if_block_anchor;
 	let current;
 	let if_block = show_if && create_if_block$2(ctx);
@@ -36270,7 +36210,7 @@ function create_each_block$5(ctx) {
 			current = true;
 		},
 		p(ctx, dirty) {
-			if (dirty & /*lines, froms, min, max*/ 15) show_if = meetsConditions(/*indent*/ ctx[18], /*link*/ ctx[19], /*froms*/ ctx[1], /*min*/ ctx[2], /*max*/ ctx[3]);
+			if (dirty & /*lines, froms, min, max*/ 15) show_if = meetsConditions(/*indent*/ ctx[17], /*link*/ ctx[18], /*froms*/ ctx[1], /*min*/ ctx[2], /*max*/ ctx[3]);
 
 			if (show_if) {
 				if (if_block) {
@@ -36315,7 +36255,7 @@ function create_fragment$d(ctx) {
 	let t;
 	let div;
 	let current;
-	let if_block = /*title*/ ctx[7] !== false && create_if_block_2(ctx);
+	let if_block = /*title*/ ctx[6] !== false && create_if_block_2(ctx);
 	let each_value = /*lines*/ ctx[0];
 	let each_blocks = [];
 
@@ -36351,9 +36291,9 @@ function create_fragment$d(ctx) {
 			current = true;
 		},
 		p(ctx, [dirty]) {
-			if (/*title*/ ctx[7] !== false) if_block.p(ctx, dirty);
+			if (/*title*/ ctx[6] !== false) if_block.p(ctx, dirty);
 
-			if (dirty & /*content, app, lines, openOrSwitch, hoverPreview, activeLeafView, isInVault, dropDendron, settings, meetsConditions, froms, min, max*/ 1391) {
+			if (dirty & /*content, lines, openOrSwitch, hoverPreview, activeLeafView, isInVault, dropDendron, settings, meetsConditions, froms, min, max*/ 687) {
 				each_value = /*lines*/ ctx[0];
 				let i;
 
@@ -36418,23 +36358,23 @@ function instance$d($$self, $$props, $$invalidate) {
 	let { max } = $$props;
 	let { basename } = $$props;
 	let { parsedSource } = $$props;
-	const { settings, app } = plugin;
+	const { settings } = plugin;
 	const { title, content, dir } = parsedSource;
 	const activeLeafView = app.workspace.activeLeaf.view;
-	const click_handler = async (link, e) => await openOrSwitch(app, link, e);
+	const click_handler = async (link, e) => await openOrSwitch(link, e);
 	const mouseover_handler = (link, e) => hoverPreview(e, activeLeafView, link);
-	const click_handler_1 = async (link, e) => await openOrSwitch(app, link, e);
+	const click_handler_1 = async (link, e) => await openOrSwitch(link, e);
 	const mouseover_handler_1 = (link, e) => hoverPreview(e, activeLeafView, link);
 
 	$$self.$$set = $$props => {
-		if ("plugin" in $$props) $$invalidate(11, plugin = $$props.plugin);
-		if ("el" in $$props) $$invalidate(12, el = $$props.el);
+		if ("plugin" in $$props) $$invalidate(10, plugin = $$props.plugin);
+		if ("el" in $$props) $$invalidate(11, el = $$props.el);
 		if ("lines" in $$props) $$invalidate(0, lines = $$props.lines);
 		if ("froms" in $$props) $$invalidate(1, froms = $$props.froms);
 		if ("min" in $$props) $$invalidate(2, min = $$props.min);
 		if ("max" in $$props) $$invalidate(3, max = $$props.max);
 		if ("basename" in $$props) $$invalidate(4, basename = $$props.basename);
-		if ("parsedSource" in $$props) $$invalidate(13, parsedSource = $$props.parsedSource);
+		if ("parsedSource" in $$props) $$invalidate(12, parsedSource = $$props.parsedSource);
 	};
 
 	return [
@@ -36444,7 +36384,6 @@ function instance$d($$self, $$props, $$invalidate) {
 		max,
 		basename,
 		settings,
-		app,
 		title,
 		content,
 		dir,
@@ -36465,21 +36404,21 @@ class CBTree extends SvelteComponent {
 		if (!document.getElementById("svelte-1df5nr5-style")) add_css$6();
 
 		init(this, options, instance$d, create_fragment$d, safe_not_equal, {
-			plugin: 11,
-			el: 12,
+			plugin: 10,
+			el: 11,
 			lines: 0,
 			froms: 1,
 			min: 2,
 			max: 3,
 			basename: 4,
-			parsedSource: 13
+			parsedSource: 12
 		});
 	}
 }
 
 function getCodeblockCB(plugin) {
     const { settings, db } = plugin;
-    const { userHiers } = settings;
+    const { userHiers, createIndexIndent } = settings;
     return (source, el, ctx) => {
         var _a;
         db.start2G("Codeblock");
@@ -36500,7 +36439,7 @@ function getCodeblockCB(plugin) {
             if (!isNaN(maxNum))
                 max = maxNum;
         }
-        const currFile = plugin.app.metadataCache.getFirstLinkpathDest(ctx.sourcePath, "");
+        const currFile = app.metadataCache.getFirstLinkpathDest(ctx.sourcePath, "");
         const { basename } = currFile;
         let froms = undefined;
         if (from !== undefined) {
@@ -36525,7 +36464,7 @@ function getCodeblockCB(plugin) {
         const subFields = fields !== null && fields !== void 0 ? fields : getFields(userHiers);
         const subClosed = getSubForFields(getSubInDirs(closed, dir), subFields);
         const allPaths = dfsAllPaths(subClosed, basename);
-        const index = createIndex(allPaths, false);
+        const index = createIndex(allPaths, false, createIndexIndent);
         loglevel.info({ allPaths, index });
         const lines = indexToLinePairs(index, flat);
         switch (parsedSource.type) {
@@ -36602,7 +36541,7 @@ function codeblockError(plugin, parsedSource) {
     if (content !== undefined && content !== "open" && content !== "closed")
         err += `<code>content: ${content}</code> is not a valid value. It has to be <code>open</code> or <code>closed</code>, or leave the entire line out.</br>`;
     if (from !== undefined &&
-        !plugin.app.plugins.enabledPlugins.has("dataview")) {
+        !app.plugins.enabledPlugins.has("dataview")) {
         err += `Dataview must be enabled to use <code>from</code>.</br>`;
     }
     if (implied !== undefined && implied !== false)
@@ -36660,8 +36599,8 @@ async function jumpToFirstDir(plugin, dir) {
         new obsidian.Notice(`No note was found in ${dir} given the limited fields allowed: ${limitJumpToFirstFields.join(", ")}`);
         return;
     }
-    const toFile = plugin.app.metadataCache.getFirstLinkpathDest(toNode, "");
-    await plugin.app.workspace.activeLeaf.openFile(toFile);
+    const toFile = app.metadataCache.getFirstLinkpathDest(toNode, "");
+    await app.workspace.activeLeaf.openFile(toFile);
 }
 
 const resolveThreadingNameTemplate = (template, currFile, field, dir, dateFormat) => template
@@ -36672,7 +36611,7 @@ const resolveThreadingNameTemplate = (template, currFile, field, dir, dateFormat
         //@ts-ignore
         .replace("{{date}}", moment().format(dateFormat))
     : "Untitled";
-function makeFilenameUnique(app, filename) {
+function makeFilenameUnique(filename) {
     let i = 1, newName = filename;
     while (app.metadataCache.getFirstLinkpathDest(newName, "")) {
         if (i === 1)
@@ -36683,7 +36622,7 @@ function makeFilenameUnique(app, filename) {
     }
     return newName;
 }
-async function resolveThreadingContentTemplate(app, writeBCsInline, templatePath, oppField, currFile, crumb) {
+async function resolveThreadingContentTemplate(writeBCsInline, templatePath, oppField, currFile, crumb) {
     let newContent = crumb;
     if (templatePath) {
         const templateFile = app.metadataCache.getFirstLinkpathDest(templatePath, "");
@@ -36696,7 +36635,7 @@ async function resolveThreadingContentTemplate(app, writeBCsInline, templatePath
 }
 async function thread(plugin, field) {
     var _a;
-    const { app, settings } = plugin;
+    const { settings } = plugin;
     const { userHiers, threadingTemplate, dateFormat, threadIntoNewPane, threadingDirTemplates, threadUnderCursor, writeBCsInline, } = settings;
     const currFile = getCurrFile();
     if (!currFile)
@@ -36705,12 +36644,12 @@ async function thread(plugin, field) {
     const dir = getFieldInfo(userHiers, field).fieldDir;
     const oppField = getOppFields(userHiers, field, dir)[0];
     let newBasename = resolveThreadingNameTemplate(threadingTemplate, currFile, field, dir, dateFormat);
-    newBasename = makeFilenameUnique(app, newBasename);
+    newBasename = makeFilenameUnique(newBasename);
     const oppCrumb = writeBCsInline
         ? `${oppField}:: [[${currFile.basename}]]`
         : `---\n${oppField}: ['${currFile.basename}']\n---`;
     const templatePath = threadingDirTemplates[dir];
-    const newContent = await resolveThreadingContentTemplate(app, writeBCsInline, templatePath, oppField, currFile, oppCrumb);
+    const newContent = await resolveThreadingContentTemplate(writeBCsInline, templatePath, oppField, currFile, oppCrumb);
     const newFile = await app.vault.create(obsidian.normalizePath(`${newFileParent.path}/${newBasename}.md`), newContent);
     if (!writeBCsInline) {
         const { api } = (_a = app.plugins.plugins.metaedit) !== null && _a !== void 0 ? _a : {};
@@ -36740,7 +36679,7 @@ async function thread(plugin, field) {
         }
     }
     const leaf = threadIntoNewPane
-        ? app.workspace.splitActiveLeaf()
+        ? app.workspace.getLeaf(true)
         : app.workspace.activeLeaf;
     await leaf.openFile(newFile, { active: true, mode: "source" });
     if (templatePath) {
@@ -36765,7 +36704,7 @@ async function thread(plugin, field) {
 }
 
 async function writeBCToFile(plugin, currFile) {
-    const { app, settings, mainG } = plugin;
+    const { settings, mainG } = plugin;
     const file = currFile !== null && currFile !== void 0 ? currFile : getCurrFile();
     const { limitWriteBCCheckboxes, writeBCsInline, userHiers } = settings;
     const succInfo = mainG.mapInEdges(file.basename, (k, a, s, t) => {
@@ -36805,7 +36744,7 @@ async function writeBCsToAllFiles(plugin) {
             if (window.confirm("For real, please make a back up before.")) {
                 const notice = new obsidian.Notice("Operation Started");
                 const problemFiles = [];
-                for (const file of plugin.app.vault.getMarkdownFiles()) {
+                for (const file of app.vault.getMarkdownFiles()) {
                     try {
                         await writeBCToFile(plugin, file);
                     }
@@ -36825,7 +36764,7 @@ async function writeBCsToAllFiles(plugin) {
 
 class FieldSuggestor extends obsidian.EditorSuggest {
     constructor(plugin) {
-        super(plugin.app);
+        super(app);
         this.getSuggestions = (context) => {
             const { query } = context;
             return BC_FIELDS_INFO.map((sug) => sug.field).filter((sug) => sug.includes(query));
@@ -36864,14 +36803,14 @@ class FieldSuggestor extends obsidian.EditorSuggest {
         if (!context)
             return;
         const field = BC_FIELDS_INFO.find((f) => f.field === suggestion);
-        const replacement = `${suggestion}${field === null || field === void 0 ? void 0 : field[isInsideYaml(plugin.app) ? "afterYaml" : "afterInline"]}`;
+        const replacement = `${suggestion}${field === null || field === void 0 ? void 0 : field[isInsideYaml(app) ? "afterYaml" : "afterInline"]}`;
         context.editor.replaceRange(replacement, { ch: 0, line: context.start.line }, context.end);
     }
 }
 
 class RelationSuggestor extends obsidian.EditorSuggest {
     constructor(plugin) {
-        super(plugin.app);
+        super(app);
         this.getSuggestions = (context) => {
             const { query } = context;
             const { userHiers } = this.plugin.settings;
@@ -36908,7 +36847,7 @@ class RelationSuggestor extends obsidian.EditorSuggest {
             return;
         const trig = plugin.settings.relSuggestorTrigger;
         const { start, end, editor } = context;
-        const replacement = suggestion + (isInsideYaml(plugin.app) ? ": " : ":: ") + '[[';
+        const replacement = suggestion + (isInsideYaml(app) ? ": " : ":: ") + '[[';
         editor.replaceRange(replacement, { ch: start.ch + 1 - trig.length, line: start.line }, end);
     }
 }
@@ -37020,6 +36959,17 @@ function addCreateIndexSettings(plugin, cmdsDetails) {
         settings.wikilinkIndex = value;
         await plugin.saveSettings();
     }));
+    new obsidian.Setting(createIndexDetails)
+        .setName("Indent Character")
+        .setDesc(fragWithHTML('The character(s) used to indent the index. These can be anything you want, but will usually be either spaces or tabs. Enter <code>\\t</code> to use tabs.'))
+        .addText((text) => {
+        text
+            .setValue(settings.createIndexIndent)
+            .onChange(async (value) => {
+            settings.createIndexIndent = value;
+            await plugin.saveSettings();
+        });
+    });
     new obsidian.Setting(createIndexDetails)
         .setName("Show aliases of notes in index")
         .setDesc("Show the aliases of each note in brackets.\n✅ = yes, ❌ = no.")
@@ -37196,7 +37146,7 @@ function addGeneralSettings(plugin, containerEl) {
         settings.relSuggestorTrigger = value;
         await plugin.saveSettings();
     }));
-    if (plugin.app.plugins.plugins.dataview !== undefined) {
+    if (app.plugins.plugins.dataview !== undefined) {
         new obsidian.Setting(generalDetails)
             .setName("Dataview Wait Time")
             .setDesc('Enter an integer number of seconds to wait for the Dataview Index to load. The larger your vault, the longer it will take. The default is 5 seconds.')
@@ -37231,6 +37181,18 @@ function addHierarchyNoteSettings(plugin, alternativeHierarchyDetails) {
             settings.hierarchyNotes = splits;
             await plugin.saveSettings();
         };
+    });
+    new obsidian.Setting(hierarchyNoteDetails)
+        .setName('Hierarchy note is parent of top-level items')
+        .setDesc('Should the actual hierarchy note be treated as the parent of all the top-level items in the list? ✅ = Yes, ❌ = No')
+        .addToggle((toggle) => {
+        toggle
+            .setValue(settings.hierarchyNoteIsParent)
+            .onChange(async (value) => {
+            settings.hierarchyNoteIsParent = value;
+            await plugin.saveSettings();
+            await refreshIndex(plugin);
+        });
     });
     new obsidian.Setting(hierarchyNoteDetails)
         .setName("Default Hierarchy Note Field")
@@ -38529,8 +38491,8 @@ function addMatrixViewSettings(plugin, viewDetails) {
         .addToggle((toggle) => toggle.setValue(settings.rlLeaf).onChange(async (value) => {
         settings.rlLeaf = value;
         await plugin.saveSettings();
-        await this.app.workspace.detachLeavesOfType(MATRIX_VIEW);
-        await openView(this.app, MATRIX_VIEW, MatrixView, value ? "right" : "left");
+        app.workspace.detachLeavesOfType(MATRIX_VIEW);
+        await openView(app, MATRIX_VIEW, MatrixView);
     }));
 }
 
@@ -38786,7 +38748,7 @@ function addThreadingSettings(plugin, cmdsDetails) {
 }
 
 function addTrailViewSettings(plugin, viewDetails) {
-    const { settings, app } = plugin;
+    const { settings } = plugin;
     const trailDetails = subDetails("Trail/Grid/Juggl", viewDetails);
     new obsidian.Setting(trailDetails)
         .setName("Show Breadcrumbs")
@@ -38850,7 +38812,7 @@ function addTrailViewSettings(plugin, viewDetails) {
             await drawTrail(plugin);
         });
     });
-    if (plugin.app.plugins.plugins.juggl !== undefined) {
+    if (app.plugins.plugins.juggl !== undefined) {
         viewsToShow.addToggle((toggle) => {
             toggle
                 .setTooltip("Juggl view")
@@ -38908,7 +38870,7 @@ function addTrailViewSettings(plugin, viewDetails) {
         text.inputEl.onblur = async () => {
             const splits = splitAndTrim(text.getValue());
             if (splits[0] === undefined ||
-                splits.every((index) => isInVault(app, index))) {
+                splits.every((index) => isInVault(index))) {
                 settings.indexNotes = splits;
                 await plugin.saveSettings();
             }
@@ -39165,16 +39127,14 @@ function addDateNoteSettings(plugin, alternativeHierarchyDetails) {
 
 const fragWithHTML = (html) => createFragment((frag) => (frag.createDiv().innerHTML = html));
 const details = (text, parent) => parent.createEl("details", {}, (d) => d.createEl("summary", { text }));
-const subDetails = (text, parent) => parent
-    .createDiv({
+const subDetails = (text, parent) => parent.createDiv({
     attr: { style: "padding-left: 10px;" },
 })
     .createEl("details", {}, (d) => d.createEl("summary", { text }));
 class BCSettingTab extends obsidian.PluginSettingTab {
-    constructor(app, plugin) {
+    constructor(plugin) {
         super(app, plugin);
         this.plugin = plugin;
-        this.app = app;
     }
     async display() {
         const { plugin, containerEl } = this;
@@ -39336,26 +39296,26 @@ function add_css$1() {
 
 function get_each_context$2(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
+	child_ctx[13] = list[i];
 	return child_ctx;
 }
 
-// (45:2) {#each ducks as duck}
+// (43:2) {#each ducks as duck}
 function create_each_block$2(ctx) {
 	let div;
 	let a;
-	let t0_value = /*duck*/ ctx[14] + "";
+	let t0_value = /*duck*/ ctx[13] + "";
 	let t0;
 	let t1;
 	let mounted;
 	let dispose;
 
 	function click_handler(...args) {
-		return /*click_handler*/ ctx[9](/*duck*/ ctx[14], ...args);
+		return /*click_handler*/ ctx[8](/*duck*/ ctx[13], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[10](/*duck*/ ctx[14], ...args);
+		return /*mouseover_handler*/ ctx[9](/*duck*/ ctx[13], ...args);
 	}
 
 	return {
@@ -39383,7 +39343,7 @@ function create_each_block$2(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*ducks*/ 16 && t0_value !== (t0_value = /*duck*/ ctx[14] + "")) set_data(t0, t0_value);
+			if (dirty & /*ducks*/ 8 && t0_value !== (t0_value = /*duck*/ ctx[13] + "")) set_data(t0, t0_value);
 		},
 		d(detaching) {
 			if (detaching) detach(div);
@@ -39410,7 +39370,7 @@ function create_fragment$4(ctx) {
 	let mounted;
 	let dispose;
 	fainfo = new FaInfo({});
-	let each_value = /*ducks*/ ctx[4];
+	let each_value = /*ducks*/ ctx[3];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value.length; i += 1) {
@@ -39455,10 +39415,10 @@ function create_fragment$4(ctx) {
 			append(div, label);
 			append(label, t3);
 			append(label, input0);
-			set_input_value(input0, /*query*/ ctx[2]);
+			set_input_value(input0, /*query*/ ctx[1]);
 			append(div, t4);
 			append(div, input1);
-			input1.checked = /*include*/ ctx[3];
+			input1.checked = /*include*/ ctx[2];
 			append(div, t5);
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -39469,24 +39429,24 @@ function create_fragment$4(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					listen(input0, "input", /*input0_input_handler*/ ctx[7]),
-					listen(input1, "change", /*input1_change_handler*/ ctx[8])
+					listen(input0, "input", /*input0_input_handler*/ ctx[6]),
+					listen(input1, "change", /*input1_change_handler*/ ctx[7])
 				];
 
 				mounted = true;
 			}
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*query*/ 4 && input0.value !== /*query*/ ctx[2]) {
-				set_input_value(input0, /*query*/ ctx[2]);
+			if (dirty & /*query*/ 2 && input0.value !== /*query*/ ctx[1]) {
+				set_input_value(input0, /*query*/ ctx[1]);
 			}
 
-			if (dirty & /*include*/ 8) {
-				input1.checked = /*include*/ ctx[3];
+			if (dirty & /*include*/ 4) {
+				input1.checked = /*include*/ ctx[2];
 			}
 
-			if (dirty & /*openOrSwitch, app, ducks, hoverPreview, ducksView*/ 19) {
-				each_value = /*ducks*/ ctx[4];
+			if (dirty & /*openOrSwitch, ducks, hoverPreview, ducksView*/ 9) {
+				each_value = /*ducks*/ ctx[3];
 				let i;
 
 				for (i = 0; i < each_value.length; i += 1) {
@@ -39531,9 +39491,7 @@ function instance$4($$self, $$props, $$invalidate) {
 	let ducks;
 	
 	
-	
 	let { plugin } = $$props;
-	let { app } = $$props;
 	let { ducksView } = $$props;
 	const { mainG } = plugin;
 	const files = app.vault.getMarkdownFiles();
@@ -39548,42 +39506,40 @@ function instance$4($$self, $$props, $$invalidate) {
 
 	function input0_input_handler() {
 		query = this.value;
-		$$invalidate(2, query);
+		$$invalidate(1, query);
 	}
 
 	function input1_change_handler() {
 		include = this.checked;
-		$$invalidate(3, include);
+		$$invalidate(2, include);
 	}
 
-	const click_handler = async (duck, e) => await openOrSwitch(app, duck, e);
+	const click_handler = async (duck, e) => await openOrSwitch(duck, e);
 	const mouseover_handler = (duck, e) => hoverPreview(e, ducksView, duck);
 
 	$$self.$$set = $$props => {
-		if ("plugin" in $$props) $$invalidate(5, plugin = $$props.plugin);
-		if ("app" in $$props) $$invalidate(0, app = $$props.app);
-		if ("ducksView" in $$props) $$invalidate(1, ducksView = $$props.ducksView);
+		if ("plugin" in $$props) $$invalidate(4, plugin = $$props.plugin);
+		if ("ducksView" in $$props) $$invalidate(0, ducksView = $$props.ducksView);
 	};
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty & /*query*/ 4) {
+		if ($$self.$$.dirty & /*query*/ 2) {
 			{
 				try {
 					const newReg = new RegExp(query, "g");
-					$$invalidate(6, regex = newReg);
+					$$invalidate(5, regex = newReg);
 				} catch(e) {
 					
 				}
 			}
 		}
 
-		if ($$self.$$.dirty & /*regex*/ 64) {
-			$$invalidate(4, ducks = getDucks(regex));
+		if ($$self.$$.dirty & /*regex*/ 32) {
+			$$invalidate(3, ducks = getDucks(regex));
 		}
 	};
 
 	return [
-		app,
 		ducksView,
 		query,
 		include,
@@ -39601,7 +39557,7 @@ class Ducks extends SvelteComponent {
 	constructor(options) {
 		super();
 		if (!document.getElementById("svelte-gmdm3a-style")) add_css$1();
-		init(this, options, instance$4, create_fragment$4, safe_not_equal, { plugin: 5, app: 0, ducksView: 1 });
+		init(this, options, instance$4, create_fragment$4, safe_not_equal, { plugin: 4, ducksView: 0 });
 	}
 }
 
@@ -39615,7 +39571,7 @@ class DucksView extends obsidian.ItemView {
     async onload() {
         super.onload();
         await this.plugin.saveSettings();
-        this.app.workspace.onLayoutReady(async () => {
+        app.workspace.onLayoutReady(async () => {
             await this.draw();
         });
     }
@@ -39635,7 +39591,7 @@ class DucksView extends obsidian.ItemView {
         this.contentEl.empty();
         this.view = new Ducks({
             target: this.contentEl,
-            props: { plugin: this.plugin, app: this.app, ducksView: this },
+            props: { plugin: this.plugin, ducksView: this },
         });
     }
 }
@@ -39821,17 +39777,17 @@ function add_css() {
 
 function get_each_context$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
+	child_ctx[15] = list[i];
 	return child_ctx;
 }
 
 function get_each_context_1$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[17] = list[i];
+	child_ctx[18] = list[i];
 	return child_ctx;
 }
 
-// (48:2) {:else}
+// (49:2) {:else}
 function create_else_block(ctx) {
 	let fafire;
 	let current;
@@ -39860,7 +39816,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (46:2) {#if frozen}
+// (47:2) {#if frozen}
 function create_if_block_1(ctx) {
 	let faregsnowflake;
 	let current;
@@ -39889,10 +39845,10 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (64:2) {#each DIRECTIONS as direction}
+// (65:2) {#each DIRECTIONS as direction}
 function create_each_block_1$1(ctx) {
 	let option;
-	let t_value = /*direction*/ ctx[17] + "";
+	let t_value = /*direction*/ ctx[18] + "";
 	let t;
 	let option_value_value;
 
@@ -39900,7 +39856,7 @@ function create_each_block_1$1(ctx) {
 		c() {
 			option = element("option");
 			t = text(t_value);
-			option.__value = option_value_value = /*direction*/ ctx[17];
+			option.__value = option_value_value = /*direction*/ ctx[18];
 			option.value = option.__value;
 		},
 		m(target, anchor) {
@@ -39914,16 +39870,16 @@ function create_each_block_1$1(ctx) {
 	};
 }
 
-// (71:4) {#if line.length > 1}
+// (72:4) {#if line.length > 1}
 function create_if_block(ctx) {
 	let div;
 	let pre;
-	let t0_value = /*line*/ ctx[14][0] + "-" + "";
+	let t0_value = /*line*/ ctx[15][0] + "-" + "";
 	let t0;
 	let t1;
 	let span;
 	let a;
-	let t2_value = dropDendron(/*line*/ ctx[14][1], /*settings*/ ctx[6]) + "";
+	let t2_value = dropDendron(/*line*/ ctx[15][1], /*settings*/ ctx[6]) + "";
 	let t2;
 	let a_class_value;
 	let t3;
@@ -39931,11 +39887,11 @@ function create_if_block(ctx) {
 	let dispose;
 
 	function click_handler_2(...args) {
-		return /*click_handler_2*/ ctx[11](/*line*/ ctx[14], ...args);
+		return /*click_handler_2*/ ctx[10](/*line*/ ctx[15], ...args);
 	}
 
 	function mouseover_handler(...args) {
-		return /*mouseover_handler*/ ctx[12](/*line*/ ctx[14], ...args);
+		return /*mouseover_handler*/ ctx[11](/*line*/ ctx[15], ...args);
 	}
 
 	return {
@@ -39949,11 +39905,7 @@ function create_if_block(ctx) {
 			t2 = text(t2_value);
 			t3 = space();
 			attr(pre, "class", "svelte-8j6nux");
-
-			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*app*/ ctx[7], /*line*/ ctx[14][1])
-			? ""
-			: "is-unresolved") + " svelte-8j6nux");
-
+			attr(a, "class", a_class_value = "internal-link " + (isInVault(/*line*/ ctx[15][1]) ? "" : "is-unresolved") + " svelte-8j6nux");
 			attr(span, "class", "internal-link");
 		},
 		m(target, anchor) {
@@ -39977,12 +39929,10 @@ function create_if_block(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty & /*lines*/ 32 && t0_value !== (t0_value = /*line*/ ctx[14][0] + "-" + "")) set_data(t0, t0_value);
-			if (dirty & /*lines*/ 32 && t2_value !== (t2_value = dropDendron(/*line*/ ctx[14][1], /*settings*/ ctx[6]) + "")) set_data(t2, t2_value);
+			if (dirty & /*lines*/ 32 && t0_value !== (t0_value = /*line*/ ctx[15][0] + "-" + "")) set_data(t0, t0_value);
+			if (dirty & /*lines*/ 32 && t2_value !== (t2_value = dropDendron(/*line*/ ctx[15][1], /*settings*/ ctx[6]) + "")) set_data(t2, t2_value);
 
-			if (dirty & /*lines*/ 32 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*app*/ ctx[7], /*line*/ ctx[14][1])
-			? ""
-			: "is-unresolved") + " svelte-8j6nux")) {
+			if (dirty & /*lines*/ 32 && a_class_value !== (a_class_value = "internal-link " + (isInVault(/*line*/ ctx[15][1]) ? "" : "is-unresolved") + " svelte-8j6nux")) {
 				attr(a, "class", a_class_value);
 			}
 		},
@@ -39994,10 +39944,10 @@ function create_if_block(ctx) {
 	};
 }
 
-// (70:2) {#each lines as line}
+// (71:2) {#each lines as line}
 function create_each_block$1(ctx) {
 	let if_block_anchor;
-	let if_block = /*line*/ ctx[14].length > 1 && create_if_block(ctx);
+	let if_block = /*line*/ ctx[15].length > 1 && create_if_block(ctx);
 
 	return {
 		c() {
@@ -40009,7 +39959,7 @@ function create_each_block$1(ctx) {
 			insert(target, if_block_anchor, anchor);
 		},
 		p(ctx, dirty) {
-			if (/*line*/ ctx[14].length > 1) {
+			if (/*line*/ ctx[15].length > 1) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 				} else {
@@ -40098,7 +40048,7 @@ function create_fragment$1(ctx) {
 			attr(button, "aria-label", "Refresh Stats View (also refreshes Breadcrumbs Index)");
 			attr(button, "class", "svelte-8j6nux");
 			attr(select, "class", "dropdown");
-			if (/*dir*/ ctx[2] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[10].call(select));
+			if (/*dir*/ ctx[2] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[9].call(select));
 			attr(div, "class", "BC-downs svelte-8j6nux");
 		},
 		m(target, anchor) {
@@ -40125,9 +40075,9 @@ function create_fragment$1(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					listen(span, "click", /*click_handler*/ ctx[8]),
-					listen(button, "click", /*click_handler_1*/ ctx[9]),
-					listen(select, "change", /*select_change_handler*/ ctx[10])
+					listen(span, "click", /*click_handler*/ ctx[7]),
+					listen(button, "click", /*click_handler_1*/ ctx[8]),
+					listen(select, "change", /*select_change_handler*/ ctx[9])
 				];
 
 				mounted = true;
@@ -40189,7 +40139,7 @@ function create_fragment$1(ctx) {
 				select_option(select, /*dir*/ ctx[2]);
 			}
 
-			if (dirty & /*openOrSwitch, app, lines, hoverPreview, view, isInVault, dropDendron, settings*/ 226) {
+			if (dirty & /*openOrSwitch, lines, hoverPreview, view, isInVault, dropDendron, settings*/ 98) {
 				each_value = /*lines*/ ctx[5];
 				let i;
 
@@ -40245,6 +40195,7 @@ function instance$1($$self, $$props, $$invalidate) {
 	let { plugin } = $$props;
 	let { view } = $$props;
 	const { settings, app, closedG } = plugin;
+	const { createIndexIndent } = settings;
 	let dir = "down";
 	let frozen = false;
 	let { basename } = getCurrFile();
@@ -40275,7 +40226,7 @@ function instance$1($$self, $$props, $$invalidate) {
 		$$invalidate(2, dir);
 	}
 
-	const click_handler_2 = async (line, e) => await openOrSwitch(app, line[1], e);
+	const click_handler_2 = async (line, e) => await openOrSwitch(line[1], e);
 	const mouseover_handler = (line, e) => hoverPreview(e, view, line[1]);
 
 	$$self.$$set = $$props => {
@@ -40288,7 +40239,7 @@ function instance$1($$self, $$props, $$invalidate) {
 			{
 				const downG = getSubInDirs(closedG, dir);
 				const allPaths = dfsAllPaths(downG, basename);
-				const index = createIndex(allPaths, false);
+				const index = createIndex(allPaths, false, createIndexIndent);
 				loglevel.info({ allPaths, index });
 				$$invalidate(5, lines = indexToLinePairs(index));
 			}
@@ -40303,7 +40254,6 @@ function instance$1($$self, $$props, $$invalidate) {
 		frozen,
 		lines,
 		settings,
-		app,
 		click_handler,
 		click_handler_1,
 		select_change_handler,
@@ -40328,7 +40278,7 @@ class TreeView extends obsidian.ItemView {
     }
     async onload() {
         super.onload();
-        this.app.workspace.onLayoutReady(async () => {
+        app.workspace.onLayoutReady(async () => {
             await this.draw();
         });
     }
@@ -60652,7 +60602,7 @@ Object.keys(d3Zoom).forEach(function (k) {
 });
 });
 
-const arcDiagram = (graph, app, currFile, modal, width, height) => {
+const arcDiagram = (graph, currFile, modal, width, height) => {
     const data = graphlibToD3(graph);
     const margin = { top: 20, right: 20, bottom: 20, left: 150 };
     const svg = d3_node.select(".d3-graph")
@@ -60747,7 +60697,7 @@ text {
         .attr("d", arc);
     const step = 104;
     const nodeClick = (event, dest) => {
-        openOrSwitch(app, dest, event);
+        openOrSwitch(dest, event);
         modal.close();
     };
     svg
@@ -60816,7 +60766,7 @@ text {
         .on("zoom", zoomed));
 };
 
-const circlePacking = (graph, app, currFile, modal, width, height) => {
+const circlePacking = (graph, currFile, modal, width, height) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hierarchy = d3_node.stratify()(flatAdj);
@@ -60869,7 +60819,7 @@ const circlePacking = (graph, app, currFile, modal, width, height) => {
     node.attr("aria-label", (d) => d.name);
     const nodeClick = (event, dest) => {
         getCurrFile();
-        openOrSwitch(app, dest, event);
+        openOrSwitch(dest, event);
         modal.close();
     };
     node.on("click", (event, d) => {
@@ -60982,7 +60932,7 @@ const circlePacking = (graph, app, currFile, modal, width, height) => {
     //   );
 };
 
-const edgeBundling = (graph, app, currFile, modal, width, height) => {
+const edgeBundling = (graph, currFile, modal, width, height) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hier = d3_node.stratify()(flatAdj);
@@ -61110,7 +61060,7 @@ const edgeBundling = (graph, app, currFile, modal, width, height) => {
     }
 };
 
-const forceDirectedG = (graph, app, currFile, modal, width, height) => {
+const forceDirectedG = (graph, currFile, modal, width, height) => {
     modal.plugin;
     let nodeToGetTo = currFile.basename;
     console.log({ nodeToGetTo });
@@ -61232,7 +61182,7 @@ const forceDirectedG = (graph, app, currFile, modal, width, height) => {
         .call(drag(simulation));
     node.attr("aria-label", (d) => d.name);
     const nodeClick = (event, dest) => {
-        openOrSwitch(app, dest, event);
+        openOrSwitch(dest, event);
         modal.close();
     };
     node.on("click", (event, d) => {
@@ -61343,7 +61293,7 @@ const forceDirectedG = (graph, app, currFile, modal, width, height) => {
         .on("zoom", zoomed));
 };
 
-const icicle = (graph, app, currFile, modal, width, viewHeight) => {
+const icicle = (graph, currFile, modal, width, viewHeight) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hier = d3_node.stratify()(flatAdj);
@@ -61429,7 +61379,7 @@ const icicle = (graph, app, currFile, modal, width, viewHeight) => {
     }
 };
 
-const radialTree = (graph, app, currFile, modal, width, height) => {
+const radialTree = (graph, currFile, modal, width, height) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hierarchy = d3_node.stratify()(flatAdj);
@@ -61600,7 +61550,7 @@ font-weight: bold;
         .on("zoom", zoomed));
 };
 
-const sunburst = (graph, app, currFile, modal, width, height) => {
+const sunburst = (graph, currFile, modal, width, height) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hierarchy = d3_node.stratify()(flatAdj);
@@ -61656,7 +61606,7 @@ const sunburst = (graph, app, currFile, modal, width, height) => {
     }); // <-- 8
 };
 
-const tidyTree = (graph, app, currFile, modal, width, height) => {
+const tidyTree = (graph, currFile, modal, width, height) => {
     // const adjList: AdjListItem[] = bfsAdjList(graph, currFile.basename);
     // console.log({ adjList });
     // const noDoubles = [...adjList];
@@ -61724,7 +61674,7 @@ const tidyTree = (graph, app, currFile, modal, width, height) => {
         return d.data.data.name;
     });
     const nodeClick = (event, dest) => {
-        openOrSwitch(app, dest, event);
+        openOrSwitch(dest, event);
         modal.close();
     };
     node.on("click", (event, d) => {
@@ -61752,7 +61702,7 @@ const tidyTree = (graph, app, currFile, modal, width, height) => {
         .on("zoom", zoomed));
 };
 
-const treeMap = (graph, app, currFile, modal, width, height) => {
+const treeMap = (graph, currFile, modal, width, height) => {
     const flatAdj = dfsFlatAdjList(graph, currFile.basename);
     console.log({ flatAdj });
     const hierarchy = d3_node.stratify()(flatAdj);
@@ -61818,7 +61768,7 @@ const treeMap = (graph, app, currFile, modal, width, height) => {
     //     );
     //   // .text((d) => d);
     const nodeClick = (event, dest) => {
-        openOrSwitch(app, dest, event);
+        openOrSwitch(dest, event);
         modal.close();
     };
     leaf.on("click", (event, d) => {
@@ -61841,24 +61791,24 @@ const treeMap = (graph, app, currFile, modal, width, height) => {
 
 function get_each_context(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[24] = list[i].text;
-	child_ctx[25] = list[i].options;
-	child_ctx[26] = list[i].val;
-	child_ctx[27] = list;
-	child_ctx[28] = i;
+	child_ctx[23] = list[i].text;
+	child_ctx[24] = list[i].options;
+	child_ctx[25] = list[i].val;
+	child_ctx[26] = list;
+	child_ctx[27] = i;
 	return child_ctx;
 }
 
 function get_each_context_1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[29] = list[i];
+	child_ctx[28] = list[i];
 	return child_ctx;
 }
 
 // (139:8) {#each options as op}
 function create_each_block_1(ctx) {
 	let option;
-	let t_value = /*op*/ ctx[29] + "";
+	let t_value = /*op*/ ctx[28] + "";
 	let t;
 	let option_value_value;
 
@@ -61866,7 +61816,7 @@ function create_each_block_1(ctx) {
 		c() {
 			option = element("option");
 			t = text(t_value);
-			option.__value = option_value_value = /*op*/ ctx[29];
+			option.__value = option_value_value = /*op*/ ctx[28];
 			option.value = option.__value;
 		},
 		m(target, anchor) {
@@ -61874,9 +61824,9 @@ function create_each_block_1(ctx) {
 			append(option, t);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*selectors*/ 1 && t_value !== (t_value = /*op*/ ctx[29] + "")) set_data(t, t_value);
+			if (dirty & /*selectors*/ 1 && t_value !== (t_value = /*op*/ ctx[28] + "")) set_data(t, t_value);
 
-			if (dirty[0] & /*selectors*/ 1 && option_value_value !== (option_value_value = /*op*/ ctx[29])) {
+			if (dirty & /*selectors*/ 1 && option_value_value !== (option_value_value = /*op*/ ctx[28])) {
 				option.__value = option_value_value;
 				option.value = option.__value;
 			}
@@ -61890,14 +61840,14 @@ function create_each_block_1(ctx) {
 // (135:2) {#each selectors as { text, options, val }}
 function create_each_block(ctx) {
 	let span;
-	let t0_value = /*text*/ ctx[24] + "";
+	let t0_value = /*text*/ ctx[23] + "";
 	let t0;
 	let t1;
 	let select;
 	let t2;
 	let mounted;
 	let dispose;
-	let each_value_1 = /*options*/ ctx[25];
+	let each_value_1 = /*options*/ ctx[24];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_1.length; i += 1) {
@@ -61905,7 +61855,7 @@ function create_each_block(ctx) {
 	}
 
 	function select_change_handler() {
-		/*select_change_handler*/ ctx[2].call(select, /*each_value*/ ctx[27], /*each_index*/ ctx[28]);
+		/*select_change_handler*/ ctx[2].call(select, /*each_value*/ ctx[26], /*each_index*/ ctx[27]);
 	}
 
 	return {
@@ -61920,7 +61870,7 @@ function create_each_block(ctx) {
 			}
 
 			t2 = space();
-			if (/*val*/ ctx[26] === void 0) add_render_callback(select_change_handler);
+			if (/*val*/ ctx[25] === void 0) add_render_callback(select_change_handler);
 		},
 		m(target, anchor) {
 			insert(target, span, anchor);
@@ -61932,7 +61882,7 @@ function create_each_block(ctx) {
 				each_blocks[i].m(select, null);
 			}
 
-			select_option(select, /*val*/ ctx[26]);
+			select_option(select, /*val*/ ctx[25]);
 			append(span, t2);
 
 			if (!mounted) {
@@ -61942,10 +61892,10 @@ function create_each_block(ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty[0] & /*selectors*/ 1 && t0_value !== (t0_value = /*text*/ ctx[24] + "")) set_data(t0, t0_value);
+			if (dirty & /*selectors*/ 1 && t0_value !== (t0_value = /*text*/ ctx[23] + "")) set_data(t0, t0_value);
 
-			if (dirty[0] & /*selectors*/ 1) {
-				each_value_1 = /*options*/ ctx[25];
+			if (dirty & /*selectors*/ 1) {
+				each_value_1 = /*options*/ ctx[24];
 				let i;
 
 				for (i = 0; i < each_value_1.length; i += 1) {
@@ -61967,8 +61917,8 @@ function create_each_block(ctx) {
 				each_blocks.length = each_value_1.length;
 			}
 
-			if (dirty[0] & /*selectors*/ 1) {
-				select_option(select, /*val*/ ctx[26]);
+			if (dirty & /*selectors*/ 1) {
+				select_option(select, /*val*/ ctx[25]);
 			}
 		},
 		d(detaching) {
@@ -62013,8 +61963,8 @@ function create_fragment(ctx) {
 			insert(target, t, anchor);
 			insert(target, div1, anchor);
 		},
-		p(ctx, dirty) {
-			if (dirty[0] & /*selectors*/ 1) {
+		p(ctx, [dirty]) {
+			if (dirty & /*selectors*/ 1) {
 				each_value = /*selectors*/ ctx[0];
 				let i;
 
@@ -62053,7 +62003,7 @@ function instance($$self, $$props, $$invalidate) {
 	
 	
 	let { modal } = $$props;
-	const { app, plugin } = modal;
+	const { plugin } = modal;
 	const { mainG, settings } = plugin;
 	const { visGraph, visRelation, visClosed, visAll } = settings;
 	const currFile = getCurrFile();
@@ -62179,7 +62129,7 @@ function instance($$self, $$props, $$invalidate) {
 	};
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty[0] & /*selectors, modal*/ 3) {
+		if ($$self.$$.dirty & /*selectors, modal*/ 3) {
 			argArr = [
 				graphs[selectors[1].val][selectors[2].val][selectors[3].val],
 				app,
@@ -62190,7 +62140,7 @@ function instance($$self, $$props, $$invalidate) {
 			];
 		}
 
-		if ($$self.$$.dirty[0] & /*selectors*/ 1) {
+		if ($$self.$$.dirty & /*selectors*/ 1) {
 			draw(selectors[0].val);
 		}
 	};
@@ -62201,7 +62151,7 @@ function instance($$self, $$props, $$invalidate) {
 class VisComp extends SvelteComponent {
 	constructor(options) {
 		super();
-		init(this, options, instance, create_fragment, safe_not_equal, { modal: 1 }, [-1, -1]);
+		init(this, options, instance, create_fragment, safe_not_equal, { modal: 1 });
 	}
 }
 
@@ -62314,7 +62264,7 @@ d3_node.stratify()
     return d.parentId;
 });
 class VisModal extends obsidian.Modal {
-    constructor(app, plugin) {
+    constructor(plugin) {
         super(app);
         this.plugin = plugin;
         this.modal = this;
@@ -62340,16 +62290,14 @@ class BCPlugin extends obsidian.Plugin {
         super(...arguments);
         this.visited = [];
         this.activeLeafChange = undefined;
-        this.activeLeafSave = undefined;
         this.layoutChange = undefined;
         this.loadSettings = async () => (this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData()));
         this.saveSettings = async () => await this.saveData(this.settings);
     }
     registerActiveLeafChangeEvent() {
-        this.activeLeafChange = this.app.workspace.on("file-open", async () => {
-            if (this.settings.refreshOnNoteChange) {
+        this.activeLeafChange = app.workspace.on("file-open", async () => {
+            if (this.settings.refreshOnNoteChange)
                 await refreshIndex(this);
-            }
             else {
                 const activeView = this.getActiveTYPEView(MATRIX_VIEW);
                 if (activeView)
@@ -62358,20 +62306,8 @@ class BCPlugin extends obsidian.Plugin {
         });
         this.registerEvent(this.activeLeafChange);
     }
-    // registerActiveLeafSaveEvent ( ) {
-    //   this.activeLeafSave = this.app.workspace.on("" ,
-    //   async () => {
-    //     if (this.settings.refreshOnNoteSave) {
-    //       await refreshIndex (this) ;
-    //     }else {
-    //       const activeView = this.getActiveTYPEView(MATRIX_VIEW);
-    //       if (activeView) await activeView.draw();
-    //     }
-    //   }
-    //   )
-    // }
     registerLayoutChangeEvent() {
-        this.layoutChange = this.app.workspace.on("layout-change", async () => {
+        this.layoutChange = app.workspace.on("layout-change", async () => {
             if (this.settings.showBCs)
                 await drawTrail(this);
         });
@@ -62379,23 +62315,20 @@ class BCPlugin extends obsidian.Plugin {
     }
     async onload() {
         console.log("loading breadcrumbs plugin");
-        const { app } = this;
         await this.loadSettings();
-        this.addSettingTab(new BCSettingTab(app, this));
+        this.addSettingTab(new BCSettingTab(this));
         this.db = new Debugger(this);
         const { settings } = this;
-        const { fieldSuggestor, enableRelationSuggestor } = settings;
+        const { fieldSuggestor, enableRelationSuggestor, openMatrixOnLoad, openDuckOnLoad, openDownOnLoad, showBCs, userHiers, } = settings;
         if (fieldSuggestor)
             this.registerEditorSuggest(new FieldSuggestor(this));
         if (enableRelationSuggestor)
             this.registerEditorSuggest(new RelationSuggestor(this));
-        if (settings.limitTrailCheckboxes.length === 0) {
+        // Override older versions of these settings
+        if (settings.limitTrailCheckboxes.length === 0)
             settings.limitTrailCheckboxes = getFields(settings.userHiers);
-        }
-        if (typeof settings.showAll === 'boolean') {
+        if (typeof settings.showAll === 'boolean')
             settings.showAll = settings.showAll ? 'All' : 'Shortest';
-        }
-        const { openMatrixOnLoad, openDuckOnLoad, openDownOnLoad, showBCs, userHiers, } = settings;
         this.VIEWS = [
             {
                 plain: "Matrix",
@@ -62421,7 +62354,7 @@ class BCPlugin extends obsidian.Plugin {
         }
         obsidian.addIcon(DUCK_ICON, DUCK_ICON_SVG);
         obsidian.addIcon(TRAIL_ICON, TRAIL_ICON_SVG);
-        await waitForCache(this);
+        await waitForCache();
         this.mainG = await buildMainG(this);
         this.closedG = buildClosedG(this);
         app.workspace.onLayoutReady(async () => {
@@ -62432,17 +62365,16 @@ class BCPlugin extends obsidian.Plugin {
                 this.mainG = await buildMainG(this);
                 this.closedG = buildClosedG(this);
             }
-            for (const { openOnLoad, type, constructor } of this.VIEWS) {
+            for (const { openOnLoad, type, constructor } of this.VIEWS)
                 if (openOnLoad)
-                    await openView(app, type, constructor);
-            }
+                    await openView(type, constructor);
             if (showBCs)
                 await drawTrail(this);
             this.registerActiveLeafChangeEvent();
             this.registerLayoutChangeEvent();
             // Source for save setting
             // https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
-            const saveCommandDefinition = this.app.commands.commands["editor:save-file"];
+            const saveCommandDefinition = app.commands.commands["editor:save-file"];
             const save = saveCommandDefinition === null || saveCommandDefinition === void 0 ? void 0 : saveCommandDefinition.callback;
             if (typeof save === "function") {
                 saveCommandDefinition.callback = async () => {
@@ -62469,19 +62401,19 @@ class BCPlugin extends obsidian.Plugin {
                 checkCallback: async (checking) => {
                     if (checking)
                         return app.workspace.getLeavesOfType(type).length === 0;
-                    await openView(app, type, constructor);
+                    await openView(type, constructor);
                 },
             });
         }
         this.addCommand({
             id: "open-vis-modal",
             name: "Open Visualisation Modal",
-            callback: () => new VisModal(app, this).open(),
+            callback: () => new VisModal(this).open(),
         });
         this.addCommand({
             id: "manipulate-hierarchy-notes",
             name: "Adjust Hierarchy Notes",
-            callback: () => new HierarchyNoteSelectorModal(app, this).open(),
+            callback: () => new HierarchyNoteSelectorModal(this).open(),
         });
         this.addCommand({
             id: "Refresh-Breadcrumbs-Index",
@@ -62531,21 +62463,21 @@ class BCPlugin extends obsidian.Plugin {
                 callback: async () => await thread(this, field),
             });
         });
-        this.addRibbonIcon(addFeatherIcon("tv"), "Breadcrumbs Visualisation", () => new VisModal(app, this).open());
+        this.addRibbonIcon(addFeatherIcon("tv"), "Breadcrumbs Visualisation", () => new VisModal(this).open());
         this.registerMarkdownCodeBlockProcessor("breadcrumbs", getCodeblockCB(this));
-        const jugglPlugin = getPlugin(this.app);
+        const jugglPlugin = getPlugin(app);
         if (jugglPlugin) {
-            this.bcStore = new BCStore(this.mainG, this.app.metadataCache);
+            this.bcStore = new BCStore(this.mainG, app.metadataCache);
             jugglPlugin.registerStore(this.bcStore);
         }
-        this.api = new BCAPI(app, this);
+        this.api = new BCAPI(this);
         // Register API to global window object.
         (window[API_NAME] = this.api) &&
             this.register(() => delete window[API_NAME]);
     }
     getActiveTYPEView(type) {
         const { constructor } = this.VIEWS.find((view) => view.type === type);
-        const leaves = this.app.workspace.getLeavesOfType(type);
+        const leaves = app.workspace.getLeavesOfType(type);
         if (leaves && leaves.length >= 1) {
             const { view } = leaves[0];
             if (view instanceof constructor)
@@ -62556,13 +62488,13 @@ class BCPlugin extends obsidian.Plugin {
     onunload() {
         console.log("unloading");
         this.VIEWS.forEach(async (view) => {
-            this.app.workspace.getLeavesOfType(view.type).forEach((leaf) => {
+            app.workspace.getLeavesOfType(view.type).forEach((leaf) => {
                 leaf.detach();
             });
         });
         this.visited.forEach((visit) => visit[1].remove());
         if (this.bcStore) {
-            const jugglPlugin = getPlugin(this.app);
+            const jugglPlugin = getPlugin(app);
             if (jugglPlugin) {
                 // @ts-ignore
                 jugglPlugin.removeStore(this.bcStore);

@@ -378,5 +378,8 @@
       ],
       "key": "="
     }
-  ]
+  ],
+  "obsidian-completr:completr-bypass-enter-key": [],
+  "obsidian-completr:completr-insert-selected-suggestion": [],
+  "obsidian-completr:completr-jump-to-next-snippet-placeholder": []
 }

@@ -4,8 +4,25 @@
     "type": "split",
     "children": [
       {
-        "id": "9f3815accdf648e2",
+        "id": "d34a00657031c26c",
         "type": "leaf",
+        "pane-relief:history-v1": {
+          "pos": 0,
+          "stack": [
+            {
+              "leaf": "d34a00657031c26c",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Home.md\",\"mode\":\"preview\",\"source\":false}}",
+              "eState": "{\"scroll\":0}"
+            },
+            {
+              "leaf": "d34a00657031c26c",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Fleeting notes/Markdown guide.md\",\"mode\":\"preview\",\"source\":false}}",
+              "eState": "{\"scroll\":0}"
+            }
+          ]
+        },
         "state": {
           "type": "markdown",
           "state": {
@@ -13,41 +30,6 @@
             "mode": "preview",
             "source": false
           }
-        },
-        "pane-relief:history-v1": {
-          "pos": 0,
-          "stack": [
-            {
-              "leaf": "9f3815accdf648e2",
-              "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Home.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{}"
-            },
-            {
-              "leaf": "9f3815accdf648e2",
-              "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"dotfiles/% new.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{\"scroll\":0}"
-            },
-            {
-              "leaf": "9f3815accdf648e2",
-              "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"dotfiles/% lecture-note.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{}"
-            },
-            {
-              "leaf": "9f3815accdf648e2",
-              "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Home.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{}"
-            },
-            {
-              "leaf": "9f3815accdf648e2",
-              "group": null,
-              "state": "{\"type\":\"empty\",\"state\":{}}",
-              "eState": "{}"
-            }
-          ]
         }
       }
     ],
@@ -64,18 +46,22 @@
           {
             "id": "742e7d10ad13cf23",
             "type": "leaf",
-            "state": {
-              "type": "file-explorer",
-              "state": {}
-            },
             "pane-relief:history-v1": {
               "pos": 0,
               "stack": []
+            },
+            "state": {
+              "type": "file-explorer",
+              "state": {}
             }
           },
           {
             "id": "fa42fdfe727c23cc",
             "type": "leaf",
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
+            },
             "state": {
               "type": "search",
               "state": {
@@ -86,22 +72,32 @@
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               }
-            },
-            "pane-relief:history-v1": {
-              "pos": 0,
-              "stack": []
             }
           },
           {
             "id": "4688608e0a4e24b7",
             "type": "leaf",
-            "state": {
-              "type": "starred",
-              "state": {}
-            },
             "pane-relief:history-v1": {
               "pos": 0,
               "stack": []
+            },
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          },
+          {
+            "id": "eacc0ace05bb77ec",
+            "type": "leaf",
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
+            },
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Home.md"
+              }
             }
           }
         ]
@@ -121,6 +117,10 @@
           {
             "id": "6bcf0f8c8dc0b093",
             "type": "leaf",
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
+            },
             "state": {
               "type": "backlink",
               "state": {
@@ -133,15 +133,15 @@
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
               }
-            },
-            "pane-relief:history-v1": {
-              "pos": 0,
-              "stack": []
             }
           },
           {
             "id": "06d1817092beb00e",
             "type": "leaf",
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
+            },
             "state": {
               "type": "outgoing-link",
               "state": {
@@ -149,63 +149,45 @@
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
-            },
-            "pane-relief:history-v1": {
-              "pos": 0,
-              "stack": []
             }
           },
           {
             "id": "ca748387a47005d1",
             "type": "leaf",
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
+            },
             "state": {
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
               }
-            },
-            "pane-relief:history-v1": {
-              "pos": 0,
-              "stack": []
             }
           },
           {
-            "id": "eacc0ace05bb77ec",
+            "id": "36cee91894181871",
             "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "Home.md"
-              }
-            },
             "pane-relief:history-v1": {
               "pos": 0,
               "stack": []
-            }
-          },
-          {
-            "id": "800619a0e0bdca2c",
-            "type": "leaf",
+            },
             "state": {
               "type": "BC-matrix",
               "state": {}
-            },
-            "pane-relief:history-v1": {
-              "pos": 0,
-              "stack": []
             }
           },
           {
-            "id": "8a388af8636f16d1",
+            "id": "53efc85cf9ea11a8",
             "type": "leaf",
-            "state": {
-              "type": "BC-tree",
-              "state": {}
-            },
             "pane-relief:history-v1": {
               "pos": 0,
               "stack": []
+            },
+            "state": {
+              "type": "BC-tree",
+              "state": {}
             }
           }
         ]
@@ -214,12 +196,17 @@
     "direction": "horizontal",
     "width": 359.5
   },
-  "active": "6bcf0f8c8dc0b093",
+  "active": "d34a00657031c26c",
   "lastOpenFiles": [
-    "dotfiles/% new.md",
-    "dotfiles/% lecture-note.md",
+    "Fleeting notes/Markdown guide.md",
+    "Daily notes/Untitled.md",
     "Home.md",
-    "Untitled.md",
-    "2022-06-25.md"
+    "dotfiles/Templates/% excalidraw.md",
+    "Excalidraw/Drawing 2022-08-19 03.40.50.excalidraw.md",
+    "dotfiles/Templates/% daily note.md",
+    "Daily notes/Daily notes.md",
+    "dotfiles/Templates/% new.md",
+    "dotfiles/Templates/% lecture-note.md",
+    "2022-08-19.md"
   ]
 }

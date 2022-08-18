@@ -5,7 +5,6 @@
   "obsidian-style-settings",
   "sliding-panes-obsidian",
   "media-extended",
-  "homepage",
   "breadcrumbs",
   "buttons",
   "cycle-through-panes",
@@ -15,5 +14,8 @@
   "pane-relief",
   "obsidian-completr",
   "obsidian-latex-suite",
-  "obsidian-icon-folder"
+  "obsidian-icon-folder",
+  "table-editor-obsidian",
+  "obsidian-admonition",
+  "obsidian-kanban"
 ]
