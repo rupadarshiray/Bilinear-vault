@@ -4,32 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "d34a00657031c26c",
+        "id": "c8fca89100af474a",
         "type": "leaf",
         "pane-relief:history-v1": {
           "pos": 0,
           "stack": [
             {
-              "leaf": "d34a00657031c26c",
+              "leaf": "c8fca89100af474a",
               "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Home.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{\"scroll\":0}"
-            },
-            {
-              "leaf": "d34a00657031c26c",
-              "group": null,
-              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Fleeting notes/Markdown guide.md\",\"mode\":\"preview\",\"source\":false}}",
-              "eState": "{\"scroll\":0}"
+              "state": "{\"type\":\"empty\",\"state\":{}}",
+              "eState": "{}"
             }
           ]
         },
         "state": {
-          "type": "markdown",
-          "state": {
-            "file": "Home.md",
-            "mode": "preview",
-            "source": false
-          }
+          "type": "empty",
+          "state": {}
         }
       }
     ],
@@ -95,9 +85,7 @@
             },
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Home.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -124,7 +112,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Home.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -145,7 +132,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -196,17 +182,17 @@
     "direction": "horizontal",
     "width": 359.5
   },
-  "active": "d34a00657031c26c",
+  "active": "742e7d10ad13cf23",
   "lastOpenFiles": [
-    "Fleeting notes/Markdown guide.md",
-    "Daily notes/Untitled.md",
-    "Home.md",
-    "dotfiles/Templates/% excalidraw.md",
-    "Excalidraw/Drawing 2022-08-19 03.40.50.excalidraw.md",
-    "dotfiles/Templates/% daily note.md",
-    "Daily notes/Daily notes.md",
     "dotfiles/Templates/% new.md",
+    "dotfiles/Templates/% daily note.md",
+    "dotfiles/Templates/% excalidraw.md",
     "dotfiles/Templates/% lecture-note.md",
-    "2022-08-19.md"
+    "Home.md",
+    "Fleeting notes/Markdown guide.md",
+    "Fleeting notes/Drawing 20220822173424.excalidraw.md",
+    "Fleeting notes/dotfiles/Templates/% excalidraw.md",
+    "Daily notes/2022-08-22.md",
+    "Daily notes/Untitled.md"
   ]
 }

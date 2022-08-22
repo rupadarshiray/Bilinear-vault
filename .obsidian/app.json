@@ -14,5 +14,6 @@
   "userIgnoreFilters": [
     "dotfiles/"
   ],
-  "communityThemeSortOrder": "download"
+  "communityThemeSortOrder": "download",
+  "defaultViewMode": "preview"
 }

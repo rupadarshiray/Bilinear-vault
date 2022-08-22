@@ -5,6 +5,7 @@
     "fontSize": 16,
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiSettings2Fill",
       "RiBook3Line",
       "RiInboxArchiveLine"
     ],
@@ -18,5 +19,6 @@
     }
   },
   "Fleeting notes": "RiInboxArchiveLine",
-  "Daily notes": "RiBook3Line"
+  "Daily notes": "RiBook3Line",
+  "dotfiles": "RiSettings2Fill"
 }
