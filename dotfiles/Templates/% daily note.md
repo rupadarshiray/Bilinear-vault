@@ -5,6 +5,6 @@ alias: ["<% tp.date.now("DMMMYY") %>"]
 tags: [dailynotes]
 ---
 
-# <% tp.date.now("dddd") %>, <% tp.date.now("D MMMM") %> <% tp.date.now("YYYY") %>
+# <% tp.date.now("dddd") %>, <% tp.date.now("D MMMM") %> <% tp.date.now("1YYYY") %>
 
 <% tp.file.cursor() %>

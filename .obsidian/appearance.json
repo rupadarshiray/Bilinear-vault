@@ -1,5 +1,15 @@
 {
-  "cssTheme": "Primary",
-  "baseFontSize": 22,
-  "translucency": false
+  "cssTheme": "Minimal",
+  "baseFontSize": 23,
+  "translucency": false,
+  "accentColor": "#007ec2",
+  "interfaceFontFamily": "",
+  "textFontFamily": "",
+  "monospaceFontFamily": "",
+  "nativeMenus": false,
+  "showViewHeader": true,
+  "enabledCssSnippets": [
+    "snippet_folder_colours",
+    "snippet_vaultname"
+  ]
 }

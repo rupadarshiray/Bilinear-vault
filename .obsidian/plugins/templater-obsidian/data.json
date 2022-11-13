@@ -17,6 +17,10 @@
     {
       "folder": "/",
       "template": "dotfiles/Templates/% new.md"
+    },
+    {
+      "folder": "00 Bilinear notes",
+      "template": "dotfiles/Templates/% new bilinear.md"
     }
   ],
   "syntax_highlighting": true,
@@ -25,5 +29,6 @@
   ],
   "startup_templates": [
     ""
-  ]
+  ],
+  "enable_ribbon_icon": true
 }

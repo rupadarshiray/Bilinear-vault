@@ -5,9 +5,11 @@
     "fontSize": 16,
     "iconColor": null,
     "recentlyUsedIcons": [
-      "RiSettings2Fill",
-      "RiBook3Line",
-      "RiInboxArchiveLine"
+      "RiFootballFill",
+      "RiPlantFill",
+      "RiTestTubeLine",
+      "RiDropFill",
+      "RiBuildingFill"
     ],
     "recentlyUsedIconsSize": 5,
     "rules": [],
@@ -18,7 +20,22 @@
       "left": 2
     }
   },
-  "Fleeting notes": "RiInboxArchiveLine",
-  "Daily notes": "RiBook3Line",
-  "dotfiles": "RiSettings2Fill"
+  "dotfiles": "RiSettings2Fill",
+  "Home.md": {
+    "iconName": null,
+    "inheritanceIcon": "RiHome2Fill"
+  },
+  "07 Daily notes": "RiBook3Line",
+  "05 '22 Uni": "RiBuildingFill",
+  "05 '22 Self-studying": "RiBookOpenFill",
+  "05 '2209 Uni Sem 1": "RiNumber1",
+  "06 Media": "RiMusic2Fill",
+  "05 '2212 Research project RXB23": "RiTestTubeLine",
+  "04 Academia": "RiBuilding4Fill",
+  "00 Bilinear notes": "RiBook2Fill",
+  "09 Vacuum notes": "RiInboxArchiveLine",
+  "08 Gardening": "RiPlantFill",
+  "01 Lore": "RiHandCoinFill",
+  "02 Creative A": "RiFootballFill",
+  "03 Creative B": "RiBrushLine"
 }

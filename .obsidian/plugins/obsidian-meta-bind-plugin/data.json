@@ -1,0 +1,7 @@
+{
+  "devMode": false,
+  "dateFormat": "eu",
+  "syncInterval": 200,
+  "minSyncInterval": 50,
+  "maxSyncInterval": 1000
+}

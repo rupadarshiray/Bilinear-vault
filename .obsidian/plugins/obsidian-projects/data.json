@@ -1,0 +1,24 @@
+{
+  "projects": [
+    {
+      "id": "ee49134a-ef3a-4b9e-94fb-f4556e949def",
+      "name": "'22 Courses",
+      "path": "05 '22 Self-studying/'22 Courses",
+      "recursive": true,
+      "defaultName": "",
+      "templates": [
+        "dotfiles/Templates/% course-note.md"
+      ],
+      "views": [
+        {
+          "id": "bbfbfa30-f85b-41bb-b91d-5f56293fd8c6",
+          "name": "Table",
+          "type": "table",
+          "config": {}
+        }
+      ],
+      "dataview": false
+    }
+  ],
+  "version": 1
+}

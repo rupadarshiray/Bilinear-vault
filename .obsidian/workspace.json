@@ -1,0 +1,189 @@
+{
+  "main": {
+    "id": "c06226d62697b4c7",
+    "type": "split",
+    "children": [
+      {
+        "id": "f166bd45ac27c748",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "efe1a4136c786b1c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "readme.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4f5fd4791605fc55",
+    "type": "split",
+    "children": [
+      {
+        "id": "685989a420103fc2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "742e7d10ad13cf23",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "fa42fdfe727c23cc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#lecture",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4688608e0a4e24b7",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          },
+          {
+            "id": "372f755b543ee904",
+            "type": "leaf",
+            "state": {
+              "type": "BC-tree",
+              "state": {}
+            }
+          },
+          {
+            "id": "44d5032b4bb07835",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 264.5
+  },
+  "right": {
+    "id": "fadd98a1a2dfcea5",
+    "type": "split",
+    "children": [
+      {
+        "id": "596afe819dcd1016",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6bcf0f8c8dc0b093",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "readme.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "06d1817092beb00e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "readme.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ca748387a47005d1",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "ad9054df5b4c582b",
+            "type": "leaf",
+            "state": {
+              "type": "BC-matrix",
+              "state": {}
+            }
+          },
+          {
+            "id": "37a000c0ecea40a9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "readme.md"
+              }
+            }
+          },
+          {
+            "id": "c67d438edf228ec5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Home.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 359.5,
+    "collapsed": true
+  },
+  "active": "efe1a4136c786b1c",
+  "lastOpenFiles": [
+    "Home.md",
+    "05 '2209 Uni Sem 1/MTH101/Lectures/MTH101.L01.md",
+    "dotfiles/Vault Management/List of files.md",
+    "dotfiles/Vault Management/Markdown guide.md",
+    "07 Daily notes/12022/12022-09-26.md",
+    "05 '22 Self-studying/'22 Courses/Abstract Algebra.md",
+    "05 '22 Self-studying/05 '22 Self-studying.md",
+    "05 '2209 Uni Sem 1/05 '2209 Uni Sem 1.md",
+    "readme.md",
+    "00 Bilinear notes/math/math.md"
+  ]
+}

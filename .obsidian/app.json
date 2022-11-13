@@ -5,15 +5,21 @@
   "spellcheckLanguages": [
     "en-GB"
   ],
-  "tabSize": 4,
-  "showFrontmatter": true,
+  "tabSize": 3,
+  "showFrontmatter": false,
   "trashOption": "local",
   "alwaysUpdateLinks": true,
   "showUnsupportedFiles": true,
   "attachmentFolderPath": "./Attachments",
   "userIgnoreFilters": [
-    "dotfiles/"
+    "dotfiles/Templates/"
   ],
   "communityThemeSortOrder": "download",
-  "defaultViewMode": "preview"
+  "defaultViewMode": "preview",
+  "smartIndentList": true,
+  "showLineNumber": true,
+  "strictLineBreaks": false,
+  "rightToLeft": false,
+  "showInlineTitle": false,
+  "newFileLocation": "current"
 }

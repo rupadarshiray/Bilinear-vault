@@ -381,5 +381,21 @@
   ],
   "obsidian-completr:completr-bypass-enter-key": [],
   "obsidian-completr:completr-insert-selected-suggestion": [],
-  "obsidian-completr:completr-jump-to-next-snippet-placeholder": []
+  "obsidian-completr:completr-jump-to-next-snippet-placeholder": [],
+  "workspace:toggle-stacked-tabs": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "Y"
+    }
+  ],
+  "obsidian-minimal-settings:toggle-minimal-focus-mode": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "U"
+    }
+  ]
 }

@@ -4,13 +4,13 @@
     "type": "split",
     "children": [
       {
-        "id": "c8fca89100af474a",
+        "id": "43cf7d864a07418d",
         "type": "leaf",
         "pane-relief:history-v1": {
           "pos": 0,
           "stack": [
             {
-              "leaf": "c8fca89100af474a",
+              "leaf": "43cf7d864a07418d",
               "group": null,
               "state": "{\"type\":\"empty\",\"state\":{}}",
               "eState": "{}"
@@ -182,8 +182,9 @@
     "direction": "horizontal",
     "width": 359.5
   },
-  "active": "742e7d10ad13cf23",
+  "active": "43cf7d864a07418d",
   "lastOpenFiles": [
+    "Daily notes/2022-08-22.md",
     "dotfiles/Templates/% new.md",
     "dotfiles/Templates/% daily note.md",
     "dotfiles/Templates/% excalidraw.md",
@@ -192,7 +193,6 @@
     "Fleeting notes/Markdown guide.md",
     "Fleeting notes/Drawing 20220822173424.excalidraw.md",
     "Fleeting notes/dotfiles/Templates/% excalidraw.md",
-    "Daily notes/2022-08-22.md",
     "Daily notes/Untitled.md"
   ]
 }

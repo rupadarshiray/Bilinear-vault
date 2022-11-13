@@ -1,0 +1,27 @@
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="00"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #9061FF;
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="01"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #d54f15;
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="02"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: rgb(43, 57, 245);
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="03"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #1cbd5c;
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="04"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: rgb(235, 199, 0);
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #01fefa;
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="06"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #c57418;
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="07"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: rgb(226, 0, 113);
+}
+.nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="08"], .nav-folder.mod-root>.nav-folder-children>.nav-folder>.nav-folder-title[data-path^="05"] + .nav-folder-children{
+color: #64bd1c;
+}

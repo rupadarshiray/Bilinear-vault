@@ -1,5 +1,5 @@
 {
-  "addDendronNotes": false,
+  "addDendronNotes": true,
   "addDateNotes": true,
   "aliasesInIndex": false,
   "alphaSortAsc": true,
@@ -21,18 +21,22 @@
   "fieldSuggestor": true,
   "filterImpliedSiblingsOfDifferentTypes": false,
   "jugglLayout": "hierarchy",
-  "limitWriteBCCheckboxes": [],
+  "limitWriteBCCheckboxes": [
+    "parent",
+    "children",
+    "semester",
+    "instructor"
+  ],
   "CHECKBOX_STATES_OVERWRITTEN": false,
   "gridDefaultDepth": 25,
-  "gridHeatmap": false,
-  "heatmapColour": " hsl(  272.235,  100%, calc( 50% - 2%) )",
   "hierarchyNotes": [
     ""
   ],
   "hierarchyNoteIsParent": false,
   "HNUpField": "",
   "indexNotes": [
-    ""
+    "00 Bilinear notes",
+    "05 '22 Uni"
   ],
   "namingSystemField": "",
   "namingSystemRegex": "",
@@ -40,14 +44,14 @@
   "namingSystemEndsWithDelimiter": false,
   "refreshOnNoteChange": false,
   "useAllMetadata": true,
-  "openMatrixOnLoad": true,
+  "openMatrixOnLoad": false,
   "openDuckOnLoad": false,
-  "openDownOnLoad": true,
+  "openDownOnLoad": false,
   "parseJugglLinksWithoutJuggl": false,
   "showNameOrType": true,
   "showRelationType": true,
   "regexNoteField": "",
-  "relSuggestorTrigger": "\\",
+  "relSuggestorTrigger": "/",
   "rlLeaf": true,
   "showAllPathsIfNoneToIndexNote": false,
   "showAllAliases": true,
@@ -56,7 +60,7 @@
   "showRefreshNotice": true,
   "showImpliedRelations": true,
   "showTrail": true,
-  "showGrid": true,
+  "showGrid": false,
   "showJuggl": false,
   "showPrevNext": true,
   "sortByNameShowAlias": false,
@@ -72,9 +76,17 @@
     "same",
     "down",
     "next",
-    "prev"
+    "prev",
+    "parent",
+    "semester",
+    "instructor"
   ],
-  "limitJumpToFirstFields": [],
+  "limitJumpToFirstFields": [
+    "parent",
+    "children",
+    "semester",
+    "instructor"
+  ],
   "showAll": "All",
   "noPathMessage": "",
   "tagNoteField": "",
@@ -88,9 +100,9 @@
     "prev": ""
   },
   "threadUnderCursor": false,
-  "trailSeperator": "→",
+  "trailSeperator": "/",
   "treatCurrNodeAsImpliedSibling": false,
-  "trimDendronNotes": false,
+  "trimDendronNotes": true,
   "respectReadableLineLength": true,
   "userHiers": [
     {
@@ -109,6 +121,35 @@
       "prev": [
         "prev"
       ]
+    },
+    {
+      "up": [
+        "parent"
+      ],
+      "same": [],
+      "down": [
+        "children"
+      ],
+      "next": [],
+      "prev": []
+    },
+    {
+      "up": [
+        "semester"
+      ],
+      "same": [],
+      "down": [],
+      "next": [],
+      "prev": []
+    },
+    {
+      "up": [
+        "instructor"
+      ],
+      "same": [],
+      "down": [],
+      "next": [],
+      "prev": []
     }
   ],
   "writeBCsInline": false,
@@ -127,6 +168,8 @@
     "parentsParentsIsParent": false,
     "cousinsIsSibling": false
   },
-  "refreshOnNoteSave": false,
-  "showUpInJuggl": false
+  "refreshOnNoteSave": true,
+  "showUpInJuggl": false,
+  "gridHeatmap": false,
+  "heatmapColour": " hsl(  272.235,  100%, calc( 50% - 2%) )"
 }

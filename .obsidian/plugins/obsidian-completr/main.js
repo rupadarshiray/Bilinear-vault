@@ -85,12 +85,15 @@ function editorToCodeMirrorState(editor) {
 function editorToCodeMirrorView(editor) {
   return editor.cm;
 }
-function matchWordBackwards(editor, cursor, charValidator, maxLookBackDistance = 50) {
+function maybeLowerCase(str, lowerCase) {
+  return lowerCase ? str.toLowerCase() : str;
+}
+function matchWordBackwards(editor, cursor, charPredicate, maxLookBackDistance = 50) {
   let query = "", separatorChar = null;
   let lookBackEnd = Math.max(0, cursor.ch - maxLookBackDistance);
   for (let i = cursor.ch - 1; i >= lookBackEnd; i--) {
     const prevChar = editor.getRange(__spreadProps(__spreadValues({}, cursor), { ch: i }), __spreadProps(__spreadValues({}, cursor), { ch: i + 1 }));
-    if (!charValidator(prevChar)) {
+    if (!charPredicate(prevChar)) {
       separatorChar = prevChar;
       break;
     }
@@ -370,7 +373,7 @@ var SnippetManager = class {
 // src/provider/provider.ts
 function getSuggestionDisplayName(suggestion, lowerCase = false) {
   const res = typeof suggestion === "string" ? suggestion : suggestion.displayName;
-  return lowerCase ? res.toLowerCase() : res;
+  return maybeLowerCase(res, lowerCase);
 }
 function getSuggestionReplacement(suggestion) {
   return typeof suggestion === "string" ? suggestion : suggestion.replacement;
@@ -434,7 +437,7 @@ var LatexSuggestionProvider = class {
     let editor = context.editor;
     if (!isInLatexBlock(editor, context.start, settings.latexTriggerInCodeBlocks))
       return [];
-    const query = settings.latexIgnoreCase ? context.query.toLowerCase() : context.query;
+    const query = maybeLowerCase(context.query, settings.latexIgnoreCase);
     const isSeparatorBackslash = context.separatorChar === "\\";
     return this.loadedCommands.filter((s) => getSuggestionDisplayName(s, settings.latexIgnoreCase).contains(query)).map((s) => {
       const replacement = getSuggestionReplacement(s);
@@ -1574,7 +1577,8 @@ var DEFAULT_SETTINGS = {
   fileScannerScanCurrent: true,
   wordListProviderEnabled: true,
   frontMatterProviderEnabled: true,
-  frontMatterTagAppendSuffix: true
+  frontMatterTagAppendSuffix: true,
+  frontMatterIgnoreCase: true
 };
 
 // src/provider/dictionary_provider.ts
@@ -1584,7 +1588,7 @@ var DictionaryProvider = class {
     if (!this.isEnabled(settings) || !context.query || context.query.length < settings.minWordTriggerLength)
       return [];
     const ignoreCase = settings.wordInsertionMode != "Match-Case & Replace" /* MATCH_CASE_REPLACE */;
-    let query = ignoreCase ? context.query.toLowerCase() : context.query;
+    let query = maybeLowerCase(context.query, ignoreCase);
     const ignoreDiacritics = settings.ignoreDiacriticsWhenFiltering;
     if (ignoreDiacritics)
       query = removeDiacritics(query);
@@ -1592,7 +1596,7 @@ var DictionaryProvider = class {
     const list = ignoreCase ? [(_a = this.wordMap.get(firstChar)) != null ? _a : [], (_b = this.wordMap.get(firstChar.toUpperCase())) != null ? _b : []] : [(_c = this.wordMap.get(firstChar)) != null ? _c : []];
     if (ignoreDiacritics) {
       for (let [key, value] of this.wordMap.entries()) {
-        let keyFirstChar = ignoreCase ? key.charAt(0).toLowerCase() : key.charAt(0);
+        let keyFirstChar = maybeLowerCase(key.charAt(0), ignoreCase);
         if (removeDiacritics(keyFirstChar) === firstChar)
           list.push(value);
       }
@@ -1602,7 +1606,7 @@ var DictionaryProvider = class {
     const result = /* @__PURE__ */ new Set();
     for (let el of list) {
       filterMapIntoSet(result, el, (s) => {
-        let match = ignoreCase ? s.toLowerCase() : s;
+        let match = maybeLowerCase(s, ignoreCase);
         if (ignoreDiacritics)
           match = removeDiacritics(match);
         return match.startsWith(query);
@@ -1777,8 +1781,9 @@ var PUBLISH_SUGGESTION = {
   displayName: "publish: #",
   replacement: "publish: ~"
 };
-function findTagCompletionType(keyInfo, currentLineIndex, currentLine, editor) {
-  const { key, isList } = keyInfo;
+function findTagCompletionType(keyInfo, editor, currentLineIndex, currentLine, ignoreCase) {
+  const key = maybeLowerCase(keyInfo.key, ignoreCase);
+  const isList = keyInfo.isList;
   if (currentLine.startsWith(key + ": "))
     return "inline";
   if (!currentLine.startsWith("- ") || !isList)
@@ -1793,37 +1798,38 @@ function findTagCompletionType(keyInfo, currentLineIndex, currentLine, editor) {
   }
   return foundListStart ? "multiline" : "none";
 }
+var YAMLKeyInfo = class {
+  constructor(key) {
+    this.key = key;
+    this.completions = /* @__PURE__ */ new Set();
+  }
+  addCompletion(value) {
+    this.completions.add(value);
+  }
+};
 var YAMLKeyCache = class {
   constructor() {
-    this.listKeys = [];
     this.keyMap = /* @__PURE__ */ new Map();
   }
   addEntry(key, value) {
-    let values = this.keyMap.get(key);
-    if (!values) {
-      values = /* @__PURE__ */ new Set();
-      this.keyMap.set(key, values);
-    }
-    values.add(value);
+    let info = this.keyMap.get(key);
+    if (!info)
+      this.keyMap.set(key, info = new YAMLKeyInfo(key));
+    info.addCompletion(value);
   }
   addEntries(key, values) {
-    let set = this.keyMap.get(key);
-    if (!set) {
-      set = /* @__PURE__ */ new Set();
-      this.keyMap.set(key, set);
-    }
+    let info = this.keyMap.get(key);
+    if (!info)
+      this.keyMap.set(key, info = new YAMLKeyInfo(key));
     for (let value of values) {
       if (!value)
         continue;
-      set.add(value);
+      info.addCompletion(value);
     }
-    this.listKeys.push(key);
-  }
-  isListKey(key) {
-    return this.listKeys.contains(key);
+    info.isList = true;
   }
   getCompletions() {
-    return [...this.keyMap.entries()].map(([e, v]) => ({ key: e, isList: this.isListKey(e), completions: v }));
+    return this.keyMap.values();
   }
 };
 var FrontMatterSuggestionProvider = class {
@@ -1840,12 +1846,13 @@ var FrontMatterSuggestionProvider = class {
       return [];
     const firstLine = context.editor.getLine(0);
     const isInFrontMatter = isInFrontMatterBlock(context.editor, context.start);
-    if (!isInFrontMatter && context.start.line === 0 && (firstLine === "" || "front-matter".startsWith(firstLine))) {
+    const ignoreCase = settings.frontMatterIgnoreCase;
+    if (!isInFrontMatter && context.start.line === 0 && (firstLine === "" || "front-matter".startsWith(maybeLowerCase(firstLine, ignoreCase)))) {
       return [BASE_SUGGESTION];
     } else if (!isInFrontMatter) {
       return [];
     }
-    const lowerCaseQuery = context.query.toLowerCase();
+    const query = maybeLowerCase(context.query, ignoreCase);
     if (context.start.ch === 0) {
       const suggestions = this.getPossibleCompletions().flatMap((i) => {
         if (!i.isList) {
@@ -1867,26 +1874,25 @@ var FrontMatterSuggestionProvider = class {
       });
       suggestions.push(PUBLISH_SUGGESTION);
       return suggestions.filter((snippet) => {
-        const displayName = getSuggestionDisplayName(snippet);
+        const displayName = getSuggestionDisplayName(snippet, ignoreCase);
         const key2 = displayName.substring(0, displayName.indexOf(":"));
-        return key2.startsWith(lowerCaseQuery);
+        return key2.startsWith(query);
       });
     }
-    const currentLine = context.editor.getLine(context.start.line);
-    if (currentLine.startsWith("publish:")) {
-      return FrontMatterSuggestionProvider.getPublishSuggestions(lowerCaseQuery);
-    }
+    const currentLine = maybeLowerCase(context.editor.getLine(context.start.line), ignoreCase);
+    if (currentLine.startsWith("publish:"))
+      return FrontMatterSuggestionProvider.getPublishSuggestions(query);
     const { key, type } = (_a = this.getPossibleCompletions().map((possibleKey) => ({
       key: possibleKey,
-      type: findTagCompletionType(possibleKey, context.start.line, currentLine, context.editor)
+      type: findTagCompletionType(possibleKey, context.editor, context.start.line, currentLine, ignoreCase)
     })).filter(({ type: type2 }) => type2 !== "none").shift()) != null ? _a : {};
     if (!key)
       return [];
-    const { query } = matchWordBackwards(context.editor, context.end, (char) => new RegExp("[" + settings.characterRegex + "/\\-_]", "u").test(char), settings.maxLookBackDistance);
-    return [...key.completions].filter((tag) => tag.startsWith(query)).map((tag) => ({
+    const customQuery = maybeLowerCase(matchWordBackwards(context.editor, context.end, (char) => new RegExp("[" + settings.characterRegex + "/\\-_]", "u").test(char), settings.maxLookBackDistance).query, ignoreCase);
+    return [...key.completions].filter((tag) => maybeLowerCase(tag, ignoreCase).startsWith(customQuery)).map((tag) => ({
       displayName: tag,
       replacement: tag + (settings.frontMatterTagAppendSuffix && key.isList ? type === "inline" ? ", " : "\n- " : ""),
-      overrideStart: __spreadProps(__spreadValues({}, context.end), { ch: context.end.ch - query.length })
+      overrideStart: __spreadProps(__spreadValues({}, context.end), { ch: context.end.ch - customQuery.length })
     })).sort((a, b) => a.displayName.length - b.displayName.length);
   }
   loadYAMLKeyCompletions(cache, files) {
@@ -1917,33 +1923,25 @@ var FrontMatterSuggestionProvider = class {
       keyCache.addEntries("tags", tags.map((t) => t.substring(1)));
   }
   getPossibleCompletions() {
-    const listKeys = /* @__PURE__ */ new Set();
     const allKeys = /* @__PURE__ */ new Map();
     for (let cache of this.fileSuggestionCache.values()) {
       for (let keyInfo of cache.getCompletions()) {
-        let completions = allKeys.get(keyInfo.key);
-        if (!completions) {
-          completions = /* @__PURE__ */ new Set();
-          allKeys.set(keyInfo.key, completions);
-        }
-        keyInfo.completions.forEach((c) => completions.add(c));
-        if (keyInfo.isList)
-          listKeys.add(keyInfo.key);
+        let combinedKeyInfo = allKeys.get(keyInfo.key);
+        if (!combinedKeyInfo)
+          allKeys.set(keyInfo.key, combinedKeyInfo = new YAMLKeyInfo(keyInfo.key));
+        keyInfo.completions.forEach((c) => combinedKeyInfo.addCompletion(c));
+        combinedKeyInfo.isList = combinedKeyInfo.isList || keyInfo.isList;
       }
     }
-    return [...allKeys.entries()].map(([k, completions]) => ({
-      key: k,
-      isList: listKeys.has(k),
-      completions
-    }));
+    return [...allKeys.values()];
   }
-  static getPublishSuggestions(lowerCaseQuery) {
+  static getPublishSuggestions(query) {
     const possibilities = ["true", "false"];
-    const partialMatches = possibilities.filter((val) => val.startsWith(lowerCaseQuery) && val !== lowerCaseQuery);
+    const partialMatches = possibilities.filter((val) => val.startsWith(query) && val !== query);
     if (partialMatches.length > 0)
       return partialMatches;
-    else if (lowerCaseQuery === "true" || lowerCaseQuery === "false")
-      return lowerCaseQuery === "true" ? possibilities.reverse() : possibilities;
+    else if (query === "true" || query === "false")
+      return query === "true" ? possibilities.reverse() : possibilities;
     return [];
   }
 };
@@ -2082,11 +2080,11 @@ var CompletrSettingsTab = class extends import_obsidian4.PluginSettingTab {
         yield this.plugin.saveSettings();
       }));
     });
-    new import_obsidian4.Setting(containerEl).setName("Word insertion mode").setDesc("The insertion mode that is used. Ignore-case would suggest 'Hello' if the typed text is 'hello', match-case would not. Append would complete 'Hell' with 'Hello' while replace would complete it with 'hello' instead (if only 'hello' was a known word).").addDropdown((dropdown) => dropdown.addOption("Ignore-Case & Replace" /* IGNORE_CASE_REPLACE */, "Ignore-Case & Replace" /* IGNORE_CASE_REPLACE */).addOption("Ignore-Case & Append" /* IGNORE_CASE_APPEND */, "Ignore-Case & Append" /* IGNORE_CASE_APPEND */).addOption("Match-Case & Replace" /* MATCH_CASE_REPLACE */, "Match-Case & Replace" /* MATCH_CASE_REPLACE */).setValue(this.plugin.settings.wordInsertionMode).onChange((val) => __async(this, null, function* () {
+    new import_obsidian4.Setting(containerEl).setName("Word insertion mode").setDesc("The insertion mode that is used. Ignore-case would suggest 'Hello' if the typed text is 'hello', match-case would not. Append would complete 'Hell' with 'Hello' while replace would complete it with 'hello' instead (if only 'hello' was a known word). Only used by the file scanner and word list provider.").addDropdown((dropdown) => dropdown.addOption("Ignore-Case & Replace" /* IGNORE_CASE_REPLACE */, "Ignore-Case & Replace" /* IGNORE_CASE_REPLACE */).addOption("Ignore-Case & Append" /* IGNORE_CASE_APPEND */, "Ignore-Case & Append" /* IGNORE_CASE_APPEND */).addOption("Match-Case & Replace" /* MATCH_CASE_REPLACE */, "Match-Case & Replace" /* MATCH_CASE_REPLACE */).setValue(this.plugin.settings.wordInsertionMode).onChange((val) => __async(this, null, function* () {
       this.plugin.settings.wordInsertionMode = val;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian4.Setting(containerEl).setName("Ignore diacritics when filtering").setDesc("When enabled, the query 'Hello' can suggest 'H\xE8ll\xF2', meaning diacritics will be ignored when filtering the suggestions.").addToggle((toggle) => toggle.setValue(this.plugin.settings.ignoreDiacriticsWhenFiltering).onChange((val) => __async(this, null, function* () {
+    new import_obsidian4.Setting(containerEl).setName("Ignore diacritics when filtering").setDesc("When enabled, the query 'Hello' can suggest 'H\xE8ll\xF2', meaning diacritics will be ignored when filtering the suggestions. Only used by the file scanner and word list provider.").addToggle((toggle) => toggle.setValue(this.plugin.settings.ignoreDiacriticsWhenFiltering).onChange((val) => __async(this, null, function* () {
       this.plugin.settings.ignoreDiacriticsWhenFiltering = val;
       yield this.plugin.saveSettings();
     })));
@@ -2111,6 +2109,10 @@ var CompletrSettingsTab = class extends import_obsidian4.PluginSettingTab {
     });
     new import_obsidian4.Setting(containerEl).setName("Front matter provider").addExtraButton((button) => button.setIcon("link").setTooltip("Obsidian Front-Matter wiki").onClick(() => window.open("https://help.obsidian.md/Advanced+topics/YAML+front+matter"))).setHeading();
     this.createEnabledSetting("frontMatterProviderEnabled", "Whether the front matter provider is enabled", containerEl);
+    new import_obsidian4.Setting(containerEl).setName("Ignore case").setDesc("Whether the Front matter provider should ignore the casing of the typed text. If so, the input 'MaThbb' could suggest 'mathbb'.").addToggle((toggle) => toggle.setValue(this.plugin.settings.frontMatterIgnoreCase).onChange((val) => __async(this, null, function* () {
+      this.plugin.settings.frontMatterIgnoreCase = val;
+      yield this.plugin.saveSettings();
+    })));
     new import_obsidian4.Setting(containerEl).setName("Add suffix to tag completion").setDesc("Whether each completed tag should be suffixed with a comma or a newline (when typing in a multi-line list). Allows faster insertion of multiple tags.").addToggle((toggle) => toggle.setValue(this.plugin.settings.frontMatterTagAppendSuffix).onChange((val) => __async(this, null, function* () {
       this.plugin.settings.frontMatterTagAppendSuffix = val;
       yield this.plugin.saveSettings();
