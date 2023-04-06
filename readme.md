@@ -4,8 +4,6 @@ This is an Obsidian vault, targeted for students in STEM, especially for Mathema
 
 ## Some specifications chosen for this vault
 
-- The years are in Human Era calendar.
-	- Change it by:
 - Focused on having unique note titles.
 - Folder
 	- numbers

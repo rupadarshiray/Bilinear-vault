@@ -20,7 +20,7 @@
     },
     {
       "folder": "00 Bilinear notes",
-      "template": "dotfiles/Templates/% new bilinear.md"
+      "template": "dotfiles/Templates/% new longform.md"
     }
   ],
   "syntax_highlighting": true,

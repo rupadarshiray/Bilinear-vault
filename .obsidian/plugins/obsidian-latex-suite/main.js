@@ -71,8 +71,8 @@ var require_dist = __commonJS({
       typeof exports === "object" && typeof module2 !== "undefined" ? module2.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global.JSON5 = factory();
     })(exports, function() {
       "use strict";
-      function createCommonjsModule(fn, module3) {
-        return module3 = { exports: {} }, fn(module3, module3.exports), module3.exports;
+      function createCommonjsModule(fn2, module3) {
+        return module3 = { exports: {} }, fn2(module3, module3.exports), module3.exports;
       }
       var _global = createCommonjsModule(function(module3) {
         var global = module3.exports = typeof window != "undefined" && window.Math == Math ? window : typeof self != "undefined" && self.Math == Math ? self : Function("return this")();
@@ -122,14 +122,14 @@ var require_dist = __commonJS({
         if (!_isObject(it)) {
           return it;
         }
-        var fn, val;
-        if (S && typeof (fn = it.toString) == "function" && !_isObject(val = fn.call(it))) {
+        var fn2, val;
+        if (S && typeof (fn2 = it.toString) == "function" && !_isObject(val = fn2.call(it))) {
           return val;
         }
-        if (typeof (fn = it.valueOf) == "function" && !_isObject(val = fn.call(it))) {
+        if (typeof (fn2 = it.valueOf) == "function" && !_isObject(val = fn2.call(it))) {
           return val;
         }
-        if (!S && typeof (fn = it.toString) == "function" && !_isObject(val = fn.call(it))) {
+        if (!S && typeof (fn2 = it.toString) == "function" && !_isObject(val = fn2.call(it))) {
           return val;
         }
         throw TypeError("Can't convert object to primitive value");
@@ -230,27 +230,27 @@ var require_dist = __commonJS({
         }
         return it;
       };
-      var _ctx = function(fn, that, length) {
-        _aFunction(fn);
+      var _ctx = function(fn2, that, length) {
+        _aFunction(fn2);
         if (that === void 0) {
-          return fn;
+          return fn2;
         }
         switch (length) {
           case 1:
             return function(a) {
-              return fn.call(that, a);
+              return fn2.call(that, a);
             };
           case 2:
             return function(a, b) {
-              return fn.call(that, a, b);
+              return fn2.call(that, a, b);
             };
           case 3:
             return function(a, b, c2) {
-              return fn.call(that, a, b, c2);
+              return fn2.call(that, a, b, c2);
             };
         }
         return function() {
-          return fn.apply(that, arguments);
+          return fn2.apply(that, arguments);
         };
       };
       var PROTOTYPE = "prototype";
@@ -323,11 +323,11 @@ var require_dist = __commonJS({
         }
       });
       var codePointAt = _core.String.codePointAt;
-      var max = Math.max;
-      var min = Math.min;
+      var max2 = Math.max;
+      var min2 = Math.min;
       var _toAbsoluteIndex = function(index, length) {
         index = _toInteger(index);
-        return index < 0 ? max(index + length, 0) : min(index, length);
+        return index < 0 ? max2(index + length, 0) : min2(index, length);
       };
       var fromCharCode = String.fromCharCode;
       var $fromCodePoint = String.fromCodePoint;
@@ -439,7 +439,7 @@ var require_dist = __commonJS({
           return String.fromCodePoint(source.codePointAt(pos));
         }
       }
-      function read() {
+      function read2() {
         var c2 = peek();
         if (c2 === "\n") {
           line++;
@@ -467,18 +467,18 @@ var require_dist = __commonJS({
             case "\r":
             case "\u2028":
             case "\u2029":
-              read();
+              read2();
               return;
             case "/":
-              read();
+              read2();
               lexState = "comment";
               return;
             case void 0:
-              read();
+              read2();
               return newToken("eof");
           }
           if (util.isSpaceSeparator(c)) {
-            read();
+            read2();
             return;
           }
           return lexStates[parseState]();
@@ -486,40 +486,40 @@ var require_dist = __commonJS({
         comment: function comment() {
           switch (c) {
             case "*":
-              read();
+              read2();
               lexState = "multiLineComment";
               return;
             case "/":
-              read();
+              read2();
               lexState = "singleLineComment";
               return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         multiLineComment: function multiLineComment() {
           switch (c) {
             case "*":
-              read();
+              read2();
               lexState = "multiLineCommentAsterisk";
               return;
             case void 0:
-              throw invalidChar(read());
+              throw invalidChar(read2());
           }
-          read();
+          read2();
         },
         multiLineCommentAsterisk: function multiLineCommentAsterisk() {
           switch (c) {
             case "*":
-              read();
+              read2();
               return;
             case "/":
-              read();
+              read2();
               lexState = "default";
               return;
             case void 0:
-              throw invalidChar(read());
+              throw invalidChar(read2());
           }
-          read();
+          read2();
           lexState = "multiLineComment";
         },
         singleLineComment: function singleLineComment() {
@@ -528,45 +528,45 @@ var require_dist = __commonJS({
             case "\r":
             case "\u2028":
             case "\u2029":
-              read();
+              read2();
               lexState = "default";
               return;
             case void 0:
-              read();
+              read2();
               return newToken("eof");
           }
-          read();
+          read2();
         },
         value: function value() {
           switch (c) {
             case "{":
             case "[":
-              return newToken("punctuator", read());
+              return newToken("punctuator", read2());
             case "n":
-              read();
+              read2();
               literal("ull");
               return newToken("null", null);
             case "t":
-              read();
+              read2();
               literal("rue");
               return newToken("boolean", true);
             case "f":
-              read();
+              read2();
               literal("alse");
               return newToken("boolean", false);
             case "-":
             case "+":
-              if (read() === "-") {
+              if (read2() === "-") {
                 sign = -1;
               }
               lexState = "sign";
               return;
             case ".":
-              buffer = read();
+              buffer = read2();
               lexState = "decimalPointLeading";
               return;
             case "0":
-              buffer = read();
+              buffer = read2();
               lexState = "zero";
               return;
             case "1":
@@ -578,31 +578,31 @@ var require_dist = __commonJS({
             case "7":
             case "8":
             case "9":
-              buffer = read();
+              buffer = read2();
               lexState = "decimalInteger";
               return;
             case "I":
-              read();
+              read2();
               literal("nfinity");
               return newToken("numeric", Infinity);
             case "N":
-              read();
+              read2();
               literal("aN");
               return newToken("numeric", NaN);
             case '"':
             case "'":
-              doubleQuote = read() === '"';
+              doubleQuote = read2() === '"';
               buffer = "";
               lexState = "string";
               return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         identifierNameStartEscape: function identifierNameStartEscape() {
           if (c !== "u") {
-            throw invalidChar(read());
+            throw invalidChar(read2());
           }
-          read();
+          read2();
           var u = unicodeEscape();
           switch (u) {
             case "$":
@@ -623,24 +623,24 @@ var require_dist = __commonJS({
             case "_":
             case "\u200C":
             case "\u200D":
-              buffer += read();
+              buffer += read2();
               return;
             case "\\":
-              read();
+              read2();
               lexState = "identifierNameEscape";
               return;
           }
           if (util.isIdContinueChar(c)) {
-            buffer += read();
+            buffer += read2();
             return;
           }
           return newToken("identifier", buffer);
         },
         identifierNameEscape: function identifierNameEscape() {
           if (c !== "u") {
-            throw invalidChar(read());
+            throw invalidChar(read2());
           }
-          read();
+          read2();
           var u = unicodeEscape();
           switch (u) {
             case "$":
@@ -660,11 +660,11 @@ var require_dist = __commonJS({
         sign: function sign$1() {
           switch (c) {
             case ".":
-              buffer = read();
+              buffer = read2();
               lexState = "decimalPointLeading";
               return;
             case "0":
-              buffer = read();
+              buffer = read2();
               lexState = "zero";
               return;
             case "1":
@@ -676,34 +676,34 @@ var require_dist = __commonJS({
             case "7":
             case "8":
             case "9":
-              buffer = read();
+              buffer = read2();
               lexState = "decimalInteger";
               return;
             case "I":
-              read();
+              read2();
               literal("nfinity");
               return newToken("numeric", sign * Infinity);
             case "N":
-              read();
+              read2();
               literal("aN");
               return newToken("numeric", NaN);
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         zero: function zero() {
           switch (c) {
             case ".":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalPoint";
               return;
             case "e":
             case "E":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalExponent";
               return;
             case "x":
             case "X":
-              buffer += read();
+              buffer += read2();
               lexState = "hexadecimal";
               return;
           }
@@ -712,39 +712,39 @@ var require_dist = __commonJS({
         decimalInteger: function decimalInteger() {
           switch (c) {
             case ".":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalPoint";
               return;
             case "e":
             case "E":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalExponent";
               return;
           }
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             return;
           }
           return newToken("numeric", sign * Number(buffer));
         },
         decimalPointLeading: function decimalPointLeading() {
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "decimalFraction";
             return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         decimalPoint: function decimalPoint() {
           switch (c) {
             case "e":
             case "E":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalExponent";
               return;
           }
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "decimalFraction";
             return;
           }
@@ -754,12 +754,12 @@ var require_dist = __commonJS({
           switch (c) {
             case "e":
             case "E":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalExponent";
               return;
           }
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             return;
           }
           return newToken("numeric", sign * Number(buffer));
@@ -768,43 +768,43 @@ var require_dist = __commonJS({
           switch (c) {
             case "+":
             case "-":
-              buffer += read();
+              buffer += read2();
               lexState = "decimalExponentSign";
               return;
           }
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "decimalExponentInteger";
             return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         decimalExponentSign: function decimalExponentSign() {
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "decimalExponentInteger";
             return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         decimalExponentInteger: function decimalExponentInteger() {
           if (util.isDigit(c)) {
-            buffer += read();
+            buffer += read2();
             return;
           }
           return newToken("numeric", sign * Number(buffer));
         },
         hexadecimal: function hexadecimal() {
           if (util.isHexDigit(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "hexadecimalInteger";
             return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         hexadecimalInteger: function hexadecimalInteger() {
           if (util.isHexDigit(c)) {
-            buffer += read();
+            buffer += read2();
             return;
           }
           return newToken("numeric", sign * Number(buffer));
@@ -812,40 +812,40 @@ var require_dist = __commonJS({
         string: function string() {
           switch (c) {
             case "\\":
-              read();
+              read2();
               buffer += escape();
               return;
             case '"':
               if (doubleQuote) {
-                read();
+                read2();
                 return newToken("string", buffer);
               }
-              buffer += read();
+              buffer += read2();
               return;
             case "'":
               if (!doubleQuote) {
-                read();
+                read2();
                 return newToken("string", buffer);
               }
-              buffer += read();
+              buffer += read2();
               return;
             case "\n":
             case "\r":
-              throw invalidChar(read());
+              throw invalidChar(read2());
             case "\u2028":
             case "\u2029":
               separatorChar(c);
               break;
             case void 0:
-              throw invalidChar(read());
+              throw invalidChar(read2());
           }
-          buffer += read();
+          buffer += read2();
         },
-        start: function start() {
+        start: function start2() {
           switch (c) {
             case "{":
             case "[":
-              return newToken("punctuator", read());
+              return newToken("punctuator", read2());
           }
           lexState = "value";
         },
@@ -853,33 +853,33 @@ var require_dist = __commonJS({
           switch (c) {
             case "$":
             case "_":
-              buffer = read();
+              buffer = read2();
               lexState = "identifierName";
               return;
             case "\\":
-              read();
+              read2();
               lexState = "identifierNameStartEscape";
               return;
             case "}":
-              return newToken("punctuator", read());
+              return newToken("punctuator", read2());
             case '"':
             case "'":
-              doubleQuote = read() === '"';
+              doubleQuote = read2() === '"';
               lexState = "string";
               return;
           }
           if (util.isIdStartChar(c)) {
-            buffer += read();
+            buffer += read2();
             lexState = "identifierName";
             return;
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         afterPropertyName: function afterPropertyName() {
           if (c === ":") {
-            return newToken("punctuator", read());
+            return newToken("punctuator", read2());
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         beforePropertyValue: function beforePropertyValue() {
           lexState = "value";
@@ -888,13 +888,13 @@ var require_dist = __commonJS({
           switch (c) {
             case ",":
             case "}":
-              return newToken("punctuator", read());
+              return newToken("punctuator", read2());
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
         beforeArrayValue: function beforeArrayValue() {
           if (c === "]") {
-            return newToken("punctuator", read());
+            return newToken("punctuator", read2());
           }
           lexState = "value";
         },
@@ -902,12 +902,12 @@ var require_dist = __commonJS({
           switch (c) {
             case ",":
             case "]":
-              return newToken("punctuator", read());
+              return newToken("punctuator", read2());
           }
-          throw invalidChar(read());
+          throw invalidChar(read2());
         },
-        end: function end() {
-          throw invalidChar(read());
+        end: function end2() {
+          throw invalidChar(read2());
         }
       };
       function newToken(type, value) {
@@ -923,53 +923,53 @@ var require_dist = __commonJS({
           var c2 = list[i];
           var p = peek();
           if (p !== c2) {
-            throw invalidChar(read());
+            throw invalidChar(read2());
           }
-          read();
+          read2();
         }
       }
       function escape() {
         var c2 = peek();
         switch (c2) {
           case "b":
-            read();
+            read2();
             return "\b";
           case "f":
-            read();
+            read2();
             return "\f";
           case "n":
-            read();
+            read2();
             return "\n";
           case "r":
-            read();
+            read2();
             return "\r";
           case "t":
-            read();
+            read2();
             return "	";
           case "v":
-            read();
+            read2();
             return "\v";
           case "0":
-            read();
+            read2();
             if (util.isDigit(peek())) {
-              throw invalidChar(read());
+              throw invalidChar(read2());
             }
             return "\0";
           case "x":
-            read();
+            read2();
             return hexEscape();
           case "u":
-            read();
+            read2();
             return unicodeEscape();
           case "\n":
           case "\u2028":
           case "\u2029":
-            read();
+            read2();
             return "";
           case "\r":
-            read();
+            read2();
             if (peek() === "\n") {
-              read();
+              read2();
             }
             return "";
           case "1":
@@ -981,24 +981,24 @@ var require_dist = __commonJS({
           case "7":
           case "8":
           case "9":
-            throw invalidChar(read());
+            throw invalidChar(read2());
           case void 0:
-            throw invalidChar(read());
+            throw invalidChar(read2());
         }
-        return read();
+        return read2();
       }
       function hexEscape() {
         var buffer2 = "";
         var c2 = peek();
         if (!util.isHexDigit(c2)) {
-          throw invalidChar(read());
+          throw invalidChar(read2());
         }
-        buffer2 += read();
+        buffer2 += read2();
         c2 = peek();
         if (!util.isHexDigit(c2)) {
-          throw invalidChar(read());
+          throw invalidChar(read2());
         }
-        buffer2 += read();
+        buffer2 += read2();
         return String.fromCodePoint(parseInt(buffer2, 16));
       }
       function unicodeEscape() {
@@ -1007,14 +1007,14 @@ var require_dist = __commonJS({
         while (count-- > 0) {
           var c2 = peek();
           if (!util.isHexDigit(c2)) {
-            throw invalidChar(read());
+            throw invalidChar(read2());
           }
-          buffer2 += read();
+          buffer2 += read2();
         }
         return String.fromCodePoint(parseInt(buffer2, 16));
       }
       var parseStates = {
-        start: function start() {
+        start: function start2() {
           if (token.type === "eof") {
             throw invalidEOF();
           }
@@ -1080,7 +1080,7 @@ var require_dist = __commonJS({
               pop();
           }
         },
-        end: function end() {
+        end: function end2() {
         }
       };
       function push() {
@@ -1419,17 +1419,14 @@ var require_dist = __commonJS({
 __export(exports, {
   default: () => LatexSuitePlugin
 });
-var import_obsidian4 = __toModule(require("obsidian"));
-var import_view11 = __toModule(require("@codemirror/view"));
-var import_state9 = __toModule(require("@codemirror/state"));
-var import_commands2 = __toModule(require("@codemirror/commands"));
+var import_obsidian7 = __toModule(require("obsidian"));
 
 // src/settings.ts
-var import_obsidian3 = __toModule(require("obsidian"));
-var import_view8 = __toModule(require("@codemirror/view"));
-var import_state6 = __toModule(require("@codemirror/state"));
+var import_obsidian6 = __toModule(require("obsidian"));
+var import_view9 = __toModule(require("@codemirror/view"));
+var import_state7 = __toModule(require("@codemirror/state"));
 
-// src/editor/extensions.ts
+// src/snippets_editor/extensions.ts
 var import_view3 = __toModule(require("@codemirror/view"));
 var import_state2 = __toModule(require("@codemirror/state"));
 
@@ -1805,20 +1802,20 @@ var TreeNode = class {
   nextChild(i, dir, pos, side, mode = 0) {
     for (let parent = this; ; ) {
       for (let { children, positions } = parent._tree, e = dir > 0 ? children.length : -1; i != e; i += dir) {
-        let next = children[i], start = positions[i] + parent.from;
-        if (!checkSide(side, pos, start, start + next.length))
+        let next = children[i], start2 = positions[i] + parent.from;
+        if (!checkSide(side, pos, start2, start2 + next.length))
           continue;
         if (next instanceof TreeBuffer) {
           if (mode & IterMode.ExcludeBuffers)
             continue;
-          let index = next.findChild(0, next.buffer.length, dir, pos - start, side);
+          let index = next.findChild(0, next.buffer.length, dir, pos - start2, side);
           if (index > -1)
-            return new BufferNode(new BufferContext(parent, next, i, start), null, index);
+            return new BufferNode(new BufferContext(parent, next, i, start2), null, index);
         } else if (mode & IterMode.IncludeAnonymous || (!next.type.isAnonymous || hasChild(next))) {
           let mounted;
           if (!(mode & IterMode.IgnoreMounts) && next.props && (mounted = next.prop(NodeProp.mounted)) && !mounted.overlay)
-            return new TreeNode(mounted.tree, start, i, parent);
-          let inner = new TreeNode(next, start, i, parent);
+            return new TreeNode(mounted.tree, start2, i, parent);
+          let inner = new TreeNode(next, start2, i, parent);
           return mode & IterMode.IncludeAnonymous || !inner.type.isAnonymous ? inner : inner.nextChild(dir < 0 ? next.children.length - 1 : 0, dir, pos, side);
         }
       }
@@ -1937,11 +1934,11 @@ function matchNodeContext(node, context, i = context.length - 1) {
   return true;
 }
 var BufferContext = class {
-  constructor(parent, buffer, index, start) {
+  constructor(parent, buffer, index, start2) {
     this.parent = parent;
     this.buffer = buffer;
     this.index = index;
-    this.start = start;
+    this.start = start2;
   }
 };
 var BufferNode = class {
@@ -2079,10 +2076,10 @@ var TreeCursor = class {
   }
   yieldBuf(index, type) {
     this.index = index;
-    let { start, buffer } = this.buffer;
+    let { start: start2, buffer } = this.buffer;
     this.type = type || buffer.set.types[buffer.buffer[index]];
-    this.from = start + buffer.buffer[index + 1];
-    this.to = start + buffer.buffer[index + 2];
+    this.from = start2 + buffer.buffer[index + 1];
+    this.to = start2 + buffer.buffer[index + 2];
     return true;
   }
   yield(node) {
@@ -2281,14 +2278,14 @@ function buildTree(data) {
   let types = nodeSet.types;
   let contextHash = 0, lookAhead = 0;
   function takeNode(parentStart, minPos, children2, positions2, inRepeat) {
-    let { id: id2, start, end, size } = cursor;
+    let { id: id2, start: start2, end: end2, size } = cursor;
     let lookAheadAtStart = lookAhead;
     while (size < 0) {
       cursor.next();
       if (size == -1) {
         let node2 = reused[id2];
         children2.push(node2);
-        positions2.push(start - parentStart);
+        positions2.push(start2 - parentStart);
         return;
       } else if (size == -3) {
         contextHash = id2;
@@ -2301,41 +2298,41 @@ function buildTree(data) {
       }
     }
     let type = types[id2], node, buffer2;
-    let startPos = start - parentStart;
-    if (end - start <= maxBufferLength && (buffer2 = findBufferSize(cursor.pos - minPos, inRepeat))) {
+    let startPos = start2 - parentStart;
+    if (end2 - start2 <= maxBufferLength && (buffer2 = findBufferSize(cursor.pos - minPos, inRepeat))) {
       let data2 = new Uint16Array(buffer2.size - buffer2.skip);
       let endPos = cursor.pos - buffer2.size, index = data2.length;
       while (cursor.pos > endPos)
         index = copyToBuffer(buffer2.start, data2, index);
-      node = new TreeBuffer(data2, end - buffer2.start, nodeSet);
+      node = new TreeBuffer(data2, end2 - buffer2.start, nodeSet);
       startPos = buffer2.start - parentStart;
     } else {
       let endPos = cursor.pos - size;
       cursor.next();
       let localChildren = [], localPositions = [];
       let localInRepeat = id2 >= minRepeatType ? id2 : -1;
-      let lastGroup = 0, lastEnd = end;
+      let lastGroup = 0, lastEnd = end2;
       while (cursor.pos > endPos) {
         if (localInRepeat >= 0 && cursor.id == localInRepeat && cursor.size >= 0) {
           if (cursor.end <= lastEnd - maxBufferLength) {
-            makeRepeatLeaf(localChildren, localPositions, start, lastGroup, cursor.end, lastEnd, localInRepeat, lookAheadAtStart);
+            makeRepeatLeaf(localChildren, localPositions, start2, lastGroup, cursor.end, lastEnd, localInRepeat, lookAheadAtStart);
             lastGroup = localChildren.length;
             lastEnd = cursor.end;
           }
           cursor.next();
         } else {
-          takeNode(start, endPos, localChildren, localPositions, localInRepeat);
+          takeNode(start2, endPos, localChildren, localPositions, localInRepeat);
         }
       }
       if (localInRepeat >= 0 && lastGroup > 0 && lastGroup < localChildren.length)
-        makeRepeatLeaf(localChildren, localPositions, start, lastGroup, start, lastEnd, localInRepeat, lookAheadAtStart);
+        makeRepeatLeaf(localChildren, localPositions, start2, lastGroup, start2, lastEnd, localInRepeat, lookAheadAtStart);
       localChildren.reverse();
       localPositions.reverse();
       if (localInRepeat > -1 && lastGroup > 0) {
         let make = makeBalanced(type);
-        node = balanceRange(type, localChildren, localPositions, 0, localChildren.length, 0, end - start, make, make);
+        node = balanceRange(type, localChildren, localPositions, 0, localChildren.length, 0, end2 - start2, make, make);
       } else {
-        node = makeTree(type, localChildren, localPositions, end - start, lookAheadAtStart - end);
+        node = makeTree(type, localChildren, localPositions, end2 - start2, lookAheadAtStart - end2);
       }
     }
     children2.push(node);
@@ -2375,14 +2372,14 @@ function buildTree(data) {
   }
   function findBufferSize(maxSize, inRepeat) {
     let fork = cursor.fork();
-    let size = 0, start = 0, skip = 0, minStart = fork.end - maxBufferLength;
+    let size = 0, start2 = 0, skip = 0, minStart = fork.end - maxBufferLength;
     let result = { size: 0, start: 0, skip: 0 };
     scan:
       for (let minPos = fork.pos - maxSize; fork.pos > minPos; ) {
         let nodeSize2 = fork.size;
         if (fork.id == inRepeat && nodeSize2 >= 0) {
           result.size = size;
-          result.start = start;
+          result.start = start2;
           result.skip = skip;
           skip += 4;
           size += 4;
@@ -2406,19 +2403,19 @@ function buildTree(data) {
           }
           fork.next();
         }
-        start = nodeStart;
+        start2 = nodeStart;
         size += nodeSize2;
         skip += localSkipped;
       }
     if (inRepeat < 0 || size == maxSize) {
       result.size = size;
-      result.start = start;
+      result.start = start2;
       result.skip = skip;
     }
     return result.size > 4 ? result : void 0;
   }
   function copyToBuffer(bufferStart, buffer2, index) {
-    let { id: id2, start, end, size } = cursor;
+    let { id: id2, start: start2, end: end2, size } = cursor;
     cursor.next();
     if (size >= 0 && id2 < minRepeatType) {
       let startIndex = index;
@@ -2428,8 +2425,8 @@ function buildTree(data) {
           index = copyToBuffer(bufferStart, buffer2, index);
       }
       buffer2[--index] = startIndex;
-      buffer2[--index] = end - bufferStart;
-      buffer2[--index] = start - bufferStart;
+      buffer2[--index] = end2 - bufferStart;
+      buffer2[--index] = start2 - bufferStart;
       buffer2[--index] = id2;
     } else if (size == -3) {
       contextHash = id2;
@@ -2462,13 +2459,13 @@ function nodeSize(balanceType, node) {
   }
   return size;
 }
-function balanceRange(balanceType, children, positions, from, to, start, length, mkTop, mkTree) {
+function balanceRange(balanceType, children, positions, from, to, start2, length, mkTop, mkTree) {
   let total = 0;
   for (let i = from; i < to; i++)
     total += nodeSize(balanceType, children[i]);
   let maxChild = Math.ceil(total * 1.5 / 8);
   let localChildren = [], localPositions = [];
-  function divide(children2, positions2, from2, to2, offset) {
+  function divide(children2, positions2, from2, to2, offset2) {
     for (let i = from2; i < to2; ) {
       let groupFrom = i, groupStart = positions2[i], groupSize = nodeSize(balanceType, children2[i]);
       i++;
@@ -2481,7 +2478,7 @@ function balanceRange(balanceType, children, positions, from, to, start, length,
       if (i == groupFrom + 1) {
         if (groupSize > maxChild) {
           let only = children2[groupFrom];
-          divide(only.children, only.positions, 0, only.children.length, positions2[groupFrom] + offset);
+          divide(only.children, only.positions, 0, only.children.length, positions2[groupFrom] + offset2);
           continue;
         }
         localChildren.push(children2[groupFrom]);
@@ -2489,7 +2486,7 @@ function balanceRange(balanceType, children, positions, from, to, start, length,
         let length2 = positions2[i - 1] + children2[i - 1].length - groupStart;
         localChildren.push(balanceRange(balanceType, children2, positions2, groupFrom, i, groupStart, length2, null, mkTree));
       }
-      localPositions.push(groupStart + offset - start);
+      localPositions.push(groupStart + offset2 - start2);
     }
   }
   divide(children, positions, from, to, 0);
@@ -2588,8 +2585,8 @@ var Stack = class {
   get context() {
     return this.curContext ? this.curContext.context : null;
   }
-  pushState(state, start) {
-    this.stack.push(this.state, start, this.bufferBase + this.buffer.length);
+  pushState(state, start2) {
+    this.stack.push(this.state, start2, this.bufferBase + this.buffer.length);
     this.state = state;
   }
   reduce(action) {
@@ -2606,11 +2603,11 @@ var Stack = class {
       return;
     }
     let base = this.stack.length - (depth - 1) * 3 - (action & 262144 ? 6 : 0);
-    let start = this.stack[base - 2];
+    let start2 = this.stack[base - 2];
     let bufferBase = this.stack[base - 1], count = this.bufferBase + this.buffer.length - bufferBase;
     if (type < parser2.minRepeatTerm || action & 131072) {
       let pos = parser2.stateFlag(this.state, 1) ? this.pos : this.reducePos;
-      this.storeNode(type, start, pos, count + 4, true);
+      this.storeNode(type, start2, pos, count + 4, true);
     }
     if (action & 262144) {
       this.state = this.stack[base];
@@ -2620,30 +2617,30 @@ var Stack = class {
     }
     while (this.stack.length > base)
       this.stack.pop();
-    this.reduceContext(type, start);
+    this.reduceContext(type, start2);
   }
-  storeNode(term, start, end, size = 4, isReduce = false) {
+  storeNode(term, start2, end2, size = 4, isReduce = false) {
     if (term == 0 && (!this.stack.length || this.stack[this.stack.length - 1] < this.buffer.length + this.bufferBase)) {
-      let cur = this, top = this.buffer.length;
-      if (top == 0 && cur.parent) {
-        top = cur.bufferBase - cur.parent.bufferBase;
+      let cur = this, top2 = this.buffer.length;
+      if (top2 == 0 && cur.parent) {
+        top2 = cur.bufferBase - cur.parent.bufferBase;
         cur = cur.parent;
       }
-      if (top > 0 && cur.buffer[top - 4] == 0 && cur.buffer[top - 1] > -1) {
-        if (start == end)
+      if (top2 > 0 && cur.buffer[top2 - 4] == 0 && cur.buffer[top2 - 1] > -1) {
+        if (start2 == end2)
           return;
-        if (cur.buffer[top - 2] >= start) {
-          cur.buffer[top - 2] = end;
+        if (cur.buffer[top2 - 2] >= start2) {
+          cur.buffer[top2 - 2] = end2;
           return;
         }
       }
     }
-    if (!isReduce || this.pos == end) {
-      this.buffer.push(term, start, end, size);
+    if (!isReduce || this.pos == end2) {
+      this.buffer.push(term, start2, end2, size);
     } else {
       let index = this.buffer.length;
       if (index > 0 && this.buffer[index - 4] != 0)
-        while (index > 0 && this.buffer[index - 2] > end) {
+        while (index > 0 && this.buffer[index - 2] > end2) {
           this.buffer[index] = this.buffer[index - 4];
           this.buffer[index + 1] = this.buffer[index - 3];
           this.buffer[index + 2] = this.buffer[index - 2];
@@ -2653,13 +2650,13 @@ var Stack = class {
             size -= 4;
         }
       this.buffer[index] = term;
-      this.buffer[index + 1] = start;
-      this.buffer[index + 2] = end;
+      this.buffer[index + 1] = start2;
+      this.buffer[index + 2] = end2;
       this.buffer[index + 3] = size;
     }
   }
   shift(action, next, nextEnd) {
-    let start = this.pos;
+    let start2 = this.pos;
     if (action & 131072) {
       this.pushState(action & 65535, this.pos);
     } else if ((action & 262144) == 0) {
@@ -2669,15 +2666,15 @@ var Stack = class {
         if (!parser2.stateFlag(nextState, 1))
           this.reducePos = nextEnd;
       }
-      this.pushState(nextState, start);
-      this.shiftContext(next, start);
+      this.pushState(nextState, start2);
+      this.shiftContext(next, start2);
       if (next <= parser2.maxNode)
-        this.buffer.push(next, start, nextEnd, 4);
+        this.buffer.push(next, start2, nextEnd, 4);
     } else {
       this.pos = nextEnd;
-      this.shiftContext(next, start);
+      this.shiftContext(next, start2);
       if (next <= this.p.parser.maxNode)
-        this.buffer.push(next, start, nextEnd, 4);
+        this.buffer.push(next, start2, nextEnd, 4);
     }
   }
   apply(action, next, nextEnd) {
@@ -2692,10 +2689,10 @@ var Stack = class {
       this.p.reused.push(value);
       index++;
     }
-    let start = this.pos;
-    this.reducePos = this.pos = start + value.length;
-    this.pushState(next, start);
-    this.buffer.push(index, start, this.reducePos, -1);
+    let start2 = this.pos;
+    this.reducePos = this.pos = start2 + value.length;
+    this.pushState(next, start2);
+    this.buffer.push(index, start2, this.reducePos, -1);
     if (this.curContext)
       this.updateContext(this.curContext.tracker.reuse(this.curContext.context, value, this, this.p.stream.reset(this.pos - value.length)));
   }
@@ -2809,13 +2806,13 @@ var Stack = class {
   dialectEnabled(dialectID) {
     return this.p.parser.dialect.flags[dialectID];
   }
-  shiftContext(term, start) {
+  shiftContext(term, start2) {
     if (this.curContext)
-      this.updateContext(this.curContext.tracker.shift(this.curContext.context, term, this, this.p.stream.reset(start)));
+      this.updateContext(this.curContext.tracker.shift(this.curContext.context, term, this, this.p.stream.reset(start2)));
   }
-  reduceContext(term, start) {
+  reduceContext(term, start2) {
     if (this.curContext)
-      this.updateContext(this.curContext.tracker.reduce(this.curContext.context, term, this, this.p.stream.reset(start)));
+      this.updateContext(this.curContext.tracker.reduce(this.curContext.context, term, this, this.p.stream.reset(start2)));
   }
   emitContext() {
     let last = this.buffer.length - 1;
@@ -2865,10 +2862,10 @@ var Recover;
   Recover2[Recover2["DampenInsertStackDepth"] = 120] = "DampenInsertStackDepth";
 })(Recover || (Recover = {}));
 var SimulatedStack = class {
-  constructor(start) {
-    this.start = start;
-    this.state = start.state;
-    this.stack = start.stack;
+  constructor(start2) {
+    this.start = start2;
+    this.state = start2.state;
+    this.stack = start2.stack;
     this.base = this.stack.length;
   }
   reduce(action) {
@@ -2955,9 +2952,9 @@ var InputStream = class {
     this.end = ranges[ranges.length - 1].to;
     this.readNext();
   }
-  resolveOffset(offset, assoc) {
+  resolveOffset(offset2, assoc) {
     let range = this.range, index = this.rangeIndex;
-    let pos = this.pos + offset;
+    let pos = this.pos + offset2;
     while (pos < range.from) {
       if (!index)
         return null;
@@ -2974,13 +2971,13 @@ var InputStream = class {
     }
     return pos;
   }
-  peek(offset) {
-    let idx = this.chunkOff + offset, pos, result;
+  peek(offset2) {
+    let idx = this.chunkOff + offset2, pos, result;
     if (idx >= 0 && idx < this.chunk.length) {
-      pos = this.pos + offset;
+      pos = this.pos + offset2;
       result = this.chunk.charCodeAt(idx);
     } else {
-      let resolved = this.resolveOffset(offset, 1);
+      let resolved = this.resolveOffset(offset2, 1);
       if (resolved == null)
         return -1;
       pos = resolved;
@@ -3001,11 +2998,11 @@ var InputStream = class {
     return result;
   }
   acceptToken(token, endOffset = 0) {
-    let end = endOffset ? this.resolveOffset(endOffset, -1) : this.pos;
-    if (end == null || end < this.token.start)
+    let end2 = endOffset ? this.resolveOffset(endOffset, -1) : this.pos;
+    if (end2 == null || end2 < this.token.start)
       throw new RangeError("Token end out of bounds");
     this.token.value = token;
-    this.token.end = end;
+    this.token.end = end2;
   }
   getChunk() {
     if (this.pos >= this.chunk2Pos && this.pos < this.chunk2Pos + this.chunk2.length) {
@@ -3019,8 +3016,8 @@ var InputStream = class {
       this.chunk2 = this.chunk;
       this.chunk2Pos = this.chunkPos;
       let nextChunk = this.input.chunk(this.pos);
-      let end = this.pos + nextChunk.length;
-      this.chunk = end > this.range.to ? nextChunk.slice(0, this.range.to - this.pos) : nextChunk;
+      let end2 = this.pos + nextChunk.length;
+      this.chunk = end2 > this.range.to ? nextChunk.slice(0, this.range.to - this.pos) : nextChunk;
       this.chunkPos = this.pos;
       this.chunkOff = 0;
     }
@@ -3252,39 +3249,39 @@ var FragmentCursor = class {
         this.nextFragment();
         return null;
       }
-      let top = this.trees[last], index = this.index[last];
-      if (index == top.children.length) {
+      let top2 = this.trees[last], index = this.index[last];
+      if (index == top2.children.length) {
         this.trees.pop();
         this.start.pop();
         this.index.pop();
         continue;
       }
-      let next = top.children[index];
-      let start = this.start[last] + top.positions[index];
-      if (start > pos) {
-        this.nextStart = start;
+      let next = top2.children[index];
+      let start2 = this.start[last] + top2.positions[index];
+      if (start2 > pos) {
+        this.nextStart = start2;
         return null;
       }
       if (next instanceof Tree) {
-        if (start == pos) {
-          if (start < this.safeFrom)
+        if (start2 == pos) {
+          if (start2 < this.safeFrom)
             return null;
-          let end = start + next.length;
-          if (end <= this.safeTo) {
+          let end2 = start2 + next.length;
+          if (end2 <= this.safeTo) {
             let lookAhead = next.prop(NodeProp.lookAhead);
-            if (!lookAhead || end + lookAhead < this.fragment.to)
+            if (!lookAhead || end2 + lookAhead < this.fragment.to)
               return next;
           }
         }
         this.index[last]++;
-        if (start + next.length >= Math.max(this.safeFrom, pos)) {
+        if (start2 + next.length >= Math.max(this.safeFrom, pos)) {
           this.trees.push(next);
-          this.start.push(start);
+          this.start.push(start2);
           this.index.push(0);
         }
       } else {
         this.index[last]++;
-        this.nextStart = start + next.length;
+        this.nextStart = start2 + next.length;
       }
     }
   }
@@ -3299,7 +3296,7 @@ var TokenCache = class {
   }
   getActions(stack) {
     let actionIndex = 0;
-    let main = null;
+    let main2 = null;
     let { parser: parser2 } = stack.p, { tokenizers } = parser2;
     let mask = parser2.stateSlot(stack.state, 3);
     let context = stack.curContext ? stack.curContext.hash : 0;
@@ -3308,7 +3305,7 @@ var TokenCache = class {
       if ((1 << i & mask) == 0)
         continue;
       let tokenizer = tokenizers[i], token = this.tokens[i];
-      if (main && !tokenizer.fallback)
+      if (main2 && !tokenizer.fallback)
         continue;
       if (tokenizer.contextual || token.start != stack.pos || token.mask != mask || token.context != context) {
         this.updateCachedToken(token, tokenizer, stack);
@@ -3323,7 +3320,7 @@ var TokenCache = class {
           actionIndex = this.addActions(stack, token.extended, token.end, actionIndex);
         actionIndex = this.addActions(stack, token.value, token.end, actionIndex);
         if (!tokenizer.extend) {
-          main = token;
+          main2 = token;
           if (actionIndex > startIndex)
             break;
         }
@@ -3333,23 +3330,23 @@ var TokenCache = class {
       this.actions.pop();
     if (lookAhead)
       stack.setLookAhead(lookAhead);
-    if (!main && stack.pos == this.stream.end) {
-      main = new CachedToken();
-      main.value = stack.p.parser.eofTerm;
-      main.start = main.end = stack.pos;
-      actionIndex = this.addActions(stack, main.value, main.end, actionIndex);
+    if (!main2 && stack.pos == this.stream.end) {
+      main2 = new CachedToken();
+      main2.value = stack.p.parser.eofTerm;
+      main2.start = main2.end = stack.pos;
+      actionIndex = this.addActions(stack, main2.value, main2.end, actionIndex);
     }
-    this.mainToken = main;
+    this.mainToken = main2;
     return this.actions;
   }
   getMainToken(stack) {
     if (this.mainToken)
       return this.mainToken;
-    let main = new CachedToken(), { pos, p } = stack;
-    main.start = pos;
-    main.end = Math.min(pos + 1, p.stream.end);
-    main.value = pos == p.stream.end ? p.parser.eofTerm : 0;
-    return main;
+    let main2 = new CachedToken(), { pos, p } = stack;
+    main2.start = pos;
+    main2.end = Math.min(pos + 1, p.stream.end);
+    main2.value = pos == p.stream.end ? p.parser.eofTerm : 0;
+    return main2;
   }
   updateCachedToken(token, tokenizer, stack) {
     tokenizer.token(this.stream.reset(stack.pos, token), stack);
@@ -3371,16 +3368,16 @@ var TokenCache = class {
       token.end = Math.min(stack.p.stream.end, stack.pos + 1);
     }
   }
-  putAction(action, token, end, index) {
+  putAction(action, token, end2, index) {
     for (let i = 0; i < index; i += 3)
       if (this.actions[i] == action)
         return index;
     this.actions[index++] = action;
     this.actions[index++] = token;
-    this.actions[index++] = end;
+    this.actions[index++] = end2;
     return index;
   }
-  addActions(stack, token, end, index) {
+  addActions(stack, token, end2, index) {
     let { state } = stack, { parser: parser2 } = stack.p, { data } = parser2;
     for (let set = 0; set < 2; set++) {
       for (let i = parser2.stateSlot(state, set ? 2 : 1); ; i += 3) {
@@ -3389,12 +3386,12 @@ var TokenCache = class {
             i = pair(data, i + 2);
           } else {
             if (index == 0 && data[i + 1] == 2)
-              index = this.putAction(pair(data, i + 2), token, end, index);
+              index = this.putAction(pair(data, i + 2), token, end2, index);
             break;
           }
         }
         if (data[i] == token)
-          index = this.putAction(pair(data, i + 1), token, end, index);
+          index = this.putAction(pair(data, i + 1), token, end2, index);
       }
     }
     return index;
@@ -3508,13 +3505,13 @@ var Parse = class {
     this.stoppedAt = pos;
   }
   advanceStack(stack, stacks, split) {
-    let start = stack.pos, { parser: parser2 } = this;
+    let start2 = stack.pos, { parser: parser2 } = this;
     let base = verbose ? this.stackID(stack) + " -> " : "";
-    if (this.stoppedAt != null && start > this.stoppedAt)
+    if (this.stoppedAt != null && start2 > this.stoppedAt)
       return stack.forceReduce() ? stack : null;
     if (this.fragments) {
       let strictCx = stack.curContext && stack.curContext.tracker.strict, cxHash = strictCx ? stack.curContext.hash : 0;
-      for (let cached = this.fragments.nodeAt(start); cached; ) {
+      for (let cached = this.fragments.nodeAt(start2); cached; ) {
         let match = this.parser.nodeSet.types[cached.type.id] == cached.type ? parser2.getGoto(stack.state, cached.type.id) : -1;
         if (match > -1 && cached.length && (!strictCx || (cached.prop(NodeProp.contextHash) || 0) == cxHash)) {
           stack.useNode(cached, match);
@@ -3544,15 +3541,15 @@ var Parse = class {
     }
     let actions = this.tokens.getActions(stack);
     for (let i = 0; i < actions.length; ) {
-      let action = actions[i++], term = actions[i++], end = actions[i++];
+      let action = actions[i++], term = actions[i++], end2 = actions[i++];
       let last = i == actions.length || !split;
       let localStack = last ? stack : stack.split();
-      localStack.apply(action, term, end);
+      localStack.apply(action, term, end2);
       if (verbose)
-        console.log(base + this.stackID(localStack) + ` (via ${(action & 65536) == 0 ? "shift" : `reduce of ${parser2.getName(action & 65535)}`} for ${parser2.getName(term)} @ ${start}${localStack == stack ? "" : ", split"})`);
+        console.log(base + this.stackID(localStack) + ` (via ${(action & 65536) == 0 ? "shift" : `reduce of ${parser2.getName(action & 65535)}`} for ${parser2.getName(term)} @ ${start2}${localStack == stack ? "" : ", split"})`);
       if (last)
         return true;
-      else if (localStack.pos > start)
+      else if (localStack.pos > start2)
         stacks.push(localStack);
       else
         split.push(localStack);
@@ -3750,7 +3747,7 @@ var LRParser = class extends Parser {
       let target = table[pos++];
       if (last && loose)
         return target;
-      for (let end = pos + (groupTag >> 1); pos < end; pos++)
+      for (let end2 = pos + (groupTag >> 1); pos < end2; pos++)
         if (table[pos] == state)
           return target;
       if (last)
@@ -3893,10 +3890,10 @@ var LRParser = class extends Parser {
 function pair(data, off) {
   return data[off] | data[off + 1] << 16;
 }
-function findOffset(data, start, term) {
-  for (let i = start, next; (next = data[i]) != 65535; i++)
+function findOffset(data, start2, term) {
+  for (let i = start2, next; (next = data[i]) != 65535; i++)
     if (next == term)
-      return i - start;
+      return i - start2;
   return -1;
 }
 function findFinished(stacks) {
@@ -4226,14 +4223,14 @@ function getScope(doc, node) {
   let cached = cache.get(node);
   if (cached)
     return cached;
-  let completions = [], top = true;
+  let completions = [], top2 = true;
   function def(node2, type) {
     let name = doc.sliceString(node2.from, node2.to);
     completions.push({ label: name, type });
   }
   node.cursor(IterMode.IncludeAnonymous).iterate((node2) => {
-    if (top) {
-      top = false;
+    if (top2) {
+      top2 = false;
     } else if (node2.name) {
       let gather = gatherCompletions[node2.name];
       if (gather && gather(node2, def) || ScopeNodes.has(node2.name))
@@ -4338,11 +4335,11 @@ function javascript(config2 = {}) {
     config2.jsx ? autoCloseTags : []
   ]);
 }
-function elementName(doc, tree, max = doc.length) {
+function elementName(doc, tree, max2 = doc.length) {
   if (!tree)
     return "";
   let name = tree.getChild("JSXIdentifier");
-  return name ? doc.sliceString(name.from, Math.min(name.to, max)) : "";
+  return name ? doc.sliceString(name.from, Math.min(name.to, max2)) : "";
 }
 var android = typeof navigator == "object" && /* @__PURE__ */ /Android\b/.test(navigator.userAgent);
 var autoCloseTags = /* @__PURE__ */ import_view.EditorView.inputHandler.of((view, from, to, text) => {
@@ -4374,14 +4371,14 @@ var autoCloseTags = /* @__PURE__ */ import_view.EditorView.inputHandler.of((view
   return true;
 });
 
-// src/editor/extensions.ts
+// src/snippets_editor/extensions.ts
 var import_language3 = __toModule(require("@codemirror/language"));
 var import_commands = __toModule(require("@codemirror/commands"));
 var import_autocomplete2 = __toModule(require("@codemirror/autocomplete"));
 var import_search = __toModule(require("@codemirror/search"));
 var import_lint = __toModule(require("@codemirror/lint"));
 
-// src/editor/obsidian_theme.ts
+// src/snippets_editor/obsidian_theme.ts
 var import_view2 = __toModule(require("@codemirror/view"));
 var import_language2 = __toModule(require("@codemirror/language"));
 var import_highlight2 = __toModule(require("@lezer/highlight"));
@@ -4486,7 +4483,7 @@ var obsidian = [
   (0, import_language2.syntaxHighlighting)(obsidianHighlightStyle)
 ];
 
-// src/editor/extensions.ts
+// src/snippets_editor/extensions.ts
 var basicSetup = [
   (0, import_view3.lineNumbers)(),
   (0, import_view3.highlightSpecialChars)(),
@@ -4515,9 +4512,9 @@ var basicSetup = [
 ].filter((ext) => ext);
 
 // src/default_snippets.ts
-var DEFAULT_SNIPPETS = '[\n    // Math mode\n    {trigger: "mk", replacement: "$$0$", options: "tA"},\n    {trigger: "dm", replacement: "$$\\n$0\\n$$", options: "tAw"},\n    {trigger: "beg", replacement: "\\\\begin{$0}\\n$1\\n\\\\end{$0}", options: "mA"},\n\n\n    // Dashes\n    {trigger: "--", replacement: "\u2013", options: "tA"},\n    {trigger: "\u2013-", replacement: "\u2014", options: "tA"},\n    {trigger: "\u2014-", replacement: "---", options: "tA"},\n\n\n    // Greek letters\n    {trigger: "@a", replacement: "\\\\alpha", options: "mA"},\n    {trigger: "@A", replacement: "\\\\alpha", options: "mA"},\n    {trigger: "@b", replacement: "\\\\beta", options: "mA"},\n    {trigger: "@B", replacement: "\\\\beta", options: "mA"},\n    {trigger: "@c", replacement: "\\\\chi", options: "mA"},\n    {trigger: "@C", replacement: "\\\\chi", options: "mA"},\n    {trigger: "@g", replacement: "\\\\gamma", options: "mA"},\n    {trigger: "@G", replacement: "\\\\Gamma", options: "mA"},\n    {trigger: "@d", replacement: "\\\\delta", options: "mA"},\n    {trigger: "@D", replacement: "\\\\Delta", options: "mA"},\n    {trigger: "@e", replacement: "\\\\epsilon", options: "mA"},\n    {trigger: "@E", replacement: "\\\\epsilon", options: "mA"},\n    {trigger: ":e", replacement: "\\\\varepsilon", options: "mA"},\n    {trigger: ":E", replacement: "\\\\varepsilon", options: "mA"},\n    {trigger: "@z", replacement: "\\\\zeta", options: "mA"},\n    {trigger: "@Z", replacement: "\\\\zeta", options: "mA"},\n    {trigger: "@t", replacement: "\\\\theta", options: "mA"},\n    {trigger: "@T", replacement: "\\\\Theta", options: "mA"},\n    {trigger: "@k", replacement: "\\\\kappa", options: "mA"},\n    {trigger: "@K", replacement: "\\\\kappa", options: "mA"},\n    {trigger: "@l", replacement: "\\\\lambda", options: "mA"},\n    {trigger: "@L", replacement: "\\\\Lambda", options: "mA"},\n    {trigger: "@m", replacement: "\\\\mu", options: "mA"},\n    {trigger: "@M", replacement: "\\\\mu", options: "mA"},\n    {trigger: "@r", replacement: "\\\\rho", options: "mA"},\n    {trigger: "@R", replacement: "\\\\rho", options: "mA"},\n    {trigger: "@s", replacement: "\\\\sigma", options: "mA"},\n    {trigger: "@S", replacement: "\\\\Sigma", options: "mA"},\n    {trigger: "ome", replacement: "\\\\omega", options: "mA"},\n    {trigger: "@o", replacement: "\\\\omega", options: "mA"},\n    {trigger: "@O", replacement: "\\\\Omega", options: "mA"},\n    {trigger: "([^\\\\\\\\])(${GREEK}|${SYMBOL})", replacement: "[[0]]\\\\[[1]]", options: "rmA", description: "Add backslash before greek letters and symbols"},\n\n\n    // Insert space after greek letters and symbols, etc\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL})([A-Za-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) sr", replacement: "\\\\[[0]]^{2}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) cb", replacement: "\\\\[[0]]^{3}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) rd", replacement: "\\\\[[0]]^{$0}$1", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) hat", replacement: "\\\\hat{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) dot", replacement: "\\\\dot{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) bar", replacement: "\\\\overline{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}),\\\\.", replacement: "\\\\mathbf{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK})\\\\.,", replacement: "\\\\mathbf{\\\\[[0]]}", options: "rmA"},\n\n\n    // Operations\n    {trigger: "te", replacement: "\\\\text{$0}", options: "m"},\n    {trigger: "bf", replacement: "\\\\mathbf{$0}", options: "mA"},\n    {trigger: "sr", replacement: "^{2}", options: "mA"},\n    {trigger: "cb", replacement: "^{3}", options: "mA"},\n    {trigger: "rd", replacement: "^{$0}$1", options: "mA"},\n    {trigger: "_", replacement: "_{$0}$1", options: "mA"},\n    {trigger: "sts", replacement: "_\\\\text{$0}", options: "rmA"},\n    {trigger: "sq", replacement: "\\\\sqrt{ $0 }$1", options: "mA"},\n    {trigger: "//", replacement: "\\\\frac{$0}{$1}$2", options: "mA"},\n    {trigger: "ee", replacement: "e^{ $0 }$1", options: "mA"},\n    {trigger: "rm", replacement: "\\\\mathrm{$0}$1", options: "mA"},\n    {trigger: "([a-zA-Z]),\\\\.", replacement: "\\\\mathbf{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])\\\\.,", replacement: "\\\\mathbf{[[0]]}", options: "rmA"},\n    {trigger: "([A-Za-z])(\\\\d)", replacement: "[[0]]_{[[1]]}", options: "rmA", description: "Auto letter subscript", priority: -1},\n    {trigger: "\\\\\\\\mathbf{([A-Za-z])}(\\\\d)", replacement: "\\\\mathbf{[[0]]}_{[[1]]}", options: "rmA"},\n    {trigger: "([A-Za-z])_(\\\\d\\\\d)", replacement: "[[0]]_{[[1]]}", options: "rmA"},\n    {trigger: "\\\\hat{([A-Za-z])}(\\\\d)", replacement: "hat{[[0]]}_{[[1]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])bar", replacement: "\\\\overline{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])hat", replacement: "\\\\hat{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])ddot", replacement: "\\\\ddot{[[0]]}", options: "rmA"},\n    {trigger: "ddot", replacement: "\\\\ddot{$0}", options: "mA"},\n    {trigger: "([a-zA-Z])dot", replacement: "\\\\dot{[[0]]}", options: "rmA"},\n    {trigger: "conj", replacement: "^{*}", options: "mA"},\n    {trigger: "bar", replacement: "\\\\overline{$0}", options: "mA"},\n    {trigger: "hat", replacement: "\\\\hat{$0}", options: "mA"},\n    {trigger: "dot", replacement: "\\\\dot{$0}", options: "mA"},\n    {trigger: "([^\\\\\\\\])(arcsin|arccos|arctan|arccot|arccsc|arcsec|sin|cos|tan|cot|csc)", replacement: "[[0]]\\\\[[1]]", options: "rmA"},\n    {trigger: "\\\\\\\\(arcsin|arccos|arctan|arccot|arccsc|arcsec|sin|cos|tan|cot|csc)([A-Za-gi-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"}, // Insert space after trig funcs. Skips letter "h" to allow sinh, cosh, etc.\n    {trigger: "\\\\\\\\(arcsinh|arccosh|arctanh|arccoth|arcsch|arcsech|sinh|cosh|tanh|coth|csch)([A-Za-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"}, // Insert space after trig funcs\n    {trigger: "trace", replacement: "\\\\mathrm{Tr}", options: "mA"},\n\n\n    // Visual operations\n    {trigger: "U", replacement: "\\\\underbrace{ ${VISUAL} }_{ $0 }", options: "mA"},\n    {trigger: "B", replacement: "\\\\underset{ $0 }{ ${VISUAL} }", options: "mA"},\n    {trigger: "C", replacement: "\\\\cancel{ ${VISUAL} }", options: "mA"},\n    {trigger: "K", replacement: "\\\\cancelto{ $0 }{ ${VISUAL} }", options: "mA"},\n    {trigger: "S", replacement: "\\\\sqrt{ ${VISUAL} }", options: "mA"},\n\n\n\n    // Symbols\n    {trigger: "ooo", replacement: "\\\\infty", options: "mA"},\n    {trigger: "sum", replacement: "\\\\sum", options: "mA"},\n    {trigger: "prod", replacement: "\\\\prod", options: "mA"},\n    {trigger: "lim", replacement: "\\\\lim_{ ${0:n} \\\\to ${1:\\\\infty} } $2", options: "mA"},\n    {trigger: "pm", replacement: "\\\\pm", options: "m"},\n    {trigger: "...", replacement: "\\\\dots", options: "mA"},\n    {trigger: "->", replacement: "\\\\to", options: "mA"},\n    {trigger: "<->", replacement: "\\\\leftrightarrow ", options: "mA"},\n    {trigger: "!>", replacement: "\\\\mapsto", options: "mA"},\n    {trigger: "invs", replacement: "^{-1}", options: "mA"},\n    {trigger: "\\\\\\\\\\\\", replacement: "\\\\setminus", options: "mA"},\n    {trigger: "||", replacement: "\\\\mid", options: "mA"},\n    {trigger: "and", replacement: "\\\\cap", options: "mA"},\n    {trigger: "orr", replacement: "\\\\cup", options: "mA"},\n    {trigger: "inn", replacement: "\\\\in", options: "mA"},\n    {trigger: "\\\\subset eq", replacement: "\\\\subseteq", options: "mA"},\n    {trigger: "set", replacement: "\\\\{ $0 \\\\}$1", options: "mA"},\n    {trigger: "=>", replacement: "\\\\implies", options: "mA"},\n    {trigger: "=<", replacement: "\\\\impliedby", options: "mA"},\n    {trigger: "iff", replacement: "\\\\iff", options: "mA"},\n    {trigger: "e\\\\xi sts", replacement: "\\\\exists", options: "mA", priority: 1},\n    {trigger: "===", replacement: "\\\\equiv", options: "mA"},\n    {trigger: "Sq", replacement: "\\\\square", options: "mA"},\n    {trigger: "!=", replacement: "\\\\neq", options: "mA"},\n    {trigger: ">=", replacement: "\\\\geq", options: "mA"},\n    {trigger: "<=", replacement: "\\\\leq", options: "mA"},\n    {trigger: ">>", replacement: "\\\\gg", options: "mA"},\n    {trigger: "<<", replacement: "\\\\ll", options: "mA"},\n    {trigger: "~~", replacement: "\\\\sim", options: "mA"},\n    {trigger: "\\\\sim ~", replacement: "\\\\approx", options: "mA"},\n    {trigger: "prop", replacement: "\\\\propto", options: "mA"},\n    {trigger: "nabl", replacement: "\\\\nabla", options: "mA"},\n    {trigger: "xx", replacement: "\\\\times", options: "mA"},\n    {trigger: "**", replacement: "\\\\cdot", options: "mA"},\n    {trigger: "pal", replacement: "\\\\parallel", options: "mA"},\n\n\n    {trigger: "xnn", replacement: "x_{n}", options: "mA"},\n    {trigger: "xii", replacement: "x_{i}", options: "mA"},\n    {trigger: "xjj", replacement: "x_{j}", options: "mA"},\n    {trigger: "xp1", replacement: "x_{n+1}", options: "mA"},\n    {trigger: "ynn", replacement: "y_{n}", options: "mA"},\n    {trigger: "yii", replacement: "y_{i}", options: "mA"},\n    {trigger: "yjj", replacement: "y_{j}", options: "mA"},\n\n\n    {trigger: "mcal", replacement: "\\\\mathcal{$0}$1", options: "mA"},\n    {trigger: "ell", replacement: "\\\\ell", options: "mA"},\n    {trigger: "lll", replacement: "\\\\ell", options: "mA"},\n    {trigger: "LL", replacement: "\\\\mathcal{L}", options: "mA"},\n    {trigger: "HH", replacement: "\\\\mathcal{H}", options: "mA"},\n    {trigger: "CC", replacement: "\\\\mathbb{C}", options: "mA"},\n    {trigger: "RR", replacement: "\\\\mathbb{R}", options: "mA"},\n    {trigger: "ZZ", replacement: "\\\\mathbb{Z}", options: "mA"},\n    {trigger: "NN", replacement: "\\\\mathbb{N}", options: "mA"},\n    {trigger: "II", replacement: "\\\\mathbb{1}", options: "mA"},\n    {trigger: "\\\\mathbb{1}I", replacement: "\\\\hat{\\\\mathbb{1}}", options: "mA"},\n    {trigger: "AA", replacement: "\\\\mathcal{A}", options: "mA"},\n    {trigger: "BB", replacement: "\\\\mathbf{B}", options: "mA"},\n    {trigger: "EE", replacement: "\\\\mathbf{E}", options: "mA"},\n\n\n\n    // Unit vectors\n    {trigger: ":i", replacement: "\\\\mathbf{i}", options: "mA"},\n    {trigger: ":j", replacement: "\\\\mathbf{j}", options: "mA"},\n    {trigger: ":k", replacement: "\\\\mathbf{k}", options: "mA"},\n    {trigger: ":x", replacement: "\\\\hat{\\\\mathbf{x}}", options: "mA"},\n    {trigger: ":y", replacement: "\\\\hat{\\\\mathbf{y}}", options: "mA"},\n    {trigger: ":z", replacement: "\\\\hat{\\\\mathbf{z}}", options: "mA"},\n\n\n\n    // Derivatives\n    {trigger: "par", replacement: "\\\\frac{ \\\\partial ${0:y} }{ \\\\partial ${1:x} } $2", options: "mA"},\n    {trigger: "pa2", replacement: "\\\\frac{ \\\\partial^{2} ${0:y} }{ \\\\partial ${1:x}^{2} } $2", options: "mA"},\n    {trigger: "pa3", replacement: "\\\\frac{ \\\\partial^{3} ${0:y} }{ \\\\partial ${1:x}^{3} } $2", options: "mA"},\n    {trigger: "pa([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ \\\\partial [[0]] }{ \\\\partial [[1]] } ", options: "rm"},\n    {trigger: "pa([A-Za-z])([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ \\\\partial^{2} [[0]] }{ \\\\partial [[1]] \\\\partial [[3]] } ", options: "rm"},\n    {trigger: "pa([A-Za-z])([A-Za-z])2", replacement: "\\\\frac{ \\\\partial^{2} [[0]] }{ \\\\partial [[1]]^{2} } ", options: "rmA"},\n    {trigger: "de([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ d[[0]] }{ d[[1]] } ", options: "rm"},\n    {trigger: "de([A-Za-z])([A-Za-z])2", replacement: "\\\\frac{ d^{2}[[0]] }{ d[[1]]^{2} } ", options: "rmA"},\n    {trigger: "ddt", replacement: "\\\\frac{d}{dt} ", options: "mA"},\n\n\n\n    // Integrals\n    {trigger: "oinf", replacement: "\\\\int_{0}^{\\\\infty} $0 \\\\, d${1:x} $2", options: "mA"},\n    {trigger: "infi", replacement: "\\\\int_{-\\\\infty}^{\\\\infty} $0 \\\\, d${1:x} $2", options: "mA"},\n    {trigger: "dint", replacement: "\\\\int_{${0:0}}^{${1:\\\\infty}} $2 \\\\, d${3:x} $4", options: "mA"},\n    {trigger: "oint", replacement: "\\\\oint", options: "mA"},\n    {trigger: "iiint", replacement: "\\\\iiint", options: "mA"},\n    {trigger: "iint", replacement: "\\\\iint", options: "mA"},\n    {trigger: "int", replacement: "\\\\int $0 \\\\, d${1:x} $2", options: "mA"},\n\n\n\n    // Physics\n    {trigger: "kbt", replacement: "k_{B}T", options: "mA"},\n\n\n    // Quantum mechanics\n    {trigger: "hba", replacement: "\\\\hbar", options: "mA"},\n    {trigger: "dag", replacement: "^{\\\\dagger}", options: "mA"},\n    {trigger: "bra", replacement: "\\\\bra{$0} $1", options: "mA"},\n    {trigger: "ket", replacement: "\\\\ket{$0} $1", options: "mA"},\n    {trigger: "brk", replacement: "\\\\braket{ $0 | $1 } $2", options: "mA"},\n    {trigger: "\\\\\\\\bra{([^|]+)\\\\|", replacement: "\\\\braket{ [[0]] | $0 ", options: "rmA", description: "Convert bra into braket"},\n    {trigger: "\\\\\\\\bra{(.+)}([^ ]+)>", replacement: "\\\\braket{ [[0]] | $0 ", options: "rmA", description: "Convert bra into braket (alternate)"},\n    {trigger: "outp", replacement: "\\\\ket{${0:\\\\psi}} \\\\bra{${0:\\\\psi}} $1", options: "mA"},\n\n\n\n    // Chemistry\n    {trigger: "pu", replacement: "\\\\pu{ $0 }", options: "mA"},\n    {trigger: "msun", replacement: "M_{\\\\odot}", options: "mA"},\n    {trigger: "solm", replacement: "M_{\\\\odot}", options: "mA"},\n    {trigger: "ce", replacement: "\\\\ce{ $0 }", options: "mA"},\n    {trigger: "iso", replacement: "{}^{${0:4}}_{${1:2}}${2:He}", options: "mA"},\n    {trigger: "hel4", replacement: "{}^{4}_{2}He ", options: "mA"},\n    {trigger: "hel3", replacement: "{}^{3}_{2}He ", options: "mA"},\n\n\n\n    // Environments\n    {trigger: "pmat", replacement: "\\\\begin{pmatrix}\\n$0\\n\\\\end{pmatrix}", options: "mA"},\n    {trigger: "bmat", replacement: "\\\\begin{bmatrix}\\n$0\\n\\\\end{bmatrix}", options: "mA"},\n    {trigger: "Bmat", replacement: "\\\\begin{Bmatrix}\\n$0\\n\\\\end{Bmatrix}", options: "mA"},\n    {trigger: "vmat", replacement: "\\\\begin{vmatrix}\\n$0\\n\\\\end{vmatrix}", options: "mA"},\n    {trigger: "Vmat", replacement: "\\\\begin{Vmatrix}\\n$0\\n\\\\end{Vmatrix}", options: "mA"},\n    {trigger: "case", replacement: "\\\\begin{cases}\\n$0\\n\\\\end{cases}", options: "mA"},\n    {trigger: "align", replacement: "\\\\begin{align}\\n$0\\n\\\\end{align}", options: "mA"},\n    {trigger: "array", replacement: "\\\\begin{array}\\n$0\\n\\\\end{array}", options: "mA"},\n    {trigger: "matrix", replacement: "\\\\begin{matrix}\\n$0\\n\\\\end{matrix}", options: "mA"},\n\n\n\n    // Brackets\n    {trigger: "lr(", replacement: "\\\\left( $0 \\\\right) $1", options: "mA"},\n    {trigger: "lr|", replacement: "\\\\left| $0 \\\\right| $1", options: "mA"},\n    {trigger: "lr{", replacement: "\\\\left\\\\{ $0 \\\\right\\\\} $1", options: "mA"},\n    {trigger: "lr[", replacement: "\\\\left[ $0 \\\\right] $1", options: "mA"},\n    {trigger: "lra", replacement: "\\\\left< $0 \\\\right> $1", options: "mA"},\n    {trigger: "avg", replacement: "\\\\langle $0 \\\\rangle $1", options: "mA"},\n    {trigger: "(", replacement: "(${VISUAL})", options: "mA"},\n    {trigger: "[", replacement: "[${VISUAL}]", options: "mA"},\n    {trigger: "{", replacement: "{${VISUAL}}", options: "mA"},\n    {trigger: "(", replacement: "($0)$1", options: "mA"},\n    {trigger: "{", replacement: "{$0}$1", options: "mA"},\n    {trigger: "[", replacement: "[$0]$1", options: "mA"},\n    {trigger: "mod", replacement: "|$0|$1", options: "mA"},\n    {trigger: "norm", replacement: "\\\\|$0\\\\|$1", options: "mA"},\n\n\n\n    // Misc\n    {trigger: "tayl", replacement: "${0:f}(${1:x} + ${2:h}) = ${0:f}(${1:x}) + ${0:f}\'(${1:x})${2:h} + ${0:f}\'\'(${1:x}) \\\\frac{${2:h}^{2}}{2!} + \\\\dots$3", options: "mA"},\n]';
+var DEFAULT_SNIPPETS = '[    \n    // Math mode\n    {trigger: "mk", replacement: "$$0$", options: "tA"},\n    {trigger: "dm", replacement: "$$\\n$0\\n$$", options: "tAw"},\n    {trigger: "beg", replacement: "\\\\begin{$0}\\n$1\\n\\\\end{$0}", options: "mA"},\n\n\n    // Dashes\n    // {trigger: "--", replacement: "\u2013", options: "tA"},\n    // {trigger: "\u2013-", replacement: "\u2014", options: "tA"},\n    // {trigger: "\u2014-", replacement: "---", options: "tA"},\n\n\n    // Greek letters\n    {trigger: "@a", replacement: "\\\\alpha", options: "mA"},\n    {trigger: "@A", replacement: "\\\\alpha", options: "mA"},\n    {trigger: "@b", replacement: "\\\\beta", options: "mA"},\n    {trigger: "@B", replacement: "\\\\beta", options: "mA"},\n    {trigger: "@c", replacement: "\\\\chi", options: "mA"},\n    {trigger: "@C", replacement: "\\\\chi", options: "mA"},\n    {trigger: "@g", replacement: "\\\\gamma", options: "mA"},\n    {trigger: "@G", replacement: "\\\\Gamma", options: "mA"},\n    {trigger: "@d", replacement: "\\\\delta", options: "mA"},\n    {trigger: "@D", replacement: "\\\\Delta", options: "mA"},\n    {trigger: "@e", replacement: "\\\\epsilon", options: "mA"},\n    {trigger: "@E", replacement: "\\\\epsilon", options: "mA"},\n    {trigger: ":e", replacement: "\\\\varepsilon", options: "mA"},\n    {trigger: ":E", replacement: "\\\\varepsilon", options: "mA"},\n    {trigger: "@z", replacement: "\\\\zeta", options: "mA"},\n    {trigger: "@Z", replacement: "\\\\zeta", options: "mA"},\n    {trigger: "@t", replacement: "\\\\theta", options: "mA"},\n    {trigger: "@T", replacement: "\\\\Theta", options: "mA"},\n    {trigger: "@k", replacement: "\\\\kappa", options: "mA"},\n    {trigger: "@K", replacement: "\\\\kappa", options: "mA"},\n    {trigger: "@l", replacement: "\\\\lambda", options: "mA"},\n    {trigger: "@L", replacement: "\\\\Lambda", options: "mA"},\n    {trigger: "@m", replacement: "\\\\mu", options: "mA"},\n    {trigger: "@M", replacement: "\\\\mu", options: "mA"},\n    {trigger: "@r", replacement: "\\\\rho", options: "mA"},\n    {trigger: "@R", replacement: "\\\\rho", options: "mA"},\n    {trigger: "@s", replacement: "\\\\sigma", options: "mA"},\n    {trigger: "@S", replacement: "\\\\Sigma", options: "mA"},\n    {trigger: "ome", replacement: "\\\\omega", options: "mA"},\n    {trigger: "@o", replacement: "\\\\omega", options: "mA"},\n    {trigger: "@O", replacement: "\\\\Omega", options: "mA"},\n    {trigger: "([^\\\\\\\\])(${GREEK}|${SYMBOL})", replacement: "[[0]]\\\\[[1]]", options: "rmA", description: "Add backslash before greek letters and symbols"},\n\n\n    // Insert space after greek letters and symbols, etc\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}|${SHORT_SYMBOL})([A-Za-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) sr", replacement: "\\\\[[0]]^{2}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) cb", replacement: "\\\\[[0]]^{3}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) rd", replacement: "\\\\[[0]]^{$0}$1", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) hat", replacement: "\\\\hat{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) dot", replacement: "\\\\dot{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) bar", replacement: "\\\\bar{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) vec", replacement: "\\\\vec{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) tilde", replacement: "\\\\tilde{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}|${SYMBOL}) und", replacement: "\\\\underline{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK}),\\\\.", replacement: "\\\\boldsymbol{\\\\[[0]]}", options: "rmA"},\n    {trigger: "\\\\\\\\(${GREEK})\\\\.,", replacement: "\\\\boldsymbol{\\\\[[0]]}", options: "rmA"},\n\n\n    // Operations\n    {trigger: "te", replacement: "\\\\text{$0}", options: "m"},\n    {trigger: "text", replacement: "\\\\text{$0}", options: "mA"},\n    {trigger: "bf", replacement: "\\\\mathbf{$0}", options: "mA"},\n    {trigger: "sr", replacement: "^{2}", options: "mA"},\n    {trigger: "cb", replacement: "^{3}", options: "mA"},\n    {trigger: "rd", replacement: "^{$0}$1", options: "mA"},\n    {trigger: "_", replacement: "_{$0}$1", options: "mA"},\n    {trigger: "sts", replacement: "_\\\\text{$0}", options: "rmA"},\n    {trigger: "sq", replacement: "\\\\sqrt{ $0 }$1", options: "mA"},\n    {trigger: "//", replacement: "\\\\frac{$0}{$1}$2", options: "mA"},\n    {trigger: "ee", replacement: "e^{ $0 }$1", options: "mA"},\n    {trigger: "rm", replacement: "\\\\mathrm{$0}$1", options: "mA"},\n    {trigger: "conj", replacement: "^{*}", options: "mA"},\n    {trigger: "trace", replacement: "\\\\mathrm{Tr}", options: "mA"},\n    {trigger: "det", replacement: "\\\\det", options: "mA"},\n    {trigger: "re", replacement: "\\\\mathrm{Re}", options: "mA"},\n    {trigger: "im", replacement: "\\\\mathrm{Im}", options: "mA"},\n\n    {trigger: "([a-zA-Z]),\\\\.", replacement: "\\\\mathbf{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])\\\\.,", replacement: "\\\\mathbf{[[0]]}", options: "rmA"},\n    {trigger: "([A-Za-z])(\\\\d)", replacement: "[[0]]_{[[1]]}", options: "rmA", description: "Auto letter subscript", priority: -1},\n    {trigger: "([A-Za-z])_(\\\\d\\\\d)", replacement: "[[0]]_{[[1]]}", options: "rmA"},\n    {trigger: "\\\\hat{([A-Za-z])}(\\\\d)", replacement: "hat{[[0]]}_{[[1]]}", options: "rmA"},\n    {trigger: "\\\\\\\\mathbf{([A-Za-z])}(\\\\d)", replacement: "\\\\mathbf{[[0]]}_{[[1]]}", options: "rmA"},\n    {trigger: "\\\\\\\\vec{([A-Za-z])}(\\\\d)", replacement: "\\\\vec{[[0]]}_{[[1]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])bar", replacement: "\\\\bar{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])hat", replacement: "\\\\hat{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])ddot", replacement: "\\\\ddot{[[0]]}", options: "rmA", priority: 3},\n    {trigger: "([a-zA-Z])dot", replacement: "\\\\dot{[[0]]}", options: "rmA", priority: 1},\n    {trigger: "([a-zA-Z])vec", replacement: "\\\\vec{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])tilde", replacement: "\\\\tilde{[[0]]}", options: "rmA"},\n    {trigger: "([a-zA-Z])und", replacement: "\\\\underline{[[0]]}", options: "rmA"},\n    {trigger: "bar", replacement: "\\\\bar{$0}$1", options: "mA"},\n    {trigger: "hat", replacement: "\\\\hat{$0}$1", options: "mA"},\n    {trigger: "dot", replacement: "\\\\dot{$0}$1", options: "mA"},\n    {trigger: "ddot", replacement: "\\\\ddot{$0}$1", options: "mA", priority: 2},\n    {trigger: "vec", replacement: "\\\\vec{$0}$1", options: "mA"},\n    {trigger: "tilde", replacement: "\\\\tilde{$0}$1", options: "mA"},\n    {trigger: "und", replacement: "\\\\underline{$0}$1", options: "mA"},\n\n    {trigger: "([^\\\\\\\\])(arcsin|arccos|arctan|arccot|arccsc|arcsec|sin|cos|tan|cot|csc)", replacement: "[[0]]\\\\[[1]]", options: "rmA"},\n    {trigger: "\\\\\\\\(arcsin|arccos|arctan|arccot|arccsc|arcsec|sin|cos|tan|cot|csc)([A-Za-gi-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"}, // Insert space after trig funcs. Skips letter "h" to allow sinh, cosh, etc.\n    {trigger: "\\\\\\\\(arcsinh|arccosh|arctanh|arccoth|arcsch|arcsech|sinh|cosh|tanh|coth|csch)([A-Za-z])", replacement: "\\\\[[0]] [[1]]", options: "rmA"}, // Insert space after trig funcs\n    {trigger: "\\\\\\\\(neq|geq|leq|gg|ll|sim)([0-9]+)", replacement: "\\\\[[0]] [[1]]", options: "rmA"}, // Insert space after inequality symbols\n\n\n    // Visual operations\n    {trigger: "U", replacement: "\\\\underbrace{ ${VISUAL} }_{ $0 }", options: "mA"},\n    {trigger: "B", replacement: "\\\\underset{ $0 }{ ${VISUAL} }", options: "mA"},\n    {trigger: "C", replacement: "\\\\cancel{ ${VISUAL} }", options: "mA"},\n    {trigger: "K", replacement: "\\\\cancelto{ $0 }{ ${VISUAL} }", options: "mA"},\n    {trigger: "S", replacement: "\\\\sqrt{ ${VISUAL} }", options: "mA"},\n\n\n\n    // Symbols\n    {trigger: "ooo", replacement: "\\\\infty", options: "mA"},\n    {trigger: "sum", replacement: "\\\\sum", options: "mA"},\n    {trigger: "prod", replacement: "\\\\prod", options: "mA"},\n    {trigger: "lim", replacement: "\\\\lim_{ ${0:n} \\\\to ${1:\\\\infty} } $2", options: "mA"},\n    {trigger: "([^\\\\\\\\])pm", replacement: "[[0]]\\\\pm", options: "rm"},\n    {trigger: "([^\\\\\\\\])mp", replacement: "[[0]]\\\\mp", options: "rm"},\n    {trigger: "+-", replacement: "\\\\pm", options: "mA"},\n    {trigger: "-+", replacement: "\\\\mp", options: "mA"},\n    {trigger: "...", replacement: "\\\\dots", options: "mA"},\n    {trigger: "<->", replacement: "\\\\leftrightarrow ", options: "mA"},\n    {trigger: "->", replacement: "\\\\to", options: "mA"},\n    {trigger: "!>", replacement: "\\\\mapsto", options: "mA"},\n    {trigger: "invs", replacement: "^{-1}", options: "mA"},\n    {trigger: "\\\\\\\\\\\\", replacement: "\\\\setminus", options: "mA"},\n    {trigger: "||", replacement: "\\\\mid", options: "mA"},\n    {trigger: "and", replacement: "\\\\cap", options: "mA"},\n    {trigger: "orr", replacement: "\\\\cup", options: "mA"},\n    {trigger: "inn", replacement: "\\\\in", options: "mA"},\n    {trigger: "\\\\subset eq", replacement: "\\\\subseteq", options: "mA"},\n    {trigger: "set", replacement: "\\\\{ $0 \\\\}$1", options: "mA"},\n    {trigger: "=>", replacement: "\\\\implies", options: "mA"},\n    {trigger: "=<", replacement: "\\\\impliedby", options: "mA"},\n    {trigger: "iff", replacement: "\\\\iff", options: "mA"},\n    {trigger: "e\\\\xi sts", replacement: "\\\\exists", options: "mA", priority: 1},\n    {trigger: "===", replacement: "\\\\equiv", options: "mA"},\n    {trigger: "Sq", replacement: "\\\\square", options: "mA"},\n    {trigger: "!=", replacement: "\\\\neq", options: "mA"},\n    {trigger: ">=", replacement: "\\\\geq", options: "mA"},\n    {trigger: "<=", replacement: "\\\\leq", options: "mA"},\n    {trigger: ">>", replacement: "\\\\gg", options: "mA"},\n    {trigger: "<<", replacement: "\\\\ll", options: "mA"},\n    {trigger: "~~", replacement: "\\\\sim", options: "mA"},\n    {trigger: "\\\\sim ~", replacement: "\\\\approx", options: "mA"},\n    {trigger: "prop", replacement: "\\\\propto", options: "mA"},\n    {trigger: "nabl", replacement: "\\\\nabla", options: "mA"},\n    {trigger: "del", replacement: "\\\\nabla", options: "mA"},\n    {trigger: "xx", replacement: "\\\\times", options: "mA"},\n    {trigger: "**", replacement: "\\\\cdot", options: "mA"},\n    {trigger: "para", replacement: "\\\\parallel", options: "mA"},\n\n\n    {trigger: "xnn", replacement: "x_{n}", options: "mA"},\n    {trigger: "xii", replacement: "x_{i}", options: "mA"},\n    {trigger: "xjj", replacement: "x_{j}", options: "mA"},\n    {trigger: "xp1", replacement: "x_{n+1}", options: "mA"},\n    {trigger: "ynn", replacement: "y_{n}", options: "mA"},\n    {trigger: "yii", replacement: "y_{i}", options: "mA"},\n    {trigger: "yjj", replacement: "y_{j}", options: "mA"},\n\n\n    {trigger: "mcal", replacement: "\\\\mathcal{$0}$1", options: "mA"},\n    {trigger: "mbb", replacement: "\\\\mathbb{$0}$1", options: "mA"},\n    {trigger: "ell", replacement: "\\\\ell", options: "mA"},\n    {trigger: "lll", replacement: "\\\\ell", options: "mA"},\n    {trigger: "LL", replacement: "\\\\mathcal{L}", options: "mA"},\n    {trigger: "HH", replacement: "\\\\mathcal{H}", options: "mA"},\n    {trigger: "CC", replacement: "\\\\mathbb{C}", options: "mA"},\n    {trigger: "RR", replacement: "\\\\mathbb{R}", options: "mA"},\n    {trigger: "ZZ", replacement: "\\\\mathbb{Z}", options: "mA"},\n    {trigger: "NN", replacement: "\\\\mathbb{N}", options: "mA"},\n    {trigger: "II", replacement: "\\\\mathbb{1}", options: "mA"},\n    {trigger: "\\\\mathbb{1}I", replacement: "\\\\hat{\\\\mathbb{1}}", options: "mA"},\n    {trigger: "AA", replacement: "\\\\mathcal{A}", options: "mA"},\n    {trigger: "BB", replacement: "\\\\mathbf{B}", options: "mA"},\n    {trigger: "EE", replacement: "\\\\mathbf{E}", options: "mA"},\n\n\n\n    // Unit vectors\n    {trigger: ":i", replacement: "\\\\mathbf{i}", options: "mA"},\n    {trigger: ":j", replacement: "\\\\mathbf{j}", options: "mA"},\n    {trigger: ":k", replacement: "\\\\mathbf{k}", options: "mA"},\n    {trigger: ":x", replacement: "\\\\hat{\\\\mathbf{x}}", options: "mA"},\n    {trigger: ":y", replacement: "\\\\hat{\\\\mathbf{y}}", options: "mA"},\n    {trigger: ":z", replacement: "\\\\hat{\\\\mathbf{z}}", options: "mA"},\n\n\n\n    // Derivatives\n    {trigger: "par", replacement: "\\\\frac{ \\\\partial ${0:y} }{ \\\\partial ${1:x} } $2", options: "m"},\n    {trigger: "pa2", replacement: "\\\\frac{ \\\\partial^{2} ${0:y} }{ \\\\partial ${1:x}^{2} } $2", options: "mA"},\n    {trigger: "pa3", replacement: "\\\\frac{ \\\\partial^{3} ${0:y} }{ \\\\partial ${1:x}^{3} } $2", options: "mA"},\n    {trigger: "pa([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ \\\\partial [[0]] }{ \\\\partial [[1]] } ", options: "rm"},\n    {trigger: "pa([A-Za-z])([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ \\\\partial^{2} [[0]] }{ \\\\partial [[1]] \\\\partial [[2]] } ", options: "rm"},\n    {trigger: "pa([A-Za-z])([A-Za-z])2", replacement: "\\\\frac{ \\\\partial^{2} [[0]] }{ \\\\partial [[1]]^{2} } ", options: "rmA"},\n    {trigger: "de([A-Za-z])([A-Za-z])", replacement: "\\\\frac{ d[[0]] }{ d[[1]] } ", options: "rm"},\n    {trigger: "de([A-Za-z])([A-Za-z])2", replacement: "\\\\frac{ d^{2}[[0]] }{ d[[1]]^{2} } ", options: "rmA"},\n    {trigger: "ddt", replacement: "\\\\frac{d}{dt} ", options: "mA"},\n\n\n\n    // Integrals\n    {trigger: "oinf", replacement: "\\\\int_{0}^{\\\\infty} $0 \\\\, d${1:x} $2", options: "mA"},\n    {trigger: "infi", replacement: "\\\\int_{-\\\\infty}^{\\\\infty} $0 \\\\, d${1:x} $2", options: "mA"},\n    {trigger: "dint", replacement: "\\\\int_{${0:0}}^{${1:\\\\infty}} $2 \\\\, d${3:x} $4", options: "mA"},\n    {trigger: "oint", replacement: "\\\\oint", options: "mA"},\n    {trigger: "iiint", replacement: "\\\\iiint", options: "mA"},\n    {trigger: "iint", replacement: "\\\\iint", options: "mA"},\n    {trigger: "int", replacement: "\\\\int $0 \\\\, d${1:x} $2", options: "mA"},\n\n\n\n    // Physics\n    {trigger: "kbt", replacement: "k_{B}T", options: "mA"},\n\n\n    // Quantum mechanics\n    {trigger: "hba", replacement: "\\\\hbar", options: "mA"},\n    {trigger: "dag", replacement: "^{\\\\dagger}", options: "mA"},\n    {trigger: "o+", replacement: "\\\\oplus ", options: "mA"},\n    {trigger: "ox", replacement: "\\\\otimes ", options: "mA"},\n    {trigger: "ot\\\\mathrm{Im}es", replacement: "\\\\otimes ", options: "mA"}, // Handle conflict with "im" snippet\n    {trigger: "bra", replacement: "\\\\bra{$0} $1", options: "mA"},\n    {trigger: "ket", replacement: "\\\\ket{$0} $1", options: "mA"},\n    {trigger: "brk", replacement: "\\\\braket{ $0 | $1 } $2", options: "mA"},\n    {trigger: "\\\\\\\\bra{([^|]+)\\\\|", replacement: "\\\\braket{ [[0]] | $0 ", options: "rmA", description: "Convert bra into braket"},\n    {trigger: "\\\\\\\\bra{(.+)}([^ ]+)>", replacement: "\\\\braket{ [[0]] | $0 ", options: "rmA", description: "Convert bra into braket (alternate)"},\n    {trigger: "outp", replacement: "\\\\ket{${0:\\\\psi}} \\\\bra{${0:\\\\psi}} $1", options: "mA"},\n\n\n\n    // Chemistry\n    {trigger: "pu", replacement: "\\\\pu{ $0 }", options: "mA"},\n    {trigger: "msun", replacement: "M_{\\\\odot}", options: "mA"},\n    {trigger: "solm", replacement: "M_{\\\\odot}", options: "mA"},\n    {trigger: "ce", replacement: "\\\\ce{ $0 }", options: "mA"},\n    {trigger: "iso", replacement: "{}^{${0:4}}_{${1:2}}${2:He}", options: "mA"},\n    {trigger: "hel4", replacement: "{}^{4}_{2}He ", options: "mA"},\n    {trigger: "hel3", replacement: "{}^{3}_{2}He ", options: "mA"},\n\n\n\n    // Environments\n    {trigger: "pmat", replacement: "\\\\begin{pmatrix}\\n$0\\n\\\\end{pmatrix}", options: "mA"},\n    {trigger: "bmat", replacement: "\\\\begin{bmatrix}\\n$0\\n\\\\end{bmatrix}", options: "mA"},\n    {trigger: "Bmat", replacement: "\\\\begin{Bmatrix}\\n$0\\n\\\\end{Bmatrix}", options: "mA"},\n    {trigger: "vmat", replacement: "\\\\begin{vmatrix}\\n$0\\n\\\\end{vmatrix}", options: "mA"},\n    {trigger: "Vmat", replacement: "\\\\begin{Vmatrix}\\n$0\\n\\\\end{Vmatrix}", options: "mA"},\n    {trigger: "case", replacement: "\\\\begin{cases}\\n$0\\n\\\\end{cases}", options: "mA"},\n    {trigger: "align", replacement: "\\\\begin{align}\\n$0\\n\\\\end{align}", options: "mA"},\n    {trigger: "array", replacement: "\\\\begin{array}\\n$0\\n\\\\end{array}", options: "mA"},\n    {trigger: "matrix", replacement: "\\\\begin{matrix}\\n$0\\n\\\\end{matrix}", options: "mA"},\n\n\n\n    // Brackets\n    {trigger: "avg", replacement: "\\\\langle $0 \\\\rangle $1", options: "mA"},\n    {trigger: "norm", replacement: "\\\\lvert $0 \\\\rvert $1", options: "mA", priority: 1},\n    {trigger: "mod", replacement: "|$0|$1", options: "mA"},\n    {trigger: "(", replacement: "(${VISUAL})", options: "mA"},\n    {trigger: "[", replacement: "[${VISUAL}]", options: "mA"},\n    {trigger: "{", replacement: "{${VISUAL}}", options: "mA"},\n    {trigger: "(", replacement: "($0)$1", options: "mA"},\n    {trigger: "{", replacement: "{$0}$1", options: "mA"},\n    {trigger: "[", replacement: "[$0]$1", options: "mA"},\n    {trigger: "lr(", replacement: "\\\\left( $0 \\\\right) $1", options: "mA"},\n    {trigger: "lr|", replacement: "\\\\left| $0 \\\\right| $1", options: "mA"},\n    {trigger: "lr{", replacement: "\\\\left\\\\{ $0 \\\\right\\\\} $1", options: "mA"},\n    {trigger: "lr[", replacement: "\\\\left[ $0 \\\\right] $1", options: "mA"},\n    {trigger: "lra", replacement: "\\\\left< $0 \\\\right> $1", options: "mA"},\n\n\n\n    // Misc\n    {trigger: "tayl", replacement: "${0:f}(${1:x} + ${2:h}) = ${0:f}(${1:x}) + ${0:f}\'(${1:x})${2:h} + ${0:f}\'\'(${1:x}) \\\\frac{${2:h}^{2}}{2!} + \\\\dots$3", options: "mA"},\n]';
 
-// src/conceal.ts
+// src/editor_extensions/conceal.ts
 var import_view5 = __toModule(require("@codemirror/view"));
 var import_language5 = __toModule(require("@codemirror/language"));
 
@@ -4526,9 +4523,9 @@ var import_obsidian = __toModule(require("obsidian"));
 var import_view4 = __toModule(require("@codemirror/view"));
 var import_state3 = __toModule(require("@codemirror/state"));
 var import_language4 = __toModule(require("@codemirror/language"));
-function replaceRange(view, start, end, replacement) {
+function replaceRange(view, start2, end2, replacement) {
   view.dispatch({
-    changes: { from: start, to: end, insert: replacement }
+    changes: { from: start2, to: end2, insert: replacement }
   });
 }
 function getCharacterAtPos(view, pos) {
@@ -4541,9 +4538,9 @@ function setCursor(view, pos) {
   });
   resetCursorBlink();
 }
-function setSelection(view, start, end) {
+function setSelection(view, start2, end2) {
   view.dispatch({
-    selection: { anchor: start, head: end }
+    selection: { anchor: start2, head: end2 }
   });
   resetCursorBlink();
 }
@@ -4583,19 +4580,34 @@ function isWithinInlineEquation(view) {
   const result = getEquationBounds(view);
   if (!result)
     return false;
-  const end = result.end;
+  const end2 = result.end;
   const d = view.state.doc;
-  const inlineMath = d.sliceString(end, end + 2) != "$$";
+  const inlineMath = d.sliceString(end2, end2 + 2) != "$$";
   return inlineMath;
 }
 function isWithinInlineEquationState(state) {
   const result = getEquationBounds(state);
   if (!result)
     return false;
-  const end = result.end;
+  const end2 = result.end;
   const d = state.doc;
-  const inlineMath = d.sliceString(end, end + 2) != "$$";
+  const inlineMath = d.sliceString(end2, end2 + 2) != "$$";
   return inlineMath;
+}
+function isTouchingInlineEquation(state, pos) {
+  const tree = (0, import_language4.syntaxTree)(state);
+  const prevToken = tree.resolveInner(pos - 1, 1).name;
+  const token = tree.resolveInner(pos, 1).name;
+  const nextToken = tree.resolveInner(pos + 1, 1).name;
+  if (token.contains("math-end") && !prevToken.contains("math-end") && !nextToken.contains("math-end")) {
+    return -1;
+  } else if (!token.contains("math-begin") && nextToken.contains("math-begin")) {
+    const nextNextToken = tree.resolveInner(pos + 2, 1).name;
+    if (!nextNextToken.contains("math-begin")) {
+      return 1;
+    }
+  }
+  return 0;
 }
 function getEquationBounds(view, pos) {
   const s = view instanceof import_view4.EditorView ? view.state : view;
@@ -4603,42 +4615,42 @@ function getEquationBounds(view, pos) {
   if (typeof pos === "undefined") {
     pos = s.selection.main.from;
   }
-  const left = text.lastIndexOf("$", pos - 1);
-  const right = text.indexOf("$", pos);
-  if (left === -1 || right === -1)
+  const left2 = text.lastIndexOf("$", pos - 1);
+  const right2 = text.indexOf("$", pos);
+  if (left2 === -1 || right2 === -1)
     return;
-  return { start: left + 1, end: right };
+  return { start: left2 + 1, end: right2 };
 }
 function isInsideEnvironment(view, pos, env) {
   const result = getEquationBounds(view);
   if (!result)
     return false;
-  const { start, end } = result;
+  const { start: start2, end: end2 } = result;
   const text = view.state.doc.toString();
   const { openSymbol, closeSymbol } = env;
-  const curText = text.slice(start, end);
+  const curText = text.slice(start2, end2);
   const openBracket = openSymbol.slice(-1);
   const closeBracket = getCloseBracket(openBracket);
-  let offset;
+  let offset2;
   let openSearchSymbol;
   if (["{", "[", "("].contains(openBracket) && closeSymbol === closeBracket) {
-    offset = openSymbol.length - 1;
+    offset2 = openSymbol.length - 1;
     openSearchSymbol = openBracket;
   } else {
-    offset = 0;
+    offset2 = 0;
     openSearchSymbol = openSymbol;
   }
-  let left = curText.lastIndexOf(openSymbol, pos - start - 1);
-  while (left != -1) {
-    const right = findMatchingBracket(curText, left + offset, openSearchSymbol, closeSymbol, false);
-    if (right === -1)
+  let left2 = curText.lastIndexOf(openSymbol, pos - start2 - 1);
+  while (left2 != -1) {
+    const right2 = findMatchingBracket(curText, left2 + offset2, openSearchSymbol, closeSymbol, false);
+    if (right2 === -1)
       return false;
-    if (right >= pos - start && pos - start >= left + openSymbol.length) {
+    if (right2 >= pos - start2 && pos - start2 >= left2 + openSymbol.length) {
       return true;
     }
-    if (left <= 0)
+    if (left2 <= 0)
       return false;
-    left = curText.lastIndexOf(openSymbol, left - 1);
+    left2 = curText.lastIndexOf(openSymbol, left2 - 1);
   }
   return false;
 }
@@ -4646,9 +4658,9 @@ function getEnclosingBracketsPos(view, pos) {
   const result = getEquationBounds(view);
   if (!result)
     return -1;
-  const { start, end } = result;
-  const text = view.state.doc.sliceString(start, end);
-  for (let i = pos - start; i > 0; i--) {
+  const { start: start2, end: end2 } = result;
+  const text = view.state.doc.sliceString(start2, end2);
+  for (let i = pos - start2; i > 0; i--) {
     let curChar = text.charAt(i);
     if ([")", "]", "}"].contains(curChar)) {
       const closeBracket = curChar;
@@ -4664,7 +4676,7 @@ function getEnclosingBracketsPos(view, pos) {
       const j = findMatchingBracket(text, i, curChar, getCloseBracket(curChar), false);
       if (j === -1)
         continue;
-      return { left: i + start, right: j + start };
+      return { left: i + start2, right: j + start2 };
     }
   }
   return -1;
@@ -4672,16 +4684,16 @@ function getEnclosingBracketsPos(view, pos) {
 function reverse(s) {
   return s.split("").reverse().join("");
 }
-function findMatchingBracket(text, start, openBracket, closeBracket, searchBackwards, end) {
+function findMatchingBracket(text, start2, openBracket, closeBracket, searchBackwards, end2) {
   if (searchBackwards) {
-    const reversedIndex = findMatchingBracket(reverse(text), text.length - (start + closeBracket.length), reverse(closeBracket), reverse(openBracket), false);
+    const reversedIndex = findMatchingBracket(reverse(text), text.length - (start2 + closeBracket.length), reverse(closeBracket), reverse(openBracket), false);
     if (reversedIndex === -1)
       return -1;
     return text.length - (reversedIndex + openBracket.length);
   }
   let brackets2 = 0;
-  const stop = end ? end : text.length;
-  for (let i = start; i < stop; i++) {
+  const stop = end2 ? end2 : text.length;
+  for (let i = start2; i < stop; i++) {
     if (text.slice(i, i + openBracket.length) === openBracket) {
       brackets2++;
     } else if (text.slice(i, i + closeBracket.length) === closeBracket) {
@@ -4698,11 +4710,11 @@ function getOpenBracket(closeBracket) {
   return openBrackets[closeBracket];
 }
 function getCloseBracket(openBracket) {
-  const closeBrackets2 = { "(": ")", "[": "]", "{": "}", "\\{": "\\}" };
+  const closeBrackets2 = { "(": ")", "[": "]", "{": "}" };
   return closeBrackets2[openBracket];
 }
 
-// src/conceal_maps.ts
+// src/editor_extensions/conceal_maps.ts
 var cmd_symbols = {
   "aleph": "\u2135",
   "amalg": "\u2210",
@@ -4754,8 +4766,8 @@ var cmd_symbols = {
   "frown": "\u2054",
   "geqslant": "\u2265",
   "geq": "\u2265",
-  "ge": "\u2265",
   "gets": "\u2190",
+  "ge": "\u2265",
   "gg": "\u27EB",
   "hbar": "\u210F",
   "heartsuit": "\u2661",
@@ -4780,12 +4792,16 @@ var cmd_symbols = {
   "Leftrightarrow": "\u21D4",
   "lhd": "\u25C1",
   "rhd": "\u25B7",
+  "leftarrow": "\u2190",
+  "Leftarrow": "\u21D0",
+  "left": "",
   "leq": "\u2264",
   "le": "\u2264",
   "ll": "\u226A",
   "lmoustache": "\u256D",
   "lor": "\u2228",
   "mapsto": "\u21A6",
+  "middle": "",
   "mid": "\u2223",
   "models": "\u22A8",
   "mp": "\u2213",
@@ -4822,8 +4838,7 @@ var cmd_symbols = {
   "quad": "\u2000",
   "rightarrow": "\u2192",
   "Rightarrow": "\u21D2",
-  "leftarrow": "\u2190",
-  "Leftarrow": "\u21D0",
+  "right": "",
   "rightleftharpoons": "\u21CC",
   "rmoustache": "\u256E",
   "S": "\xA7",
@@ -4840,6 +4855,7 @@ var cmd_symbols = {
   "sqsubset": "\u228F",
   "sqsupseteq": "\u2292",
   "sqsupset": "\u2290",
+  "square": "\u25A1",
   "star": "\u272B",
   "subseteq": "\u2286",
   "subset": "\u2282",
@@ -5073,13 +5089,13 @@ var brackets = {
   "left<": "\u3008",
   "right>": "\u3009",
   "langle": "\u3008",
-  "rangle": "\u3009"
-};
-var leftright = {
-  "left": "",
-  "right": ""
+  "rangle": "\u3009",
+  "lvert": "|",
+  "rvert": "|",
+  "vert": "|"
 };
 var mathbb = {
+  " ": " ",
   "0": "\u{1D7D8}",
   "1": "\u{1D7D9}",
   "2": "\u{1D7DA}",
@@ -5172,7 +5188,7 @@ var mathscrcal = {
   "Z": "\u{1D4E9}"
 };
 
-// src/conceal.ts
+// src/editor_extensions/conceal.ts
 var ConcealWidget = class extends import_view5.WidgetType {
   constructor(symbol, className, elementType) {
     super();
@@ -5181,7 +5197,7 @@ var ConcealWidget = class extends import_view5.WidgetType {
     this.elementType = elementType ? elementType : "span";
   }
   eq(other) {
-    return other.symbol == this.symbol;
+    return other.symbol == this.symbol && other.className === this.className && other.elementType === this.elementType;
   }
   toDOM() {
     const span = document.createElement(this.elementType);
@@ -5251,37 +5267,80 @@ function concealModifier(eqn, modifier, combiningCharacter) {
 }
 function concealSupSub(eqn, superscript, symbolMap) {
   const prefix = superscript ? "\\^" : "_";
-  const regexStr = prefix + "{([A-Za-z0-9\\()/+-=<>:;]+)}";
+  const regexStr = prefix + "{([A-Za-z0-9\\()\\[\\]/+-=<>':;\\\\ *]+)}";
   const regex = new RegExp(regexStr, "g");
   const matches = [...eqn.matchAll(regex)];
   const concealments = [];
   for (const match of matches) {
     const exponent = match[1];
-    const replacement = exponent;
     const elementType = superscript ? "sup" : "sub";
+    const symbolNames = Object.keys(symbolMap);
+    const symbolRegexStr = "\\\\(" + escapeRegex(symbolNames.join("|")) + ")";
+    const symbolRegex = new RegExp(symbolRegexStr, "g");
+    const replacement = exponent.replace(symbolRegex, (a, b) => {
+      return symbolMap[b];
+    });
     concealments.push({ start: match.index, end: match.index + match[0].length, replacement, class: "cm-number", elementType });
   }
   return concealments;
 }
-function concealBoldMathBbMathRm(eqn, symbolMap) {
-  const regexStr = "\\\\(mathbf|mathbb|mathrm){([A-Za-z0-9]+)}";
+function concealModified_A_to_Z_0_to_9(eqn, mathBBsymbolMap) {
+  const regexStr = "\\\\(mathbf|boldsymbol|underline|mathrm|text|mathbb){([A-Za-z0-9 ]+)}";
   const regex = new RegExp(regexStr, "g");
   const matches = [...eqn.matchAll(regex)];
   const concealments = [];
   for (const match of matches) {
     const type = match[1];
     const value = match[2];
-    const start = match.index;
-    const end = start + match[0].length;
-    if (type === "mathbf") {
-      concealments.push({ start, end, replacement: value, class: "cm-concealed-bold cm-variable-1" });
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    if (type === "mathbf" || type === "boldsymbol") {
+      concealments.push({ start: start2, end: end2, replacement: value, class: "cm-concealed-bold" });
+    } else if (type === "underline") {
+      concealments.push({ start: start2, end: end2, replacement: value, class: "cm-concealed-underline" });
+    } else if (type === "mathrm") {
+      concealments.push({ start: start2, end: end2, replacement: value, class: "cm-concealed-mathrm" });
+    } else if (type === "text") {
+      if (start2 > 0 && eqn.charAt(start2 - 1) === "_") {
+        concealments.push({ start: start2 - 1, end: end2, replacement: value, class: "cm-concealed-mathrm", elementType: "sub" });
+      }
     } else if (type === "mathbb") {
       const letters = Array.from(value);
-      const replacement = letters.map((el) => symbolMap[el]).join("");
-      concealments.push({ start, end, replacement });
-    } else {
-      concealments.push({ start, end, replacement: value, class: "cm-concealed-mathrm cm-variable-2" });
+      const replacement = letters.map((el) => mathBBsymbolMap[el]).join("");
+      concealments.push({ start: start2, end: end2, replacement });
     }
+  }
+  return concealments;
+}
+function concealModifiedGreekLetters(eqn, greekSymbolMap) {
+  const greekSymbolNames = Object.keys(greekSymbolMap);
+  const regexStr = "\\\\(underline|boldsymbol){\\\\(" + escapeRegex(greekSymbolNames.join("|")) + ")}";
+  const regex = new RegExp(regexStr, "g");
+  const matches = [...eqn.matchAll(regex)];
+  const concealments = [];
+  for (const match of matches) {
+    const type = match[1];
+    const value = match[2];
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    if (type === "underline") {
+      concealments.push({ start: start2, end: end2, replacement: greekSymbolMap[value], class: "cm-concealed-underline" });
+    } else if (type === "boldsymbol") {
+      concealments.push({ start: start2, end: end2, replacement: greekSymbolMap[value], class: "cm-concealed-bold" });
+    }
+  }
+  return concealments;
+}
+function concealText(eqn) {
+  const regexStr = "\\\\text{([A-Za-z0-9-.!?() ]+)}";
+  const regex = new RegExp(regexStr, "g");
+  const matches = [...eqn.matchAll(regex)];
+  const concealments = [];
+  for (const match of matches) {
+    const value = match[1];
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    concealments.push({ start: start2, end: end2, replacement: value, class: "cm-concealed-mathrm cm-variable-2" });
   }
   return concealments;
 }
@@ -5292,9 +5351,9 @@ function concealOperators(eqn, symbols) {
   const concealments = [];
   for (const match of matches) {
     const value = match[1];
-    const start = match.index;
-    const end = start + match[0].length;
-    concealments.push({ start, end, replacement: value, class: "cm-concealed-mathrm cm-variable-2" });
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    concealments.push({ start: start2, end: end2, replacement: value, class: "cm-concealed-mathrm cm-variable-2" });
   }
   return concealments;
 }
@@ -5324,18 +5383,18 @@ function concealBraKet(eqn, selection, eqnStartBound) {
     const j = findMatchingBracket(eqn, loc - 1, "{", "}", false);
     if (j === -1)
       continue;
-    const start = match.index;
-    const end = start + match[0].length;
-    if (selectionAndRangeOverlap(selection, eqnStartBound + start, eqnStartBound + end))
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    if (selectionAndRangeOverlap(selection, eqnStartBound + start2, eqnStartBound + end2))
       continue;
     if (selectionAndRangeOverlap(selection, eqnStartBound + j, eqnStartBound + j + 1))
       continue;
     const type = match[1];
-    const left = type === "ket" ? vert : langle;
-    const right = type === "bra" ? vert : rangle;
-    concealments.push({ start, end: end - 1, replacement: "" });
-    concealments.push({ start: end - 1, end, replacement: left, class: "cm-bracket" });
-    concealments.push({ start: j, end: j + 1, replacement: right, class: "cm-bracket" });
+    const left2 = type === "ket" ? vert : langle;
+    const right2 = type === "bra" ? vert : rangle;
+    concealments.push({ start: start2, end: end2 - 1, replacement: "" });
+    concealments.push({ start: end2 - 1, end: end2, replacement: left2, class: "cm-bracket" });
+    concealments.push({ start: j, end: j + 1, replacement: right2, class: "cm-bracket" });
   }
   return concealments;
 }
@@ -5355,16 +5414,16 @@ function concealFraction(eqn, selection, eqnStartBound) {
     const k = findMatchingBracket(eqn, j + 1, "{", "}", false);
     if (k === -1)
       continue;
-    const start = match.index;
-    const end = start + match[0].length;
-    if (selectionAndRangeOverlap(selection, eqnStartBound + start, eqnStartBound + end))
+    const start2 = match.index;
+    const end2 = start2 + match[0].length;
+    if (selectionAndRangeOverlap(selection, eqnStartBound + start2, eqnStartBound + end2))
       continue;
     if (selectionAndRangeOverlap(selection, eqnStartBound + j, eqnStartBound + j + 2))
       continue;
     if (selectionAndRangeOverlap(selection, eqnStartBound + k, eqnStartBound + k + 1))
       continue;
-    concealments.push({ start, end: end - 1, replacement: "" });
-    concealments.push({ start: end - 1, end, replacement: "(", class: "cm-bracket" });
+    concealments.push({ start: start2, end: end2 - 1, replacement: "" });
+    concealments.push({ start: end2 - 1, end: end2, replacement: "(", class: "cm-bracket" });
     concealments.push({ start: j, end: j + 1, replacement: ")", class: "cm-bracket" });
     concealments.push({ start: j + 1, end: j + 1, replacement: "/", class: "cm-bracket" });
     concealments.push({ start: j + 1, end: j + 2, replacement: "(", class: "cm-bracket" });
@@ -5389,41 +5448,46 @@ function conceal(view) {
         if (!bounds)
           return;
         const eqn = view.state.doc.sliceString(bounds.start, bounds.end);
+        const ALL_SYMBOLS = __spreadValues(__spreadValues({}, greek), cmd_symbols);
         const concealments = [
-          ...concealSupSub(eqn, true, map_super),
-          ...concealSupSub(eqn, false, map_sub),
           ...concealSymbols(eqn, "\\^", "", map_super),
           ...concealSymbols(eqn, "_", "", map_sub),
           ...concealSymbols(eqn, "\\\\frac", "", fractions),
-          ...concealSymbols(eqn, "\\\\", "", __spreadValues(__spreadValues(__spreadValues({}, leftright), greek), cmd_symbols)),
+          ...concealSymbols(eqn, "\\\\", "", ALL_SYMBOLS),
+          ...concealSupSub(eqn, true, ALL_SYMBOLS),
+          ...concealSupSub(eqn, false, ALL_SYMBOLS),
           ...concealModifier(eqn, "hat", "\u0302"),
           ...concealModifier(eqn, "dot", "\u0307"),
           ...concealModifier(eqn, "ddot", "\u0308"),
           ...concealModifier(eqn, "overline", "\u0304"),
+          ...concealModifier(eqn, "bar", "\u0304"),
+          ...concealModifier(eqn, "tilde", "\u0303"),
           ...concealSymbols(eqn, "\\\\", "", brackets, "cm-bracket"),
           ...concealAtoZ(eqn, "\\\\mathcal{", "}", mathscrcal),
-          ...concealBoldMathBbMathRm(eqn, mathbb),
+          ...concealModifiedGreekLetters(eqn, greek),
+          ...concealModified_A_to_Z_0_to_9(eqn, mathbb),
+          ...concealText(eqn),
           ...concealBraKet(eqn, selection, bounds.start),
           ...concealFraction(eqn, selection, bounds.start),
           ...concealOperators(eqn, operators)
         ];
         for (const concealment of concealments) {
-          const start = bounds.start + concealment.start;
-          const end = bounds.start + concealment.end;
+          const start2 = bounds.start + concealment.start;
+          const end2 = bounds.start + concealment.end;
           const symbol = concealment.replacement;
-          if (selectionAndRangeOverlap(selection, start, end))
+          if (selectionAndRangeOverlap(selection, start2, end2))
             continue;
-          if (start === end) {
+          if (start2 === end2) {
             widgets.push(import_view5.Decoration.widget({
               widget: new TextWidget(symbol),
               block: false
-            }).range(start, end));
+            }).range(start2, end2));
           } else {
             widgets.push(import_view5.Decoration.replace({
               widget: new ConcealWidget(symbol, concealment.class, concealment.elementType),
               inclusive: false,
               block: false
-            }).range(start, end));
+            }).range(start2, end2));
           }
         }
       }
@@ -5441,7 +5505,7 @@ var concealPlugin = import_view5.ViewPlugin.fromClass(class {
   }
 }, { decorations: (v) => v.decorations });
 
-// src/highlight_brackets.ts
+// src/editor_extensions/highlight_brackets.ts
 var import_view6 = __toModule(require("@codemirror/view"));
 var import_state4 = __toModule(require("@codemirror/state"));
 var import_language6 = __toModule(require("@codemirror/language"));
@@ -5574,7 +5638,7 @@ var highlightCursorBracketsPlugin = import_view6.ViewPlugin.fromClass(class {
   }
 }, { decorations: (v) => v.decorations });
 
-// src/inline_math_tooltip.ts
+// src/editor_extensions/inline_math_tooltip.ts
 var import_view7 = __toModule(require("@codemirror/view"));
 var import_state5 = __toModule(require("@codemirror/state"));
 var import_obsidian2 = __toModule(require("obsidian"));
@@ -5588,25 +5652,38 @@ var cursorTooltipField = import_state5.StateField.define({
   provide: (f) => import_view7.showTooltip.computeN([f], (state) => state.field(f))
 });
 function getCursorTooltips(state) {
-  if (isWithinEquation(state) && isWithinInlineEquationState(state)) {
-    const bounds = getEquationBounds(state);
+  const isInsideInlineEqn = isWithinEquation(state) && isWithinInlineEquationState(state);
+  let shouldShowTooltip = isInsideInlineEqn;
+  let isTouchingInlineEqn;
+  let pos = state.selection.main.from;
+  if (!isInsideInlineEqn) {
+    isTouchingInlineEqn = isTouchingInlineEquation(state, pos - 1);
+    if (isTouchingInlineEqn != 0) {
+      pos += isTouchingInlineEqn;
+      shouldShowTooltip = true;
+    }
+  }
+  if (shouldShowTooltip) {
+    const bounds = getEquationBounds(state, pos);
     if (!bounds)
       return [];
     if (bounds.start === bounds.end)
       return [];
     const eqn = state.sliceDoc(bounds.start, bounds.end);
-    return [{
-      pos: bounds.start,
-      above: true,
-      strictSide: true,
-      arrow: true,
-      create: () => {
-        let dom = document.createElement("div");
-        dom.className = "cm-tooltip-cursor";
-        import_obsidian2.MarkdownRenderer.renderMarkdown("$" + eqn + "$", dom, "", null);
-        return { dom };
+    return [
+      {
+        pos: bounds.start,
+        above: true,
+        strictSide: true,
+        arrow: true,
+        create: () => {
+          const dom = document.createElement("div");
+          dom.className = "cm-tooltip-cursor";
+          import_obsidian2.MarkdownRenderer.renderMarkdown("$" + eqn + "$", dom, "", null);
+          return { dom };
+        }
       }
-    }];
+    ];
   } else {
     return [];
   }
@@ -5631,10 +5708,1863 @@ var cursorTooltipBaseTheme = import_view7.EditorView.baseTheme({
   }
 });
 
+// src/ui/file_suggest.ts
+var import_obsidian4 = __toModule(require("obsidian"));
+
+// node_modules/@popperjs/core/lib/enums.js
+var top = "top";
+var bottom = "bottom";
+var right = "right";
+var left = "left";
+var auto = "auto";
+var basePlacements = [top, bottom, right, left];
+var start = "start";
+var end = "end";
+var clippingParents = "clippingParents";
+var viewport = "viewport";
+var popper = "popper";
+var reference = "reference";
+var variationPlacements = /* @__PURE__ */ basePlacements.reduce(function(acc, placement) {
+  return acc.concat([placement + "-" + start, placement + "-" + end]);
+}, []);
+var placements = /* @__PURE__ */ [].concat(basePlacements, [auto]).reduce(function(acc, placement) {
+  return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
+}, []);
+var beforeRead = "beforeRead";
+var read = "read";
+var afterRead = "afterRead";
+var beforeMain = "beforeMain";
+var main = "main";
+var afterMain = "afterMain";
+var beforeWrite = "beforeWrite";
+var write = "write";
+var afterWrite = "afterWrite";
+var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
+
+// node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
+function getNodeName(element) {
+  return element ? (element.nodeName || "").toLowerCase() : null;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getWindow.js
+function getWindow(node) {
+  if (node == null) {
+    return window;
+  }
+  if (node.toString() !== "[object Window]") {
+    var ownerDocument = node.ownerDocument;
+    return ownerDocument ? ownerDocument.defaultView || window : window;
+  }
+  return node;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
+function isElement(node) {
+  var OwnElement = getWindow(node).Element;
+  return node instanceof OwnElement || node instanceof Element;
+}
+function isHTMLElement(node) {
+  var OwnElement = getWindow(node).HTMLElement;
+  return node instanceof OwnElement || node instanceof HTMLElement;
+}
+function isShadowRoot(node) {
+  if (typeof ShadowRoot === "undefined") {
+    return false;
+  }
+  var OwnElement = getWindow(node).ShadowRoot;
+  return node instanceof OwnElement || node instanceof ShadowRoot;
+}
+
+// node_modules/@popperjs/core/lib/modifiers/applyStyles.js
+function applyStyles(_ref) {
+  var state = _ref.state;
+  Object.keys(state.elements).forEach(function(name) {
+    var style = state.styles[name] || {};
+    var attributes = state.attributes[name] || {};
+    var element = state.elements[name];
+    if (!isHTMLElement(element) || !getNodeName(element)) {
+      return;
+    }
+    Object.assign(element.style, style);
+    Object.keys(attributes).forEach(function(name2) {
+      var value = attributes[name2];
+      if (value === false) {
+        element.removeAttribute(name2);
+      } else {
+        element.setAttribute(name2, value === true ? "" : value);
+      }
+    });
+  });
+}
+function effect(_ref2) {
+  var state = _ref2.state;
+  var initialStyles = {
+    popper: {
+      position: state.options.strategy,
+      left: "0",
+      top: "0",
+      margin: "0"
+    },
+    arrow: {
+      position: "absolute"
+    },
+    reference: {}
+  };
+  Object.assign(state.elements.popper.style, initialStyles.popper);
+  state.styles = initialStyles;
+  if (state.elements.arrow) {
+    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  }
+  return function() {
+    Object.keys(state.elements).forEach(function(name) {
+      var element = state.elements[name];
+      var attributes = state.attributes[name] || {};
+      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
+      var style = styleProperties.reduce(function(style2, property) {
+        style2[property] = "";
+        return style2;
+      }, {});
+      if (!isHTMLElement(element) || !getNodeName(element)) {
+        return;
+      }
+      Object.assign(element.style, style);
+      Object.keys(attributes).forEach(function(attribute) {
+        element.removeAttribute(attribute);
+      });
+    });
+  };
+}
+var applyStyles_default = {
+  name: "applyStyles",
+  enabled: true,
+  phase: "write",
+  fn: applyStyles,
+  effect,
+  requires: ["computeStyles"]
+};
+
+// node_modules/@popperjs/core/lib/utils/getBasePlacement.js
+function getBasePlacement(placement) {
+  return placement.split("-")[0];
+}
+
+// node_modules/@popperjs/core/lib/utils/math.js
+var max = Math.max;
+var min = Math.min;
+var round = Math.round;
+
+// node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
+function getBoundingClientRect(element, includeScale) {
+  if (includeScale === void 0) {
+    includeScale = false;
+  }
+  var rect = element.getBoundingClientRect();
+  var scaleX = 1;
+  var scaleY = 1;
+  if (isHTMLElement(element) && includeScale) {
+    var offsetHeight = element.offsetHeight;
+    var offsetWidth = element.offsetWidth;
+    if (offsetWidth > 0) {
+      scaleX = round(rect.width) / offsetWidth || 1;
+    }
+    if (offsetHeight > 0) {
+      scaleY = round(rect.height) / offsetHeight || 1;
+    }
+  }
+  return {
+    width: rect.width / scaleX,
+    height: rect.height / scaleY,
+    top: rect.top / scaleY,
+    right: rect.right / scaleX,
+    bottom: rect.bottom / scaleY,
+    left: rect.left / scaleX,
+    x: rect.left / scaleX,
+    y: rect.top / scaleY
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
+function getLayoutRect(element) {
+  var clientRect = getBoundingClientRect(element);
+  var width = element.offsetWidth;
+  var height = element.offsetHeight;
+  if (Math.abs(clientRect.width - width) <= 1) {
+    width = clientRect.width;
+  }
+  if (Math.abs(clientRect.height - height) <= 1) {
+    height = clientRect.height;
+  }
+  return {
+    x: element.offsetLeft,
+    y: element.offsetTop,
+    width,
+    height
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/contains.js
+function contains(parent, child) {
+  var rootNode = child.getRootNode && child.getRootNode();
+  if (parent.contains(child)) {
+    return true;
+  } else if (rootNode && isShadowRoot(rootNode)) {
+    var next = child;
+    do {
+      if (next && parent.isSameNode(next)) {
+        return true;
+      }
+      next = next.parentNode || next.host;
+    } while (next);
+  }
+  return false;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
+function getComputedStyle(element) {
+  return getWindow(element).getComputedStyle(element);
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
+function isTableElement(element) {
+  return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
+function getDocumentElement(element) {
+  return ((isElement(element) ? element.ownerDocument : element.document) || window.document).documentElement;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
+function getParentNode(element) {
+  if (getNodeName(element) === "html") {
+    return element;
+  }
+  return element.assignedSlot || element.parentNode || (isShadowRoot(element) ? element.host : null) || getDocumentElement(element);
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
+function getTrueOffsetParent(element) {
+  if (!isHTMLElement(element) || getComputedStyle(element).position === "fixed") {
+    return null;
+  }
+  return element.offsetParent;
+}
+function getContainingBlock(element) {
+  var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") !== -1;
+  var isIE = navigator.userAgent.indexOf("Trident") !== -1;
+  if (isIE && isHTMLElement(element)) {
+    var elementCss = getComputedStyle(element);
+    if (elementCss.position === "fixed") {
+      return null;
+    }
+  }
+  var currentNode = getParentNode(element);
+  if (isShadowRoot(currentNode)) {
+    currentNode = currentNode.host;
+  }
+  while (isHTMLElement(currentNode) && ["html", "body"].indexOf(getNodeName(currentNode)) < 0) {
+    var css = getComputedStyle(currentNode);
+    if (css.transform !== "none" || css.perspective !== "none" || css.contain === "paint" || ["transform", "perspective"].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === "filter" || isFirefox && css.filter && css.filter !== "none") {
+      return currentNode;
+    } else {
+      currentNode = currentNode.parentNode;
+    }
+  }
+  return null;
+}
+function getOffsetParent(element) {
+  var window2 = getWindow(element);
+  var offsetParent = getTrueOffsetParent(element);
+  while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
+    offsetParent = getTrueOffsetParent(offsetParent);
+  }
+  if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static")) {
+    return window2;
+  }
+  return offsetParent || getContainingBlock(element) || window2;
+}
+
+// node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
+function getMainAxisFromPlacement(placement) {
+  return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
+}
+
+// node_modules/@popperjs/core/lib/utils/within.js
+function within(min2, value, max2) {
+  return max(min2, min(value, max2));
+}
+function withinMaxClamp(min2, value, max2) {
+  var v = within(min2, value, max2);
+  return v > max2 ? max2 : v;
+}
+
+// node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
+function getFreshSideObject() {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+}
+
+// node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
+function mergePaddingObject(paddingObject) {
+  return Object.assign({}, getFreshSideObject(), paddingObject);
+}
+
+// node_modules/@popperjs/core/lib/utils/expandToHashMap.js
+function expandToHashMap(value, keys) {
+  return keys.reduce(function(hashMap, key) {
+    hashMap[key] = value;
+    return hashMap;
+  }, {});
+}
+
+// node_modules/@popperjs/core/lib/modifiers/arrow.js
+var toPaddingObject = function toPaddingObject2(padding, state) {
+  padding = typeof padding === "function" ? padding(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : padding;
+  return mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
+};
+function arrow(_ref) {
+  var _state$modifiersData$;
+  var state = _ref.state, name = _ref.name, options = _ref.options;
+  var arrowElement = state.elements.arrow;
+  var popperOffsets2 = state.modifiersData.popperOffsets;
+  var basePlacement = getBasePlacement(state.placement);
+  var axis = getMainAxisFromPlacement(basePlacement);
+  var isVertical = [left, right].indexOf(basePlacement) >= 0;
+  var len = isVertical ? "height" : "width";
+  if (!arrowElement || !popperOffsets2) {
+    return;
+  }
+  var paddingObject = toPaddingObject(options.padding, state);
+  var arrowRect = getLayoutRect(arrowElement);
+  var minProp = axis === "y" ? top : left;
+  var maxProp = axis === "y" ? bottom : right;
+  var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets2[axis] - state.rects.popper[len];
+  var startDiff = popperOffsets2[axis] - state.rects.reference[axis];
+  var arrowOffsetParent = getOffsetParent(arrowElement);
+  var clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
+  var centerToReference = endDiff / 2 - startDiff / 2;
+  var min2 = paddingObject[minProp];
+  var max2 = clientSize - arrowRect[len] - paddingObject[maxProp];
+  var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
+  var offset2 = within(min2, center, max2);
+  var axisProp = axis;
+  state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
+}
+function effect2(_ref2) {
+  var state = _ref2.state, options = _ref2.options;
+  var _options$element = options.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
+  if (arrowElement == null) {
+    return;
+  }
+  if (typeof arrowElement === "string") {
+    arrowElement = state.elements.popper.querySelector(arrowElement);
+    if (!arrowElement) {
+      return;
+    }
+  }
+  if (true) {
+    if (!isHTMLElement(arrowElement)) {
+      console.error(['Popper: "arrow" element must be an HTMLElement (not an SVGElement).', "To use an SVG arrow, wrap it in an HTMLElement that will be used as", "the arrow."].join(" "));
+    }
+  }
+  if (!contains(state.elements.popper, arrowElement)) {
+    if (true) {
+      console.error(['Popper: "arrow" modifier\'s `element` must be a child of the popper', "element."].join(" "));
+    }
+    return;
+  }
+  state.elements.arrow = arrowElement;
+}
+var arrow_default = {
+  name: "arrow",
+  enabled: true,
+  phase: "main",
+  fn: arrow,
+  effect: effect2,
+  requires: ["popperOffsets"],
+  requiresIfExists: ["preventOverflow"]
+};
+
+// node_modules/@popperjs/core/lib/utils/getVariation.js
+function getVariation(placement) {
+  return placement.split("-")[1];
+}
+
+// node_modules/@popperjs/core/lib/modifiers/computeStyles.js
+var unsetSides = {
+  top: "auto",
+  right: "auto",
+  bottom: "auto",
+  left: "auto"
+};
+function roundOffsetsByDPR(_ref) {
+  var x = _ref.x, y = _ref.y;
+  var win = window;
+  var dpr = win.devicePixelRatio || 1;
+  return {
+    x: round(x * dpr) / dpr || 0,
+    y: round(y * dpr) / dpr || 0
+  };
+}
+function mapToStyles(_ref2) {
+  var _Object$assign2;
+  var popper2 = _ref2.popper, popperRect = _ref2.popperRect, placement = _ref2.placement, variation = _ref2.variation, offsets = _ref2.offsets, position = _ref2.position, gpuAcceleration = _ref2.gpuAcceleration, adaptive = _ref2.adaptive, roundOffsets = _ref2.roundOffsets, isFixed = _ref2.isFixed;
+  var _offsets$x = offsets.x, x = _offsets$x === void 0 ? 0 : _offsets$x, _offsets$y = offsets.y, y = _offsets$y === void 0 ? 0 : _offsets$y;
+  var _ref3 = typeof roundOffsets === "function" ? roundOffsets({
+    x,
+    y
+  }) : {
+    x,
+    y
+  };
+  x = _ref3.x;
+  y = _ref3.y;
+  var hasX = offsets.hasOwnProperty("x");
+  var hasY = offsets.hasOwnProperty("y");
+  var sideX = left;
+  var sideY = top;
+  var win = window;
+  if (adaptive) {
+    var offsetParent = getOffsetParent(popper2);
+    var heightProp = "clientHeight";
+    var widthProp = "clientWidth";
+    if (offsetParent === getWindow(popper2)) {
+      offsetParent = getDocumentElement(popper2);
+      if (getComputedStyle(offsetParent).position !== "static" && position === "absolute") {
+        heightProp = "scrollHeight";
+        widthProp = "scrollWidth";
+      }
+    }
+    offsetParent = offsetParent;
+    if (placement === top || (placement === left || placement === right) && variation === end) {
+      sideY = bottom;
+      var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : offsetParent[heightProp];
+      y -= offsetY - popperRect.height;
+      y *= gpuAcceleration ? 1 : -1;
+    }
+    if (placement === left || (placement === top || placement === bottom) && variation === end) {
+      sideX = right;
+      var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : offsetParent[widthProp];
+      x -= offsetX - popperRect.width;
+      x *= gpuAcceleration ? 1 : -1;
+    }
+  }
+  var commonStyles = Object.assign({
+    position
+  }, adaptive && unsetSides);
+  var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
+    x,
+    y
+  }) : {
+    x,
+    y
+  };
+  x = _ref4.x;
+  y = _ref4.y;
+  if (gpuAcceleration) {
+    var _Object$assign;
+    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? "0" : "", _Object$assign[sideX] = hasX ? "0" : "", _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+  }
+  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x + "px" : "", _Object$assign2.transform = "", _Object$assign2));
+}
+function computeStyles(_ref5) {
+  var state = _ref5.state, options = _ref5.options;
+  var _options$gpuAccelerat = options.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+  if (true) {
+    var transitionProperty = getComputedStyle(state.elements.popper).transitionProperty || "";
+    if (adaptive && ["transform", "top", "right", "bottom", "left"].some(function(property) {
+      return transitionProperty.indexOf(property) >= 0;
+    })) {
+      console.warn(["Popper: Detected CSS transitions on at least one of the following", 'CSS properties: "transform", "top", "right", "bottom", "left".', "\n\n", 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', "for smooth transitions, or remove these properties from the CSS", "transition declaration on the popper element if only transitioning", "opacity or background-color for example.", "\n\n", "We recommend using the popper element as a wrapper around an inner", "element that can have any CSS property transitioned for animations."].join(" "));
+    }
+  }
+  var commonStyles = {
+    placement: getBasePlacement(state.placement),
+    variation: getVariation(state.placement),
+    popper: state.elements.popper,
+    popperRect: state.rects.popper,
+    gpuAcceleration,
+    isFixed: state.options.strategy === "fixed"
+  };
+  if (state.modifiersData.popperOffsets != null) {
+    state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.popperOffsets,
+      position: state.options.strategy,
+      adaptive,
+      roundOffsets
+    })));
+  }
+  if (state.modifiersData.arrow != null) {
+    state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.arrow,
+      position: "absolute",
+      adaptive: false,
+      roundOffsets
+    })));
+  }
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    "data-popper-placement": state.placement
+  });
+}
+var computeStyles_default = {
+  name: "computeStyles",
+  enabled: true,
+  phase: "beforeWrite",
+  fn: computeStyles,
+  data: {}
+};
+
+// node_modules/@popperjs/core/lib/modifiers/eventListeners.js
+var passive = {
+  passive: true
+};
+function effect3(_ref) {
+  var state = _ref.state, instance = _ref.instance, options = _ref.options;
+  var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
+  var window2 = getWindow(state.elements.popper);
+  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+  if (scroll) {
+    scrollParents.forEach(function(scrollParent) {
+      scrollParent.addEventListener("scroll", instance.update, passive);
+    });
+  }
+  if (resize) {
+    window2.addEventListener("resize", instance.update, passive);
+  }
+  return function() {
+    if (scroll) {
+      scrollParents.forEach(function(scrollParent) {
+        scrollParent.removeEventListener("scroll", instance.update, passive);
+      });
+    }
+    if (resize) {
+      window2.removeEventListener("resize", instance.update, passive);
+    }
+  };
+}
+var eventListeners_default = {
+  name: "eventListeners",
+  enabled: true,
+  phase: "write",
+  fn: function fn() {
+  },
+  effect: effect3,
+  data: {}
+};
+
+// node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
+var hash = {
+  left: "right",
+  right: "left",
+  bottom: "top",
+  top: "bottom"
+};
+function getOppositePlacement(placement) {
+  return placement.replace(/left|right|bottom|top/g, function(matched) {
+    return hash[matched];
+  });
+}
+
+// node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
+var hash2 = {
+  start: "end",
+  end: "start"
+};
+function getOppositeVariationPlacement(placement) {
+  return placement.replace(/start|end/g, function(matched) {
+    return hash2[matched];
+  });
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
+function getWindowScroll(node) {
+  var win = getWindow(node);
+  var scrollLeft = win.pageXOffset;
+  var scrollTop = win.pageYOffset;
+  return {
+    scrollLeft,
+    scrollTop
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
+function getWindowScrollBarX(element) {
+  return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
+function getViewportRect(element) {
+  var win = getWindow(element);
+  var html = getDocumentElement(element);
+  var visualViewport = win.visualViewport;
+  var width = html.clientWidth;
+  var height = html.clientHeight;
+  var x = 0;
+  var y = 0;
+  if (visualViewport) {
+    width = visualViewport.width;
+    height = visualViewport.height;
+    if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      x = visualViewport.offsetLeft;
+      y = visualViewport.offsetTop;
+    }
+  }
+  return {
+    width,
+    height,
+    x: x + getWindowScrollBarX(element),
+    y
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
+function getDocumentRect(element) {
+  var _element$ownerDocumen;
+  var html = getDocumentElement(element);
+  var winScroll = getWindowScroll(element);
+  var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+  var width = max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+  var height = max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+  var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
+  var y = -winScroll.scrollTop;
+  if (getComputedStyle(body || html).direction === "rtl") {
+    x += max(html.clientWidth, body ? body.clientWidth : 0) - width;
+  }
+  return {
+    width,
+    height,
+    x,
+    y
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
+function isScrollParent(element) {
+  var _getComputedStyle = getComputedStyle(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
+  return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
+function getScrollParent(node) {
+  if (["html", "body", "#document"].indexOf(getNodeName(node)) >= 0) {
+    return node.ownerDocument.body;
+  }
+  if (isHTMLElement(node) && isScrollParent(node)) {
+    return node;
+  }
+  return getScrollParent(getParentNode(node));
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
+function listScrollParents(element, list) {
+  var _element$ownerDocumen;
+  if (list === void 0) {
+    list = [];
+  }
+  var scrollParent = getScrollParent(element);
+  var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
+  var win = getWindow(scrollParent);
+  var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
+  var updatedList = list.concat(target);
+  return isBody ? updatedList : updatedList.concat(listScrollParents(getParentNode(target)));
+}
+
+// node_modules/@popperjs/core/lib/utils/rectToClientRect.js
+function rectToClientRect(rect) {
+  return Object.assign({}, rect, {
+    left: rect.x,
+    top: rect.y,
+    right: rect.x + rect.width,
+    bottom: rect.y + rect.height
+  });
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
+function getInnerBoundingClientRect(element) {
+  var rect = getBoundingClientRect(element);
+  rect.top = rect.top + element.clientTop;
+  rect.left = rect.left + element.clientLeft;
+  rect.bottom = rect.top + element.clientHeight;
+  rect.right = rect.left + element.clientWidth;
+  rect.width = element.clientWidth;
+  rect.height = element.clientHeight;
+  rect.x = rect.left;
+  rect.y = rect.top;
+  return rect;
+}
+function getClientRectFromMixedType(element, clippingParent) {
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+}
+function getClippingParents(element) {
+  var clippingParents2 = listScrollParents(getParentNode(element));
+  var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle(element).position) >= 0;
+  var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
+  if (!isElement(clipperElement)) {
+    return [];
+  }
+  return clippingParents2.filter(function(clippingParent) {
+    return isElement(clippingParent) && contains(clippingParent, clipperElement) && getNodeName(clippingParent) !== "body";
+  });
+}
+function getClippingRect(element, boundary, rootBoundary) {
+  var mainClippingParents = boundary === "clippingParents" ? getClippingParents(element) : [].concat(boundary);
+  var clippingParents2 = [].concat(mainClippingParents, [rootBoundary]);
+  var firstClippingParent = clippingParents2[0];
+  var clippingRect = clippingParents2.reduce(function(accRect, clippingParent) {
+    var rect = getClientRectFromMixedType(element, clippingParent);
+    accRect.top = max(rect.top, accRect.top);
+    accRect.right = min(rect.right, accRect.right);
+    accRect.bottom = min(rect.bottom, accRect.bottom);
+    accRect.left = max(rect.left, accRect.left);
+    return accRect;
+  }, getClientRectFromMixedType(element, firstClippingParent));
+  clippingRect.width = clippingRect.right - clippingRect.left;
+  clippingRect.height = clippingRect.bottom - clippingRect.top;
+  clippingRect.x = clippingRect.left;
+  clippingRect.y = clippingRect.top;
+  return clippingRect;
+}
+
+// node_modules/@popperjs/core/lib/utils/computeOffsets.js
+function computeOffsets(_ref) {
+  var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
+  var basePlacement = placement ? getBasePlacement(placement) : null;
+  var variation = placement ? getVariation(placement) : null;
+  var commonX = reference2.x + reference2.width / 2 - element.width / 2;
+  var commonY = reference2.y + reference2.height / 2 - element.height / 2;
+  var offsets;
+  switch (basePlacement) {
+    case top:
+      offsets = {
+        x: commonX,
+        y: reference2.y - element.height
+      };
+      break;
+    case bottom:
+      offsets = {
+        x: commonX,
+        y: reference2.y + reference2.height
+      };
+      break;
+    case right:
+      offsets = {
+        x: reference2.x + reference2.width,
+        y: commonY
+      };
+      break;
+    case left:
+      offsets = {
+        x: reference2.x - element.width,
+        y: commonY
+      };
+      break;
+    default:
+      offsets = {
+        x: reference2.x,
+        y: reference2.y
+      };
+  }
+  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+  if (mainAxis != null) {
+    var len = mainAxis === "y" ? "height" : "width";
+    switch (variation) {
+      case start:
+        offsets[mainAxis] = offsets[mainAxis] - (reference2[len] / 2 - element[len] / 2);
+        break;
+      case end:
+        offsets[mainAxis] = offsets[mainAxis] + (reference2[len] / 2 - element[len] / 2);
+        break;
+      default:
+    }
+  }
+  return offsets;
+}
+
+// node_modules/@popperjs/core/lib/utils/detectOverflow.js
+function detectOverflow(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+  var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
+  var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
+  var altContext = elementContext === popper ? reference : popper;
+  var popperRect = state.rects.popper;
+  var element = state.elements[altBoundary ? altContext : elementContext];
+  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
+  var referenceClientRect = getBoundingClientRect(state.elements.reference);
+  var popperOffsets2 = computeOffsets({
+    reference: referenceClientRect,
+    element: popperRect,
+    strategy: "absolute",
+    placement
+  });
+  var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets2));
+  var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect;
+  var overflowOffsets = {
+    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+    bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+    right: elementClientRect.right - clippingClientRect.right + paddingObject.right
+  };
+  var offsetData = state.modifiersData.offset;
+  if (elementContext === popper && offsetData) {
+    var offset2 = offsetData[placement];
+    Object.keys(overflowOffsets).forEach(function(key) {
+      var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+      var axis = [top, bottom].indexOf(key) >= 0 ? "y" : "x";
+      overflowOffsets[key] += offset2[axis] * multiply;
+    });
+  }
+  return overflowOffsets;
+}
+
+// node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
+function computeAutoPlacement(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+  var _options = options, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+  var variation = getVariation(placement);
+  var placements2 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
+    return getVariation(placement2) === variation;
+  }) : basePlacements;
+  var allowedPlacements = placements2.filter(function(placement2) {
+    return allowedAutoPlacements.indexOf(placement2) >= 0;
+  });
+  if (allowedPlacements.length === 0) {
+    allowedPlacements = placements2;
+    if (true) {
+      console.error(["Popper: The `allowedAutoPlacements` option did not allow any", "placements. Ensure the `placement` option matches the variation", "of the allowed placements.", 'For example, "auto" cannot be used to allow "bottom-start".', 'Use "auto-start" instead.'].join(" "));
+    }
+  }
+  var overflows = allowedPlacements.reduce(function(acc, placement2) {
+    acc[placement2] = detectOverflow(state, {
+      placement: placement2,
+      boundary,
+      rootBoundary,
+      padding
+    })[getBasePlacement(placement2)];
+    return acc;
+  }, {});
+  return Object.keys(overflows).sort(function(a, b) {
+    return overflows[a] - overflows[b];
+  });
+}
+
+// node_modules/@popperjs/core/lib/modifiers/flip.js
+function getExpandedFallbackPlacements(placement) {
+  if (getBasePlacement(placement) === auto) {
+    return [];
+  }
+  var oppositePlacement = getOppositePlacement(placement);
+  return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+}
+function flip(_ref) {
+  var state = _ref.state, options = _ref.options, name = _ref.name;
+  if (state.modifiersData[name]._skip) {
+    return;
+  }
+  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
+  var preferredPlacement = state.options.placement;
+  var basePlacement = getBasePlacement(preferredPlacement);
+  var isBasePlacement = basePlacement === preferredPlacement;
+  var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+  var placements2 = [preferredPlacement].concat(fallbackPlacements).reduce(function(acc, placement2) {
+    return acc.concat(getBasePlacement(placement2) === auto ? computeAutoPlacement(state, {
+      placement: placement2,
+      boundary,
+      rootBoundary,
+      padding,
+      flipVariations,
+      allowedAutoPlacements
+    }) : placement2);
+  }, []);
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var checksMap = new Map();
+  var makeFallbackChecks = true;
+  var firstFittingPlacement = placements2[0];
+  for (var i = 0; i < placements2.length; i++) {
+    var placement = placements2[i];
+    var _basePlacement = getBasePlacement(placement);
+    var isStartVariation = getVariation(placement) === start;
+    var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
+    var len = isVertical ? "width" : "height";
+    var overflow = detectOverflow(state, {
+      placement,
+      boundary,
+      rootBoundary,
+      altBoundary,
+      padding
+    });
+    var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
+    if (referenceRect[len] > popperRect[len]) {
+      mainVariationSide = getOppositePlacement(mainVariationSide);
+    }
+    var altVariationSide = getOppositePlacement(mainVariationSide);
+    var checks = [];
+    if (checkMainAxis) {
+      checks.push(overflow[_basePlacement] <= 0);
+    }
+    if (checkAltAxis) {
+      checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
+    }
+    if (checks.every(function(check) {
+      return check;
+    })) {
+      firstFittingPlacement = placement;
+      makeFallbackChecks = false;
+      break;
+    }
+    checksMap.set(placement, checks);
+  }
+  if (makeFallbackChecks) {
+    var numberOfChecks = flipVariations ? 3 : 1;
+    var _loop = function _loop2(_i2) {
+      var fittingPlacement = placements2.find(function(placement2) {
+        var checks2 = checksMap.get(placement2);
+        if (checks2) {
+          return checks2.slice(0, _i2).every(function(check) {
+            return check;
+          });
+        }
+      });
+      if (fittingPlacement) {
+        firstFittingPlacement = fittingPlacement;
+        return "break";
+      }
+    };
+    for (var _i = numberOfChecks; _i > 0; _i--) {
+      var _ret = _loop(_i);
+      if (_ret === "break")
+        break;
+    }
+  }
+  if (state.placement !== firstFittingPlacement) {
+    state.modifiersData[name]._skip = true;
+    state.placement = firstFittingPlacement;
+    state.reset = true;
+  }
+}
+var flip_default = {
+  name: "flip",
+  enabled: true,
+  phase: "main",
+  fn: flip,
+  requiresIfExists: ["offset"],
+  data: {
+    _skip: false
+  }
+};
+
+// node_modules/@popperjs/core/lib/modifiers/hide.js
+function getSideOffsets(overflow, rect, preventedOffsets) {
+  if (preventedOffsets === void 0) {
+    preventedOffsets = {
+      x: 0,
+      y: 0
+    };
+  }
+  return {
+    top: overflow.top - rect.height - preventedOffsets.y,
+    right: overflow.right - rect.width + preventedOffsets.x,
+    bottom: overflow.bottom - rect.height + preventedOffsets.y,
+    left: overflow.left - rect.width - preventedOffsets.x
+  };
+}
+function isAnySideFullyClipped(overflow) {
+  return [top, right, bottom, left].some(function(side) {
+    return overflow[side] >= 0;
+  });
+}
+function hide(_ref) {
+  var state = _ref.state, name = _ref.name;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var preventedOffsets = state.modifiersData.preventOverflow;
+  var referenceOverflow = detectOverflow(state, {
+    elementContext: "reference"
+  });
+  var popperAltOverflow = detectOverflow(state, {
+    altBoundary: true
+  });
+  var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
+  var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
+  var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
+  var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
+  state.modifiersData[name] = {
+    referenceClippingOffsets,
+    popperEscapeOffsets,
+    isReferenceHidden,
+    hasPopperEscaped
+  };
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    "data-popper-reference-hidden": isReferenceHidden,
+    "data-popper-escaped": hasPopperEscaped
+  });
+}
+var hide_default = {
+  name: "hide",
+  enabled: true,
+  phase: "main",
+  requiresIfExists: ["preventOverflow"],
+  fn: hide
+};
+
+// node_modules/@popperjs/core/lib/modifiers/offset.js
+function distanceAndSkiddingToXY(placement, rects, offset2) {
+  var basePlacement = getBasePlacement(placement);
+  var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
+  var _ref = typeof offset2 === "function" ? offset2(Object.assign({}, rects, {
+    placement
+  })) : offset2, skidding = _ref[0], distance = _ref[1];
+  skidding = skidding || 0;
+  distance = (distance || 0) * invertDistance;
+  return [left, right].indexOf(basePlacement) >= 0 ? {
+    x: distance,
+    y: skidding
+  } : {
+    x: skidding,
+    y: distance
+  };
+}
+function offset(_ref2) {
+  var state = _ref2.state, options = _ref2.options, name = _ref2.name;
+  var _options$offset = options.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
+  var data = placements.reduce(function(acc, placement) {
+    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
+    return acc;
+  }, {});
+  var _data$state$placement = data[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
+  if (state.modifiersData.popperOffsets != null) {
+    state.modifiersData.popperOffsets.x += x;
+    state.modifiersData.popperOffsets.y += y;
+  }
+  state.modifiersData[name] = data;
+}
+var offset_default = {
+  name: "offset",
+  enabled: true,
+  phase: "main",
+  requires: ["popperOffsets"],
+  fn: offset
+};
+
+// node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
+function popperOffsets(_ref) {
+  var state = _ref.state, name = _ref.name;
+  state.modifiersData[name] = computeOffsets({
+    reference: state.rects.reference,
+    element: state.rects.popper,
+    strategy: "absolute",
+    placement: state.placement
+  });
+}
+var popperOffsets_default = {
+  name: "popperOffsets",
+  enabled: true,
+  phase: "read",
+  fn: popperOffsets,
+  data: {}
+};
+
+// node_modules/@popperjs/core/lib/utils/getAltAxis.js
+function getAltAxis(axis) {
+  return axis === "x" ? "y" : "x";
+}
+
+// node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
+function preventOverflow(_ref) {
+  var state = _ref.state, options = _ref.options, name = _ref.name;
+  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+  var overflow = detectOverflow(state, {
+    boundary,
+    rootBoundary,
+    padding,
+    altBoundary
+  });
+  var basePlacement = getBasePlacement(state.placement);
+  var variation = getVariation(state.placement);
+  var isBasePlacement = !variation;
+  var mainAxis = getMainAxisFromPlacement(basePlacement);
+  var altAxis = getAltAxis(mainAxis);
+  var popperOffsets2 = state.modifiersData.popperOffsets;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : tetherOffset;
+  var normalizedTetherOffsetValue = typeof tetherOffsetValue === "number" ? {
+    mainAxis: tetherOffsetValue,
+    altAxis: tetherOffsetValue
+  } : Object.assign({
+    mainAxis: 0,
+    altAxis: 0
+  }, tetherOffsetValue);
+  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
+  var data = {
+    x: 0,
+    y: 0
+  };
+  if (!popperOffsets2) {
+    return;
+  }
+  if (checkMainAxis) {
+    var _offsetModifierState$;
+    var mainSide = mainAxis === "y" ? top : left;
+    var altSide = mainAxis === "y" ? bottom : right;
+    var len = mainAxis === "y" ? "height" : "width";
+    var offset2 = popperOffsets2[mainAxis];
+    var min2 = offset2 + overflow[mainSide];
+    var max2 = offset2 - overflow[altSide];
+    var additive = tether ? -popperRect[len] / 2 : 0;
+    var minLen = variation === start ? referenceRect[len] : popperRect[len];
+    var maxLen = variation === start ? -popperRect[len] : -referenceRect[len];
+    var arrowElement = state.elements.arrow;
+    var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
+      width: 0,
+      height: 0
+    };
+    var arrowPaddingObject = state.modifiersData["arrow#persistent"] ? state.modifiersData["arrow#persistent"].padding : getFreshSideObject();
+    var arrowPaddingMin = arrowPaddingObject[mainSide];
+    var arrowPaddingMax = arrowPaddingObject[altSide];
+    var arrowLen = within(0, referenceRect[len], arrowRect[len]);
+    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
+    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
+    var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
+    var clientOffset = arrowOffsetParent ? mainAxis === "y" ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
+    var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
+    var tetherMin = offset2 + minOffset - offsetModifierValue - clientOffset;
+    var tetherMax = offset2 + maxOffset - offsetModifierValue;
+    var preventedOffset = within(tether ? min(min2, tetherMin) : min2, offset2, tether ? max(max2, tetherMax) : max2);
+    popperOffsets2[mainAxis] = preventedOffset;
+    data[mainAxis] = preventedOffset - offset2;
+  }
+  if (checkAltAxis) {
+    var _offsetModifierState$2;
+    var _mainSide = mainAxis === "x" ? top : left;
+    var _altSide = mainAxis === "x" ? bottom : right;
+    var _offset = popperOffsets2[altAxis];
+    var _len = altAxis === "y" ? "height" : "width";
+    var _min = _offset + overflow[_mainSide];
+    var _max = _offset - overflow[_altSide];
+    var isOriginSide = [top, left].indexOf(basePlacement) !== -1;
+    var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
+    var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
+    var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
+    var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
+    popperOffsets2[altAxis] = _preventedOffset;
+    data[altAxis] = _preventedOffset - _offset;
+  }
+  state.modifiersData[name] = data;
+}
+var preventOverflow_default = {
+  name: "preventOverflow",
+  enabled: true,
+  phase: "main",
+  fn: preventOverflow,
+  requiresIfExists: ["offset"]
+};
+
+// node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
+function getHTMLElementScroll(element) {
+  return {
+    scrollLeft: element.scrollLeft,
+    scrollTop: element.scrollTop
+  };
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
+function getNodeScroll(node) {
+  if (node === getWindow(node) || !isHTMLElement(node)) {
+    return getWindowScroll(node);
+  } else {
+    return getHTMLElementScroll(node);
+  }
+}
+
+// node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
+function isElementScaled(element) {
+  var rect = element.getBoundingClientRect();
+  var scaleX = round(rect.width) / element.offsetWidth || 1;
+  var scaleY = round(rect.height) / element.offsetHeight || 1;
+  return scaleX !== 1 || scaleY !== 1;
+}
+function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
+  if (isFixed === void 0) {
+    isFixed = false;
+  }
+  var isOffsetParentAnElement = isHTMLElement(offsetParent);
+  var offsetParentIsScaled = isHTMLElement(offsetParent) && isElementScaled(offsetParent);
+  var documentElement = getDocumentElement(offsetParent);
+  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled);
+  var scroll = {
+    scrollLeft: 0,
+    scrollTop: 0
+  };
+  var offsets = {
+    x: 0,
+    y: 0
+  };
+  if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+    if (getNodeName(offsetParent) !== "body" || isScrollParent(documentElement)) {
+      scroll = getNodeScroll(offsetParent);
+    }
+    if (isHTMLElement(offsetParent)) {
+      offsets = getBoundingClientRect(offsetParent, true);
+      offsets.x += offsetParent.clientLeft;
+      offsets.y += offsetParent.clientTop;
+    } else if (documentElement) {
+      offsets.x = getWindowScrollBarX(documentElement);
+    }
+  }
+  return {
+    x: rect.left + scroll.scrollLeft - offsets.x,
+    y: rect.top + scroll.scrollTop - offsets.y,
+    width: rect.width,
+    height: rect.height
+  };
+}
+
+// node_modules/@popperjs/core/lib/utils/orderModifiers.js
+function order(modifiers) {
+  var map = new Map();
+  var visited = new Set();
+  var result = [];
+  modifiers.forEach(function(modifier) {
+    map.set(modifier.name, modifier);
+  });
+  function sort(modifier) {
+    visited.add(modifier.name);
+    var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
+    requires.forEach(function(dep) {
+      if (!visited.has(dep)) {
+        var depModifier = map.get(dep);
+        if (depModifier) {
+          sort(depModifier);
+        }
+      }
+    });
+    result.push(modifier);
+  }
+  modifiers.forEach(function(modifier) {
+    if (!visited.has(modifier.name)) {
+      sort(modifier);
+    }
+  });
+  return result;
+}
+function orderModifiers(modifiers) {
+  var orderedModifiers = order(modifiers);
+  return modifierPhases.reduce(function(acc, phase) {
+    return acc.concat(orderedModifiers.filter(function(modifier) {
+      return modifier.phase === phase;
+    }));
+  }, []);
+}
+
+// node_modules/@popperjs/core/lib/utils/debounce.js
+function debounce(fn2) {
+  var pending;
+  return function() {
+    if (!pending) {
+      pending = new Promise(function(resolve) {
+        Promise.resolve().then(function() {
+          pending = void 0;
+          resolve(fn2());
+        });
+      });
+    }
+    return pending;
+  };
+}
+
+// node_modules/@popperjs/core/lib/utils/format.js
+function format(str) {
+  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+  return [].concat(args).reduce(function(p, c) {
+    return p.replace(/%s/, c);
+  }, str);
+}
+
+// node_modules/@popperjs/core/lib/utils/validateModifiers.js
+var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
+var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
+var VALID_PROPERTIES = ["name", "enabled", "phase", "fn", "effect", "requires", "options"];
+function validateModifiers(modifiers) {
+  modifiers.forEach(function(modifier) {
+    [].concat(Object.keys(modifier), VALID_PROPERTIES).filter(function(value, index, self2) {
+      return self2.indexOf(value) === index;
+    }).forEach(function(key) {
+      switch (key) {
+        case "name":
+          if (typeof modifier.name !== "string") {
+            console.error(format(INVALID_MODIFIER_ERROR, String(modifier.name), '"name"', '"string"', '"' + String(modifier.name) + '"'));
+          }
+          break;
+        case "enabled":
+          if (typeof modifier.enabled !== "boolean") {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', '"' + String(modifier.enabled) + '"'));
+          }
+          break;
+        case "phase":
+          if (modifierPhases.indexOf(modifier.phase) < 0) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + modifierPhases.join(", "), '"' + String(modifier.phase) + '"'));
+          }
+          break;
+        case "fn":
+          if (typeof modifier.fn !== "function") {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"fn"', '"function"', '"' + String(modifier.fn) + '"'));
+          }
+          break;
+        case "effect":
+          if (modifier.effect != null && typeof modifier.effect !== "function") {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', '"' + String(modifier.fn) + '"'));
+          }
+          break;
+        case "requires":
+          if (modifier.requires != null && !Array.isArray(modifier.requires)) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', '"' + String(modifier.requires) + '"'));
+          }
+          break;
+        case "requiresIfExists":
+          if (!Array.isArray(modifier.requiresIfExists)) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requiresIfExists"', '"array"', '"' + String(modifier.requiresIfExists) + '"'));
+          }
+          break;
+        case "options":
+        case "data":
+          break;
+        default:
+          console.error('PopperJS: an invalid property has been provided to the "' + modifier.name + '" modifier, valid properties are ' + VALID_PROPERTIES.map(function(s) {
+            return '"' + s + '"';
+          }).join(", ") + '; but "' + key + '" was provided.');
+      }
+      modifier.requires && modifier.requires.forEach(function(requirement) {
+        if (modifiers.find(function(mod) {
+          return mod.name === requirement;
+        }) == null) {
+          console.error(format(MISSING_DEPENDENCY_ERROR, String(modifier.name), requirement, requirement));
+        }
+      });
+    });
+  });
+}
+
+// node_modules/@popperjs/core/lib/utils/uniqueBy.js
+function uniqueBy(arr, fn2) {
+  var identifiers = new Set();
+  return arr.filter(function(item) {
+    var identifier = fn2(item);
+    if (!identifiers.has(identifier)) {
+      identifiers.add(identifier);
+      return true;
+    }
+  });
+}
+
+// node_modules/@popperjs/core/lib/utils/mergeByName.js
+function mergeByName(modifiers) {
+  var merged = modifiers.reduce(function(merged2, current) {
+    var existing = merged2[current.name];
+    merged2[current.name] = existing ? Object.assign({}, existing, current, {
+      options: Object.assign({}, existing.options, current.options),
+      data: Object.assign({}, existing.data, current.data)
+    }) : current;
+    return merged2;
+  }, {});
+  return Object.keys(merged).map(function(key) {
+    return merged[key];
+  });
+}
+
+// node_modules/@popperjs/core/lib/createPopper.js
+var INVALID_ELEMENT_ERROR = "Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.";
+var INFINITE_LOOP_ERROR = "Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.";
+var DEFAULT_OPTIONS = {
+  placement: "bottom",
+  modifiers: [],
+  strategy: "absolute"
+};
+function areValidElements() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  return !args.some(function(element) {
+    return !(element && typeof element.getBoundingClientRect === "function");
+  });
+}
+function popperGenerator(generatorOptions) {
+  if (generatorOptions === void 0) {
+    generatorOptions = {};
+  }
+  var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+  return function createPopper2(reference2, popper2, options) {
+    if (options === void 0) {
+      options = defaultOptions;
+    }
+    var state = {
+      placement: "bottom",
+      orderedModifiers: [],
+      options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
+      modifiersData: {},
+      elements: {
+        reference: reference2,
+        popper: popper2
+      },
+      attributes: {},
+      styles: {}
+    };
+    var effectCleanupFns = [];
+    var isDestroyed = false;
+    var instance = {
+      state,
+      setOptions: function setOptions(setOptionsAction) {
+        var options2 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+        cleanupModifierEffects();
+        state.options = Object.assign({}, defaultOptions, state.options, options2);
+        state.scrollParents = {
+          reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
+          popper: listScrollParents(popper2)
+        };
+        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state.options.modifiers)));
+        state.orderedModifiers = orderedModifiers.filter(function(m) {
+          return m.enabled;
+        });
+        if (true) {
+          var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function(_ref) {
+            var name = _ref.name;
+            return name;
+          });
+          validateModifiers(modifiers);
+          if (getBasePlacement(state.options.placement) === auto) {
+            var flipModifier = state.orderedModifiers.find(function(_ref2) {
+              var name = _ref2.name;
+              return name === "flip";
+            });
+            if (!flipModifier) {
+              console.error(['Popper: "auto" placements require the "flip" modifier be', "present and enabled to work."].join(" "));
+            }
+          }
+          var _getComputedStyle = getComputedStyle(popper2), marginTop = _getComputedStyle.marginTop, marginRight = _getComputedStyle.marginRight, marginBottom = _getComputedStyle.marginBottom, marginLeft = _getComputedStyle.marginLeft;
+          if ([marginTop, marginRight, marginBottom, marginLeft].some(function(margin) {
+            return parseFloat(margin);
+          })) {
+            console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', "between the popper and its reference element or boundary.", "To replicate margin, use the `offset` modifier, as well as", "the `padding` option in the `preventOverflow` and `flip`", "modifiers."].join(" "));
+          }
+        }
+        runModifierEffects();
+        return instance.update();
+      },
+      forceUpdate: function forceUpdate() {
+        if (isDestroyed) {
+          return;
+        }
+        var _state$elements = state.elements, reference3 = _state$elements.reference, popper3 = _state$elements.popper;
+        if (!areValidElements(reference3, popper3)) {
+          if (true) {
+            console.error(INVALID_ELEMENT_ERROR);
+          }
+          return;
+        }
+        state.rects = {
+          reference: getCompositeRect(reference3, getOffsetParent(popper3), state.options.strategy === "fixed"),
+          popper: getLayoutRect(popper3)
+        };
+        state.reset = false;
+        state.placement = state.options.placement;
+        state.orderedModifiers.forEach(function(modifier) {
+          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+        });
+        var __debug_loops__ = 0;
+        for (var index = 0; index < state.orderedModifiers.length; index++) {
+          if (true) {
+            __debug_loops__ += 1;
+            if (__debug_loops__ > 100) {
+              console.error(INFINITE_LOOP_ERROR);
+              break;
+            }
+          }
+          if (state.reset === true) {
+            state.reset = false;
+            index = -1;
+            continue;
+          }
+          var _state$orderedModifie = state.orderedModifiers[index], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
+          if (typeof fn2 === "function") {
+            state = fn2({
+              state,
+              options: _options,
+              name,
+              instance
+            }) || state;
+          }
+        }
+      },
+      update: debounce(function() {
+        return new Promise(function(resolve) {
+          instance.forceUpdate();
+          resolve(state);
+        });
+      }),
+      destroy: function destroy() {
+        cleanupModifierEffects();
+        isDestroyed = true;
+      }
+    };
+    if (!areValidElements(reference2, popper2)) {
+      if (true) {
+        console.error(INVALID_ELEMENT_ERROR);
+      }
+      return instance;
+    }
+    instance.setOptions(options).then(function(state2) {
+      if (!isDestroyed && options.onFirstUpdate) {
+        options.onFirstUpdate(state2);
+      }
+    });
+    function runModifierEffects() {
+      state.orderedModifiers.forEach(function(_ref3) {
+        var name = _ref3.name, _ref3$options = _ref3.options, options2 = _ref3$options === void 0 ? {} : _ref3$options, effect4 = _ref3.effect;
+        if (typeof effect4 === "function") {
+          var cleanupFn = effect4({
+            state,
+            name,
+            instance,
+            options: options2
+          });
+          var noopFn = function noopFn2() {
+          };
+          effectCleanupFns.push(cleanupFn || noopFn);
+        }
+      });
+    }
+    function cleanupModifierEffects() {
+      effectCleanupFns.forEach(function(fn2) {
+        return fn2();
+      });
+      effectCleanupFns = [];
+    }
+    return instance;
+  };
+}
+
+// node_modules/@popperjs/core/lib/popper.js
+var defaultModifiers = [eventListeners_default, popperOffsets_default, computeStyles_default, applyStyles_default, offset_default, flip_default, preventOverflow_default, arrow_default, hide_default];
+var createPopper = /* @__PURE__ */ popperGenerator({
+  defaultModifiers
+});
+
+// src/ui/suggest.ts
+var import_obsidian3 = __toModule(require("obsidian"));
+var wrapAround = (value, size) => {
+  return (value % size + size) % size;
+};
+var Suggest = class {
+  constructor(owner, containerEl, scope) {
+    this.owner = owner;
+    this.containerEl = containerEl;
+    containerEl.on("click", ".suggestion-item", this.onSuggestionClick.bind(this));
+    containerEl.on("mousemove", ".suggestion-item", this.onSuggestionMouseover.bind(this));
+    scope.register([], "ArrowUp", (event) => {
+      if (!event.isComposing) {
+        this.setSelectedItem(this.selectedItem - 1, true);
+        return false;
+      }
+    });
+    scope.register([], "ArrowDown", (event) => {
+      if (!event.isComposing) {
+        this.setSelectedItem(this.selectedItem + 1, true);
+        return false;
+      }
+    });
+    scope.register([], "Enter", (event) => {
+      if (!event.isComposing) {
+        this.useSelectedItem(event);
+        return false;
+      }
+    });
+  }
+  onSuggestionClick(event, el) {
+    event.preventDefault();
+    const item = this.suggestions.indexOf(el);
+    this.setSelectedItem(item, false);
+    this.useSelectedItem(event);
+  }
+  onSuggestionMouseover(_event, el) {
+    const item = this.suggestions.indexOf(el);
+    this.setSelectedItem(item, false);
+  }
+  setSuggestions(values) {
+    this.containerEl.empty();
+    const suggestionEls = [];
+    values.forEach((value) => {
+      const suggestionEl = this.containerEl.createDiv("suggestion-item");
+      this.owner.renderSuggestion(value, suggestionEl);
+      suggestionEls.push(suggestionEl);
+    });
+    this.values = values;
+    this.suggestions = suggestionEls;
+    this.setSelectedItem(0, false);
+  }
+  useSelectedItem(event) {
+    const currentValue = this.values[this.selectedItem];
+    if (currentValue) {
+      this.owner.selectSuggestion(currentValue, event);
+    }
+  }
+  setSelectedItem(selectedIndex, scrollIntoView) {
+    const normalizedIndex = wrapAround(selectedIndex, this.suggestions.length);
+    const prevSelectedSuggestion = this.suggestions[this.selectedItem];
+    const selectedSuggestion = this.suggestions[normalizedIndex];
+    prevSelectedSuggestion == null ? void 0 : prevSelectedSuggestion.removeClass("is-selected");
+    selectedSuggestion == null ? void 0 : selectedSuggestion.addClass("is-selected");
+    this.selectedItem = normalizedIndex;
+    if (scrollIntoView) {
+      selectedSuggestion.scrollIntoView(false);
+    }
+  }
+};
+var TextInputSuggest = class {
+  constructor(app, inputEl) {
+    this.app = app;
+    this.inputEl = inputEl;
+    this.scope = new import_obsidian3.Scope();
+    this.suggestEl = createDiv("suggestion-container");
+    const suggestion = this.suggestEl.createDiv("suggestion");
+    this.suggest = new Suggest(this, suggestion, this.scope);
+    this.scope.register([], "Escape", this.close.bind(this));
+    this.inputEl.addEventListener("input", this.onInputChanged.bind(this));
+    this.inputEl.addEventListener("focus", this.onInputChanged.bind(this));
+    this.inputEl.addEventListener("blur", this.close.bind(this));
+    this.suggestEl.on("mousedown", ".suggestion-container", (event) => {
+      event.preventDefault();
+    });
+  }
+  onInputChanged() {
+    const inputStr = this.inputEl.value;
+    const suggestions = this.getSuggestions(inputStr);
+    if (suggestions.length > 0) {
+      this.suggest.setSuggestions(suggestions);
+      this.open(this.app.dom.appContainerEl, this.inputEl);
+    }
+  }
+  open(container, inputEl) {
+    this.app.keymap.pushScope(this.scope);
+    container.appendChild(this.suggestEl);
+    this.popper = createPopper(inputEl, this.suggestEl, {
+      placement: "bottom-start",
+      modifiers: [
+        {
+          name: "sameWidth",
+          enabled: true,
+          fn: ({ state, instance }) => {
+            const targetWidth = `${state.rects.reference.width}px`;
+            if (state.styles.popper.width === targetWidth) {
+              return;
+            }
+            state.styles.popper.width = targetWidth;
+            instance.update();
+          },
+          phase: "beforeWrite",
+          requires: ["computeStyles"]
+        }
+      ]
+    });
+  }
+  close() {
+    this.app.keymap.popScope(this.scope);
+    this.suggest.setSuggestions([]);
+    this.popper.destroy();
+    this.suggestEl.detach();
+  }
+};
+
+// src/ui/file_suggest.ts
+var FileSuggest = class extends TextInputSuggest {
+  getSuggestions(inputStr) {
+    const files = [];
+    const lowerCaseInputStr = inputStr.toLowerCase();
+    import_obsidian4.Vault.recurseChildren(this.app.vault.getRoot(), (file) => {
+      if (file.path.toLowerCase().contains(lowerCaseInputStr)) {
+        files.push(file);
+      }
+    });
+    return files;
+  }
+  renderSuggestion(file, el) {
+    el.setText(file.path);
+  }
+  selectSuggestion(file) {
+    this.inputEl.value = file.path;
+    this.inputEl.trigger("input");
+    this.close();
+  }
+};
+
+// src/snippets/snippet_helper_functions.ts
+var import_obsidian5 = __toModule(require("obsidian"));
+var import_commands2 = __toModule(require("@codemirror/commands"));
+
+// src/snippets/marker_state_field.ts
+var import_state6 = __toModule(require("@codemirror/state"));
+var import_view8 = __toModule(require("@codemirror/view"));
+var addMark = import_state6.StateEffect.define();
+var removeMark = import_state6.StateEffect.define();
+var clearMarks = import_state6.StateEffect.define();
+var removeMarkBySpecAttribute = import_state6.StateEffect.define();
+var startSnippet = import_state6.StateEffect.define();
+var endSnippet = import_state6.StateEffect.define();
+var undidStartSnippet = import_state6.StateEffect.define();
+var undidEndSnippet = import_state6.StateEffect.define();
+var markerStateField = import_state6.StateField.define({
+  create() {
+    return import_view8.Decoration.none;
+  },
+  update(value, tr) {
+    value = value.map(tr.changes);
+    for (const effect4 of tr.effects) {
+      if (effect4.is(addMark)) {
+        value = value.update({ add: [effect4.value] });
+      } else if (effect4.is(removeMark)) {
+        value = value.update({ filter: (from, to, value2) => {
+          return !value2.eq(effect4.value.value);
+        } });
+      } else if (effect4.is(clearMarks)) {
+        value = value.update({ filter: () => false });
+      } else if (effect4.is(removeMarkBySpecAttribute)) {
+        value = value.update({ filter: (from, to, ref) => ref.spec[effect4.value.attribute] !== effect4.value.reference });
+      }
+    }
+    return value;
+  },
+  provide: (f) => import_view8.EditorView.decorations.from(f)
+});
+
+// src/snippets/snippet_helper_functions.ts
+var import_json5 = __toModule(require_dist());
+function sortSnippets(snippets2) {
+  function compareTriggerLength(a, b) {
+    const aTriggerLength = a.trigger.length;
+    const bTriggerLength = b.trigger.length;
+    if (aTriggerLength < bTriggerLength) {
+      return 1;
+    }
+    if (aTriggerLength > bTriggerLength) {
+      return -1;
+    }
+    return 0;
+  }
+  snippets2.sort(compareTriggerLength);
+  function compare(a, b) {
+    const aPriority = a.priority === void 0 ? 0 : a.priority;
+    const bPriority = b.priority === void 0 ? 0 : b.priority;
+    if (aPriority < bPriority) {
+      return 1;
+    }
+    if (aPriority > bPriority) {
+      return -1;
+    }
+    return 0;
+  }
+  snippets2.sort(compare);
+}
+function getSnippetsFromString(snippetsStr) {
+  const snippets2 = (0, import_json5.parse)(snippetsStr);
+  if (!validateSnippets(snippets2))
+    throw "Invalid snippet format.";
+  return snippets2;
+}
+function validateSnippets(snippets2) {
+  let valid = true;
+  for (const snippet of snippets2) {
+    if (!(snippet.trigger && snippet.replacement && snippet.options != void 0)) {
+      valid = false;
+      break;
+    }
+  }
+  return valid;
+}
+function isInFolder(file, dir) {
+  let cur = file.parent;
+  let cnt = 0;
+  while (cur && !cur.isRoot() && cnt < 100) {
+    if (cur.path === dir.path)
+      return true;
+    cur = cur.parent;
+    cnt++;
+  }
+  return false;
+}
+var snippetInvertedEffects = import_commands2.invertedEffects.of((tr) => {
+  const effects = [];
+  for (const effect4 of tr.effects) {
+    if (effect4.is(addMark)) {
+      effects.push(removeMark.of(effect4.value));
+    } else if (effect4.is(removeMark)) {
+      effects.push(addMark.of(effect4.value));
+    } else if (effect4.is(startSnippet)) {
+      effects.push(undidStartSnippet.of(null));
+    } else if (effect4.is(undidStartSnippet)) {
+      effects.push(startSnippet.of(null));
+    } else if (effect4.is(endSnippet)) {
+      effects.push(undidEndSnippet.of(null));
+    } else if (effect4.is(undidEndSnippet)) {
+      effects.push(endSnippet.of(null));
+    }
+  }
+  return effects;
+});
+function getSnippetsWithinFolder(folder) {
+  return __async(this, null, function* () {
+    const snippets2 = [];
+    for (const fileOrFolder of folder.children) {
+      if (fileOrFolder instanceof import_obsidian5.TFile) {
+        const content = yield this.app.vault.cachedRead(fileOrFolder);
+        try {
+          snippets2.push(...getSnippetsFromString(content));
+        } catch (e) {
+          console.log(`Failed to load snippet file ${fileOrFolder.path}:`, e);
+          new import_obsidian5.Notice(`Failed to load snippet file ${fileOrFolder.name}`);
+        }
+      } else {
+        const newSnippets = yield getSnippetsWithinFolder(fileOrFolder);
+        snippets2.push(...newSnippets);
+      }
+    }
+    return snippets2;
+  });
+}
+var debouncedSetSnippetsFromFileOrFolder = (0, import_obsidian5.debounce)((plugin, path) => __async(void 0, null, function* () {
+  if (!path)
+    path = plugin.settings.snippetsFileLocation;
+  let snippets2;
+  const fileOrFolder = plugin.app.vault.getAbstractFileByPath(path);
+  if (fileOrFolder instanceof import_obsidian5.TFolder) {
+    snippets2 = yield getSnippetsWithinFolder(fileOrFolder);
+  } else {
+    const content = yield plugin.app.vault.cachedRead(fileOrFolder);
+    snippets2 = yield getSnippetsFromString(content);
+  }
+  sortSnippets(snippets2);
+  plugin.snippets = snippets2;
+  new import_obsidian5.Notice("Successfully reloaded snippets.", 5e3);
+}), 500, true);
+
 // src/settings.ts
 var DEFAULT_SETTINGS = {
   snippets: DEFAULT_SNIPPETS,
   snippetsEnabled: true,
+  loadSnippetsFromFile: false,
+  snippetsFileLocation: "",
   concealEnabled: false,
   colorPairedBracketsEnabled: true,
   highlightCursorBracketsEnabled: true,
@@ -5644,14 +7574,15 @@ var DEFAULT_SETTINGS = {
         ["^{", "}"],
         ["\\\\pu{", "}"]
 ]`,
+  autofractionBreakingChars: "+-=	",
   matrixShortcutsEnabled: true,
   matrixShortcutsEnvNames: "pmatrix, cases, align, bmatrix, Bmatrix, vmatrix, Vmatrix, array, matrix",
   taboutEnabled: true,
   autoEnlargeBrackets: true,
   autoEnlargeBracketsTriggers: "sum, int, frac, prod",
-  wordDelimiters: "., -\\n:;!?\\/{}[]()=~"
+  wordDelimiters: "., +-\\n	:;!?\\/{}[]()=~$"
 };
-var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
+var LatexSuiteSettingTab = class extends import_obsidian6.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -5664,15 +7595,15 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("div", { text: "Snippets" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("Whether snippets are enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.snippetsEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("Whether snippets are enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.snippetsEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.snippetsEnabled = value;
       yield this.plugin.saveSettings();
     })));
-    const snippetsSetting = new import_obsidian3.Setting(containerEl).setName("Snippets").setDesc('Enter snippets here.  Remember to add a comma after each snippet, and escape all backslashes with an extra \\. Lines starting with "//" will be treated as comments and ignored.').setClass("snippets-text-area");
+    const snippetsSetting = new import_obsidian6.Setting(containerEl).setName("Snippets").setDesc('Enter snippets here.  Remember to add a comma after each snippet, and escape all backslashes with an extra \\. Lines starting with "//" will be treated as comments and ignored.').setClass("snippets-text-area");
     const customCSSWrapper = snippetsSetting.controlEl.createDiv("snippets-editor-wrapper");
     const snippetsFooter = snippetsSetting.controlEl.createDiv("snippets-footer");
     const validity = snippetsFooter.createDiv("snippets-editor-validity");
-    const validityIndicator = new import_obsidian3.ExtraButtonComponent(validity);
+    const validityIndicator = new import_obsidian6.ExtraButtonComponent(validity);
     validityIndicator.setIcon("checkmark").extraSettingsEl.addClass("snippets-editor-validity-indicator");
     const validityText = validity.createDiv("snippets-editor-validity-text");
     validityText.addClass("setting-item-description");
@@ -5684,7 +7615,7 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
       validityText.setText(success ? "Saved" : "Invalid syntax. Changes not saved");
     }
     const extensions = basicSetup;
-    const change = import_view8.EditorView.updateListener.of((v) => __async(this, null, function* () {
+    const change = import_view9.EditorView.updateListener.of((v) => __async(this, null, function* () {
       if (v.docChanged) {
         const value = v.state.doc.toString();
         let success = true;
@@ -5704,29 +7635,56 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
     this.snippetsEditor = createSnippetsEditor(this.plugin.settings.snippets, extensions);
     customCSSWrapper.appendChild(this.snippetsEditor.dom);
     const buttonsDiv = snippetsFooter.createDiv("snippets-editor-buttons");
-    const reset = new import_obsidian3.ButtonComponent(buttonsDiv);
+    const reset = new import_obsidian6.ButtonComponent(buttonsDiv);
     reset.setIcon("switch").setTooltip("Reset to default snippets").onClick(() => __async(this, null, function* () {
       new ConfirmationModal(this.plugin.app, "Are you sure? This will delete any custom snippets you have written.", (button) => button.setButtonText("Reset to default snippets").setWarning(), () => __async(this, null, function* () {
-        this.snippetsEditor.setState(import_state6.EditorState.create({ doc: DEFAULT_SNIPPETS, extensions }));
+        this.snippetsEditor.setState(import_state7.EditorState.create({ doc: DEFAULT_SNIPPETS, extensions }));
         updateValidityIndicator(true);
         this.plugin.setSnippets(DEFAULT_SNIPPETS);
         this.plugin.settings.snippets = DEFAULT_SNIPPETS;
         yield this.plugin.saveSettings();
       })).open();
     }));
-    const remove = new import_obsidian3.ButtonComponent(buttonsDiv);
+    const remove = new import_obsidian6.ButtonComponent(buttonsDiv);
     remove.setIcon("trash").setTooltip("Remove all snippets").onClick(() => __async(this, null, function* () {
       new ConfirmationModal(this.plugin.app, "Are you sure? This will delete any custom snippets you have written.", (button) => button.setButtonText("Remove all snippets").setWarning(), () => __async(this, null, function* () {
         const value = `[
 
 ]`;
-        this.snippetsEditor.setState(import_state6.EditorState.create({ doc: value, extensions }));
+        this.snippetsEditor.setState(import_state7.EditorState.create({ doc: value, extensions }));
         updateValidityIndicator(true);
         this.plugin.setSnippets(value);
         this.plugin.settings.snippets = value;
         yield this.plugin.saveSettings();
       })).open();
     }));
+    new import_obsidian6.Setting(containerEl).setName("Load snippets from file or folder").setDesc("Whether to load snippets from a specified file, or from all files within a folder (instead of from the plugin settings).").addToggle((toggle) => toggle.setValue(this.plugin.settings.loadSnippetsFromFile).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.loadSnippetsFromFile = value;
+      snippetsSetting.settingEl.toggleClass("hidden", value);
+      if (this.snippetsFileLocEl != void 0)
+        this.snippetsFileLocEl.toggleClass("hidden", !value);
+      if (value) {
+        debouncedSetSnippetsFromFileOrFolder(this.plugin);
+      } else {
+        this.plugin.setSnippets(this.plugin.settings.snippets);
+      }
+      yield this.plugin.saveSettings();
+    })));
+    const snippetsFileLoc = new import_obsidian6.Setting(containerEl).setName("Snippets file or folder location").setDesc("The file or folder to load snippets from.");
+    let inputEl;
+    snippetsFileLoc.addText((text) => {
+      text.setPlaceholder(DEFAULT_SETTINGS.snippetsFileLocation).setValue(this.plugin.settings.snippetsFileLocation).onChange((value) => __async(this, null, function* () {
+        this.plugin.settings.snippetsFileLocation = value;
+        debouncedSetSnippetsFromFileOrFolder(this.plugin);
+        yield this.plugin.saveSettings();
+      }));
+      inputEl = text.inputEl;
+    });
+    this.snippetsFileLocEl = snippetsFileLoc.settingEl;
+    new FileSuggest(this.app, inputEl);
+    const loadSnippetsFromFile = this.plugin.settings.loadSnippetsFromFile;
+    snippetsSetting.settingEl.toggleClass("hidden", loadSnippetsFromFile);
+    this.snippetsFileLocEl.toggleClass("hidden", !loadSnippetsFromFile);
     containerEl.createEl("div", { text: "Conceal" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
     const fragment = document.createDocumentFragment();
     const line1 = document.createElement("div");
@@ -5739,7 +7697,7 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
     const line4 = document.createElement("div");
     line4.setText("Disabled by default to not confuse new users. However, I recommend turning this on once you are comfortable with the plugin!");
     fragment.append(line1, line2, line3, space2, line4);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc(fragment).addToggle((toggle) => toggle.setValue(this.plugin.settings.concealEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc(fragment).addToggle((toggle) => toggle.setValue(this.plugin.settings.concealEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.concealEnabled = value;
       if (value) {
         this.plugin.enableExtension(concealPlugin.extension);
@@ -5749,7 +7707,7 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Highlight and color brackets" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Color paired brackets").setDesc("Whether to colorize matching brackets.").addToggle((toggle) => toggle.setValue(this.plugin.settings.colorPairedBracketsEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Color paired brackets").setDesc("Whether to colorize matching brackets.").addToggle((toggle) => toggle.setValue(this.plugin.settings.colorPairedBracketsEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.colorPairedBracketsEnabled = value;
       if (value) {
         this.plugin.enableExtension(colorPairedBracketsPluginLowestPrec);
@@ -5758,7 +7716,7 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
       }
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian3.Setting(containerEl).setName("Highlight matching bracket beneath cursor").setDesc("When the cursor is adjacent to a bracket, highlight the matching bracket.").addToggle((toggle) => toggle.setValue(this.plugin.settings.highlightCursorBracketsEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Highlight matching bracket beneath cursor").setDesc("When the cursor is adjacent to a bracket, highlight the matching bracket.").addToggle((toggle) => toggle.setValue(this.plugin.settings.highlightCursorBracketsEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.highlightCursorBracketsEnabled = value;
       if (value) {
         this.plugin.enableExtension(highlightCursorBracketsPlugin.extension);
@@ -5768,7 +7726,7 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Inline math preview" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("When inside inline math, show a popup preview window of the rendered math.").addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineMathPreviewEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("When inside inline math, show a popup preview window of the rendered math.").addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineMathPreviewEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.inlineMathPreviewEnabled = value;
       if (value) {
         this.plugin.enableExtension(cursorTooltipField);
@@ -5780,53 +7738,57 @@ var LatexSuiteSettingTab = class extends import_obsidian3.PluginSettingTab {
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Auto-fraction" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("Whether auto-fraction is enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.autofractionEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("Whether auto-fraction is enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.autofractionEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.autofractionEnabled = value;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian3.Setting(containerEl).setName("Excluded environments").setDesc('A list of environments to exclude auto-fraction from running in. For example, to exclude auto-fraction from running while inside an exponent, such as e^{...}, use  ["^{", "}"]').addTextArea((text) => text.setPlaceholder('[ ["^{", "}] ]').setValue(this.plugin.settings.autofractionExcludedEnvs).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Excluded environments").setDesc('A list of environments to exclude auto-fraction from running in. For example, to exclude auto-fraction from running while inside an exponent, such as e^{...}, use  ["^{", "}"]').addTextArea((text) => text.setPlaceholder('[ ["^{", "}] ]').setValue(this.plugin.settings.autofractionExcludedEnvs).onChange((value) => __async(this, null, function* () {
       this.plugin.setAutofractionExcludedEnvs(value);
       this.plugin.settings.autofractionExcludedEnvs = value;
       yield this.plugin.saveSettings();
     })));
+    new import_obsidian6.Setting(containerEl).setName("Breaking characters").setDesc('A list of characters that denote the start/end of a fraction. e.g. if + is included in the list, "a+b/c" will expand to "a+\\frac{b}{c}". If + is not in the list, it will expand to "\\frac{a+b}{c}".').addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.autofractionBreakingChars).setValue(this.plugin.settings.autofractionBreakingChars).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.autofractionBreakingChars = value;
+      yield this.plugin.saveSettings();
+    })));
     containerEl.createEl("div", { text: "Matrix shortcuts" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("Whether matrix shortcuts are enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.matrixShortcutsEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("Whether matrix shortcuts are enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.matrixShortcutsEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.matrixShortcutsEnabled = value;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian3.Setting(containerEl).setName("Environments").setDesc("A list of environment names to run the matrix shortcuts in, separated by commas.").addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.matrixShortcutsEnvNames).setValue(this.plugin.settings.matrixShortcutsEnvNames).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Environments").setDesc("A list of environment names to run the matrix shortcuts in, separated by commas.").addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.matrixShortcutsEnvNames).setValue(this.plugin.settings.matrixShortcutsEnvNames).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.matrixShortcutsEnvNames = value;
       this.plugin.matrixShortcutsEnvNames = value.replace(/\s/g, "").split(",");
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Tabout" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("Whether tabout is enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.taboutEnabled).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("Whether tabout is enabled.").addToggle((toggle) => toggle.setValue(this.plugin.settings.taboutEnabled).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.taboutEnabled = value;
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Auto-enlarge brackets" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Enabled").setDesc("Whether to automatically enlarge brackets containing e.g. sum, int, frac.").addToggle((toggle) => toggle.setValue(this.plugin.settings.autoEnlargeBrackets).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Enabled").setDesc("Whether to automatically enlarge brackets containing e.g. sum, int, frac.").addToggle((toggle) => toggle.setValue(this.plugin.settings.autoEnlargeBrackets).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.autoEnlargeBrackets = value;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian3.Setting(containerEl).setName("Triggers").setDesc("A list of symbols that should trigger auto-enlarge brackets, separated by commas.").addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.autoEnlargeBracketsTriggers).setValue(this.plugin.settings.autoEnlargeBracketsTriggers).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Triggers").setDesc("A list of symbols that should trigger auto-enlarge brackets, separated by commas.").addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.autoEnlargeBracketsTriggers).setValue(this.plugin.settings.autoEnlargeBracketsTriggers).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.autoEnlargeBracketsTriggers = value;
       this.plugin.autoEnlargeBracketsTriggers = value.replace(/\s/g, "").split(",");
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("div", { text: "Misc" }).addClasses(["setting-item", "setting-item-heading", "setting-item-name"]);
-    new import_obsidian3.Setting(containerEl).setName("Word delimiters").setDesc('Symbols that will be treated as word delimiters, for use with the "w" snippet option.').addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.wordDelimiters).setValue(this.plugin.settings.wordDelimiters).onChange((value) => __async(this, null, function* () {
+    new import_obsidian6.Setting(containerEl).setName("Word delimiters").setDesc('Symbols that will be treated as word delimiters, for use with the "w" snippet option.').addText((text) => text.setPlaceholder(DEFAULT_SETTINGS.wordDelimiters).setValue(this.plugin.settings.wordDelimiters).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.wordDelimiters = value;
       yield this.plugin.saveSettings();
     })));
   }
 };
-var ConfirmationModal = class extends import_obsidian3.Modal {
+var ConfirmationModal = class extends import_obsidian6.Modal {
   constructor(app, body, buttonCallback, clickCallback) {
     super(app);
     this.contentEl.addClass("latex-suite-confirmation-modal");
     this.contentEl.createEl("p", { text: body });
-    new import_obsidian3.Setting(this.contentEl).addButton((button) => {
+    new import_obsidian6.Setting(this.contentEl).addButton((button) => {
       buttonCallback(button);
       button.onClick(() => __async(this, null, function* () {
         yield clickCallback();
@@ -5836,60 +7798,32 @@ var ConfirmationModal = class extends import_obsidian3.Modal {
   }
 };
 function createSnippetsEditor(content, extensions) {
-  const view = new import_view8.EditorView({
-    state: import_state6.EditorState.create({ doc: content, extensions })
+  const view = new import_view9.EditorView({
+    state: import_state7.EditorState.create({ doc: content, extensions })
   });
   return view;
 }
 
-// src/marker_state_field.ts
-var import_state7 = __toModule(require("@codemirror/state"));
-var import_view9 = __toModule(require("@codemirror/view"));
-var addMark = import_state7.StateEffect.define();
-var removeMark = import_state7.StateEffect.define();
-var clearMarks = import_state7.StateEffect.define();
-var removeMarkBySpecAttribute = import_state7.StateEffect.define();
-var startSnippet = import_state7.StateEffect.define();
-var endSnippet = import_state7.StateEffect.define();
-var undidStartSnippet = import_state7.StateEffect.define();
-var undidEndSnippet = import_state7.StateEffect.define();
-var markerStateField = import_state7.StateField.define({
-  create() {
-    return import_view9.Decoration.none;
-  },
-  update(value, tr) {
-    value = value.map(tr.changes);
-    for (const effect of tr.effects) {
-      if (effect.is(addMark)) {
-        value = value.update({ add: [effect.value] });
-      } else if (effect.is(removeMark)) {
-        value = value.update({ filter: (from, to, value2) => {
-          return !value2.eq(effect.value.value);
-        } });
-      } else if (effect.is(clearMarks)) {
-        value = value.update({ filter: () => false });
-      } else if (effect.is(removeMarkBySpecAttribute)) {
-        value = value.update({ filter: (from, to, ref) => ref.spec[effect.value.attribute] !== effect.value.reference });
-      }
-    }
-    return value;
-  },
-  provide: (f) => import_view9.EditorView.decorations.from(f)
-});
+// src/main.ts
+var import_view11 = __toModule(require("@codemirror/view"));
+var import_state9 = __toModule(require("@codemirror/state"));
+var import_commands4 = __toModule(require("@codemirror/commands"));
 
-// src/snippets.ts
+// src/snippets/snippets.ts
 var SNIPPET_VARIABLES = {
   "${GREEK}": "alpha|beta|gamma|Gamma|delta|Delta|epsilon|varepsilon|zeta|eta|theta|Theta|iota|kappa|lambda|Lambda|mu|nu|xi|Xi|pi|Pi|rho|sigma|Sigma|tau|upsilon|varphi|phi|Phi|chi|psi|Psi|omega|Omega",
-  "${SYMBOL}": "hbar|ell|nabla|infty|dots|to|leftrightarrow|mapsto|setminus|mid|cap|cup|subseteq|subset|implies|impliedby|iff|exists|equiv|square|neq|geq|leq|gg|ll|sim|simeq|approx|propto|cdot|oplus|otimes|times|star|perp|det|exp|ln|log"
+  "${SYMBOL}": "hbar|ell|nabla|infty|dots|leftrightarrow|mapsto|setminus|mid|cap|cup|land|lor|subseteq|subset|implies|impliedby|iff|exists|equiv|square|neq|geq|leq|gg|ll|sim|simeq|approx|propto|cdot|oplus|otimes|times|star|perp|det|exp|ln|log|partial",
+  "${SHORT_SYMBOL}": "to|pm|mp"
 };
 var EXCLUSIONS = {
   "([A-Za-z])(\\d)": { openSymbol: "\\pu{", closeSymbol: "}" },
   "->": { openSymbol: "\\ce{", closeSymbol: "}" }
 };
 
-// src/snippet_manager.ts
+// src/snippets/snippet_manager.ts
 var import_view10 = __toModule(require("@codemirror/view"));
 var import_state8 = __toModule(require("@codemirror/state"));
+var import_commands3 = __toModule(require("@codemirror/commands"));
 var COLORS = ["lightskyblue", "orange", "lime", "pink", "cornsilk", "magenta", "navajowhite"];
 var TabstopReference = class {
   constructor(view, colorIndex) {
@@ -5954,10 +7888,10 @@ var SnippetManager = class {
     const markerClass = prefix + " " + prefix + colorIndex;
     return markerClass;
   }
-  getTabstopsFromSnippet(view, start, replacement) {
+  getTabstopsFromSnippet(view, start2, replacement) {
     const tabstops = [];
     const text = view.state.doc.toString();
-    for (let i = start; i < start + replacement.length; i++) {
+    for (let i = start2; i < start2 + replacement.length; i++) {
       if (!(text.charAt(i) === "$")) {
         continue;
       }
@@ -5971,7 +7905,7 @@ var SnippetManager = class {
         number = parseInt(text.charAt(i + 2));
         if (isNaN(number))
           continue;
-        const closingIndex = findMatchingBracket(text, i + 1, "{", "}", false, start + replacement.length);
+        const closingIndex = findMatchingBracket(text, i + 1, "{", "}", false, start2 + replacement.length);
         if (closingIndex === -1)
           continue;
         tabstopReplacement = text.slice(i + 4, closingIndex);
@@ -5986,16 +7920,36 @@ var SnippetManager = class {
   queueSnippet(snippet) {
     this.snippetsToAdd.push(snippet);
   }
+  clearSnippetQueue() {
+    this.snippetsToAdd = [];
+  }
   expandSnippets(view) {
     if (this.snippetsToAdd.length === 0)
       return false;
+    const originalDoc = view.state.doc;
+    const originalDocLength = view.state.doc.length;
     const snippets2 = this.snippetsToAdd;
     const changes = snippets2;
+    const keyPresses = [];
+    for (const snippet of snippets2) {
+      if (snippet.keyPressed && snippet.keyPressed.length === 1) {
+        const prevChar = view.state.doc.sliceString(snippet.to - 1, snippet.to);
+        const from = snippet.to === 0 ? 0 : snippet.to - 1;
+        keyPresses.push({ from, to: snippet.to, insert: prevChar + snippet.keyPressed });
+      }
+    }
     view.dispatch({
-      changes,
+      changes: keyPresses,
+      annotations: import_commands3.isolateHistory.of("full")
+    });
+    const undoKeyPresses = import_state8.ChangeSet.of(keyPresses, originalDocLength).invert(originalDoc);
+    const changesAsChangeSet = import_state8.ChangeSet.of(changes, originalDocLength);
+    const combinedChanges = undoKeyPresses.compose(changesAsChangeSet);
+    view.dispatch({
+      changes: combinedChanges,
       effects: startSnippet.of(null)
     });
-    const changeSet = import_state8.ChangeSet.of(changes, view.state.doc.length);
+    const changeSet = import_state8.ChangeSet.of(changes, originalDocLength);
     const oldPositions = snippets2.map((change) => change.from);
     const newPositions = oldPositions.map((pos) => changeSet.mapPos(pos));
     let tabstopsToAdd = [];
@@ -6016,19 +7970,19 @@ var SnippetManager = class {
     if (!append) {
       const colorIndex = this.getColorIndex();
       for (let i = 0; i < numbers.length; i++) {
-        const reference = new TabstopReference(view, colorIndex);
-        this.currentTabstopReferences.unshift(reference);
+        const reference2 = new TabstopReference(view, colorIndex);
+        this.currentTabstopReferences.unshift(reference2);
       }
     }
   }
   insertTabstopsTransaction(view, tabstops) {
     const effects = tabstops.map((tabstop) => {
-      const reference = this.currentTabstopReferences[tabstop.number];
+      const reference2 = this.currentTabstopReferences[tabstop.number];
       const mark = import_view10.Decoration.mark({
         inclusive: true,
         attributes: {},
-        class: this.getColorClass(reference.colorIndex),
-        reference
+        class: this.getColorClass(reference2.colorIndex),
+        reference: reference2
       }).range(tabstop.from, tabstop.to);
       return addMark.of(mark);
     });
@@ -6051,16 +8005,16 @@ var SnippetManager = class {
     firstRef.removeFromEditor();
     this.removeOnlyTabstop();
   }
-  selectTabstopReference(reference) {
-    setSelections(reference.view, reference.ranges);
-    reference.removeFromEditor();
+  selectTabstopReference(reference2) {
+    setSelections(reference2.view, reference2.ranges);
+    reference2.removeFromEditor();
     this.removeOnlyTabstop();
   }
   removeOnlyTabstop() {
     if (this.currentTabstopReferences.length === 1) {
       let shouldClear = true;
-      const reference = this.currentTabstopReferences[0];
-      const markers = reference.markers;
+      const reference2 = this.currentTabstopReferences[0];
+      const markers = reference2.markers;
       for (const marker of markers) {
         if (!(marker.from === marker.to)) {
           shouldClear = false;
@@ -6068,7 +8022,7 @@ var SnippetManager = class {
         }
       }
       if (shouldClear)
-        this.clearAllTabstops(reference.view);
+        this.clearAllTabstops(reference2.view);
     }
   }
   isInsideATabstop(pos) {
@@ -6148,13 +8102,13 @@ function boxCurrentEquation(view) {
   const result = getEquationBounds(view);
   if (!result)
     return false;
-  const { start, end } = result;
-  let equation = "\\boxed{" + view.state.sliceDoc(start, end) + "}";
-  const insideBlockEqn = view.state.sliceDoc(start - 2, start) === "$$" && view.state.sliceDoc(end, end + 2) === "$$";
+  const { start: start2, end: end2 } = result;
+  let equation = "\\boxed{" + view.state.sliceDoc(start2, end2) + "}";
+  const insideBlockEqn = view.state.sliceDoc(start2 - 2, start2) === "$$" && view.state.sliceDoc(end2, end2 + 2) === "$$";
   if (insideBlockEqn)
     equation = "\n" + equation + "\n";
   const pos = view.state.selection.main.to;
-  replaceRange(view, start, end, equation);
+  replaceRange(view, start2, end2, equation);
   setCursor(view, pos + "\\boxed{".length + (insideBlockEqn ? 1 : 0));
 }
 function getBoxEquationCommand() {
@@ -6187,13 +8141,13 @@ function getSelectEquationCommand() {
       const result = getEquationBounds(view);
       if (!result)
         return false;
-      let { start, end } = result;
+      let { start: start2, end: end2 } = result;
       const doc = view.state.doc.toString();
-      if (doc.charAt(start) === "\n")
-        start++;
-      if (doc.charAt(end - 1) === "\n")
-        end--;
-      setSelection(view, start, end);
+      if (doc.charAt(start2) === "\n")
+        start2++;
+      if (doc.charAt(end2 - 1) === "\n")
+        end2--;
+      setSelection(view, start2, end2);
       return;
     }
   };
@@ -6204,13 +8158,17 @@ var editorCommands = [
 ];
 
 // src/main.ts
-var import_json5 = __toModule(require_dist());
-var LatexSuitePlugin = class extends import_obsidian4.Plugin {
+var LatexSuitePlugin = class extends import_obsidian7.Plugin {
   constructor() {
     super(...arguments);
     this.cursorTriggeredByChange = false;
     this.shouldAutoEnlargeBrackets = false;
     this.editorExtensions = [];
+    this.fileIsInSnippetsFolder = (file) => {
+      const snippetDir = this.app.vault.getAbstractFileByPath(this.settings.snippetsFileLocation);
+      const isFolder = snippetDir instanceof import_obsidian7.TFolder;
+      return isFolder && isInFolder(file, snippetDir);
+    };
     this.handleDocChange = () => {
       this.cursorTriggeredByChange = true;
     };
@@ -6227,18 +8185,18 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       const undoTr = update.transactions.find((tr) => tr.isUserEvent("undo"));
       const redoTr = update.transactions.find((tr) => tr.isUserEvent("redo"));
       for (const tr of update.transactions) {
-        for (const effect of tr.effects) {
-          if (effect.is(startSnippet)) {
+        for (const effect4 of tr.effects) {
+          if (effect4.is(startSnippet)) {
             if (redoTr) {
-              (0, import_commands2.redo)(update.view);
-              (0, import_commands2.redo)(update.view);
-              (0, import_commands2.redo)(update.view);
+              (0, import_commands4.redo)(update.view);
+              (0, import_commands4.redo)(update.view);
+              (0, import_commands4.redo)(update.view);
             }
-          } else if (effect.is(undidEndSnippet)) {
+          } else if (effect4.is(undidEndSnippet)) {
             if (undoTr) {
-              (0, import_commands2.undo)(update.view);
-              (0, import_commands2.undo)(update.view);
-              (0, import_commands2.undo)(update.view);
+              (0, import_commands4.undo)(update.view);
+              (0, import_commands4.undo)(update.view);
+              (0, import_commands4.undo)(update.view);
             }
           }
         }
@@ -6246,27 +8204,6 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       if (undoTr) {
         this.snippetManager.tidyTabstopReferences();
       }
-    };
-    this.getInvertedEffects = () => {
-      return import_commands2.invertedEffects.of((tr) => {
-        const effects = [];
-        for (const effect of tr.effects) {
-          if (effect.is(addMark)) {
-            effects.push(removeMark.of(effect.value));
-          } else if (effect.is(removeMark)) {
-            effects.push(addMark.of(effect.value));
-          } else if (effect.is(startSnippet)) {
-            effects.push(undidStartSnippet.of(null));
-          } else if (effect.is(undidStartSnippet)) {
-            effects.push(startSnippet.of(null));
-          } else if (effect.is(endSnippet)) {
-            effects.push(undidEndSnippet.of(null));
-          } else if (effect.is(undidEndSnippet)) {
-            effects.push(endSnippet.of(null));
-          }
-        }
-        return effects;
-      });
     };
     this.addEditorCommands = () => {
       for (const command of editorCommands) {
@@ -6298,7 +8235,7 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       });
     };
     this.onKeydown = (event, view) => {
-      const success = this.handleKeydown(event.key, event.shiftKey, event.ctrlKey, view);
+      const success = this.handleKeydown(event.key, event.shiftKey, event.ctrlKey || event.metaKey, view);
       if (success)
         event.preventDefault();
     };
@@ -6313,9 +8250,14 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       let success = false;
       if (this.settings.snippetsEnabled) {
         if (!ctrlKey) {
-          success = this.runSnippets(view, key, withinMath, ranges);
-          if (success)
-            return true;
+          try {
+            success = this.runSnippets(view, key, withinMath, ranges);
+            if (success)
+              return true;
+          } catch (e) {
+            this.snippetManager.clearSnippetQueue();
+            console.error(e);
+          }
         }
       }
       const shouldTaboutByCloseBracket = this.shouldTaboutByCloseBracket(view, key);
@@ -6454,8 +8396,8 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
             }
           }
         }
-        const start = triggerPos;
-        this.snippetManager.queueSnippet({ from: start, to, insert: replacement });
+        const start2 = triggerPos;
+        this.snippetManager.queueSnippet({ from: start2, to, insert: replacement, keyPressed: key });
         const containsTrigger = this.autoEnlargeBracketsTriggers.some((word) => replacement.contains("\\" + word));
         if (containsTrigger)
           this.shouldAutoEnlargeBrackets = true;
@@ -6489,9 +8431,9 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
         return false;
       const eqnStart = result.start;
       let curLine = view.state.sliceDoc(0, to);
-      let start = eqnStart;
+      let start2 = eqnStart;
       if (from != to) {
-        start = from;
+        start2 = from;
       } else {
         const regex = new RegExp("(" + SNIPPET_VARIABLES["${GREEK}"] + ") ([^ ])", "g");
         curLine = curLine.replace(regex, "$1#$2");
@@ -6505,24 +8447,24 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
               return false;
             i = j;
             if (i < eqnStart) {
-              start = eqnStart;
+              start2 = eqnStart;
               break;
             }
           }
-          if ([" ", "+", "-", "=", "$", "(", "[", "{", "\n"].contains(curChar)) {
-            start = i + 1;
+          if (" $([{\n".concat(this.settings.autofractionBreakingChars).contains(curChar)) {
+            start2 = i + 1;
             break;
           }
         }
       }
-      let numerator = view.state.sliceDoc(start, to);
+      let numerator = view.state.sliceDoc(start2, to);
       if (numerator === "")
         return false;
-      if (curLine.charAt(start) === "(" && curLine.charAt(to - 1) === ")") {
+      if (curLine.charAt(start2) === "(" && curLine.charAt(to - 1) === ")") {
         numerator = numerator.slice(1, -1);
       }
       const replacement = "\\frac{" + numerator + "}{$0}$1";
-      this.snippetManager.queueSnippet({ from: start, to, insert: replacement });
+      this.snippetManager.queueSnippet({ from: start2, to, insert: replacement, keyPressed: "/" });
       return true;
     };
     this.autoEnlargeBrackets = (view) => {
@@ -6531,22 +8473,30 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       const result = getEquationBounds(view);
       if (!result)
         return false;
-      const { start, end } = result;
+      const { start: start2, end: end2 } = result;
       const text = view.state.doc.toString();
-      const left = "\\left";
-      const right = "\\right";
-      for (let i = start; i < end; i++) {
-        const is1CharBracket = ["[", "("].contains(text.charAt(i));
-        const isCurlyBracket = text.slice(i, i + 2) == "\\{";
-        if (!(is1CharBracket || isCurlyBracket))
+      const left2 = "\\left";
+      const right2 = "\\right";
+      for (let i = start2; i < end2; i++) {
+        const brackets2 = { "(": ")", "[": "]", "\\{": "\\}", "\\langle": "\\rangle", "\\lvert": "\\rvert" };
+        const openBrackets = Object.keys(brackets2);
+        let found = false;
+        let open = "";
+        for (const openBracket of openBrackets) {
+          if (text.slice(i, i + openBracket.length) === openBracket) {
+            found = true;
+            open = openBracket;
+            break;
+          }
+        }
+        if (!found)
           continue;
-        const bracketSize = is1CharBracket ? 1 : 2;
-        const open = is1CharBracket ? text.charAt(i) : "\\{";
-        const close = getCloseBracket(open);
-        const j = findMatchingBracket(text, i, open, close, false, end);
+        const bracketSize = open.length;
+        const close = brackets2[open];
+        const j = findMatchingBracket(text, i, open, close, false, end2);
         if (j === -1)
           continue;
-        if (text.slice(i - left.length, i) === left && text.slice(j - right.length, j) === right)
+        if (text.slice(i - left2.length, i) === left2 && text.slice(j - right2.length, j) === right2)
           continue;
         const bracketContents = text.slice(i + 1, j);
         const containsTrigger = this.autoEnlargeBracketsTriggers.some((word) => bracketContents.contains("\\" + word));
@@ -6554,8 +8504,8 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
           i = j;
           continue;
         }
-        this.snippetManager.queueSnippet({ from: i, to: i + bracketSize, insert: left + open + " " });
-        this.snippetManager.queueSnippet({ from: j, to: j + bracketSize, insert: " " + right + close });
+        this.snippetManager.queueSnippet({ from: i, to: i + bracketSize, insert: left2 + open + " " });
+        this.snippetManager.queueSnippet({ from: j, to: j + bracketSize, insert: " " + right2 + close });
       }
       this.snippetManager.expandSnippets(view);
     };
@@ -6566,11 +8516,11 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       const result = getEquationBounds(view);
       if (!result)
         return false;
-      const end = result.end;
+      const end2 = result.end;
       const d = view.state.doc;
       const text = d.toString();
       const rangle = "\\rangle";
-      for (let i = pos; i < end; i++) {
+      for (let i = pos; i < end2; i++) {
         if (["}", ")", "]", ">", "|"].contains(text.charAt(i))) {
           setCursor(view, i + 1);
           return true;
@@ -6579,15 +8529,15 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
           return true;
         }
       }
-      const textBtwnCursorAndEnd = d.sliceString(pos, end);
+      const textBtwnCursorAndEnd = d.sliceString(pos, end2);
       const atEnd = textBtwnCursorAndEnd.trim().length === 0;
       if (!atEnd)
         return false;
-      const inlineMath = d.sliceString(end, end + 2) != "$$";
+      const inlineMath = d.sliceString(end2, end2 + 2) != "$$";
       if (inlineMath) {
-        setCursor(view, end + 1);
+        setCursor(view, end2 + 1);
       } else {
-        const dollarLine = d.lineAt(end + 2);
+        const dollarLine = d.lineAt(end2 + 2);
         if (dollarLine.number === d.lines) {
           replaceRange(view, dollarLine.to, dollarLine.to, "\n");
         }
@@ -6664,14 +8614,14 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       ])));
       if ((_a = this.app.vault.config) == null ? void 0 : _a.legacyEditor) {
         const message = "Obsidian Latex Suite: This plugin does not support the legacy editor. Switch to Live Preview mode to use this plugin.";
-        new import_obsidian4.Notice(message, 1e5);
+        new import_obsidian7.Notice(message, 1e5);
         console.log(message);
         return;
       }
       this.addSettingTab(new LatexSuiteSettingTab(this.app, this));
       this.snippetManager = new SnippetManager();
       this.registerEditorExtension(markerStateField);
-      this.registerEditorExtension(this.getInvertedEffects());
+      this.registerEditorExtension(snippetInvertedEffects);
       this.registerEditorExtension(import_state9.Prec.highest(import_view11.EditorView.domEventHandlers({
         "keydown": this.onKeydown
       })));
@@ -6688,10 +8638,37 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
       this.registerEditorExtension((0, import_view11.tooltips)({ position: "absolute" }));
       this.registerEditorExtension(this.editorExtensions);
       this.addEditorCommands();
+      this.registerEvent(this.app.vault.on("modify", this.onFileChange.bind(this)));
+      this.registerEvent(this.app.vault.on("delete", (file) => {
+        const snippetDir = this.app.vault.getAbstractFileByPath(this.settings.snippetsFileLocation);
+        const isFolder = snippetDir instanceof import_obsidian7.TFolder;
+        if (file instanceof import_obsidian7.TFile && (isFolder && file.path.contains(snippetDir.path))) {
+          debouncedSetSnippetsFromFileOrFolder(this);
+        }
+      }));
+      this.registerEvent(this.app.vault.on("create", (file) => {
+        if (file instanceof import_obsidian7.TFile && this.fileIsInSnippetsFolder(file)) {
+          debouncedSetSnippetsFromFileOrFolder(this);
+        }
+      }));
     });
   }
   onunload() {
     this.snippetManager.onunload();
+  }
+  onFileChange(file) {
+    return __async(this, null, function* () {
+      if (!this.settings.loadSnippetsFromFile) {
+        return;
+      }
+      if (file.path === this.settings.snippetsFileLocation || this.fileIsInSnippetsFolder(file)) {
+        try {
+          yield debouncedSetSnippetsFromFileOrFolder(this);
+        } catch (e) {
+          new import_obsidian7.Notice("Failed to load snippets.", 5e3);
+        }
+      }
+    });
   }
   enableExtension(extension) {
     this.editorExtensions.push(extension);
@@ -6704,7 +8681,13 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
   loadSettings() {
     return __async(this, null, function* () {
       this.settings = Object.assign({}, DEFAULT_SETTINGS, yield this.loadData());
-      this.setSnippets(this.settings.snippets);
+      if (this.settings.loadSnippetsFromFile) {
+        this.app.workspace.onLayoutReady(() => {
+          debouncedSetSnippetsFromFileOrFolder(this);
+        });
+      } else {
+        this.setSnippets(this.settings.snippets);
+      }
       this.setAutofractionExcludedEnvs(this.settings.autofractionExcludedEnvs);
       this.matrixShortcutsEnvNames = this.settings.matrixShortcutsEnvNames.replace(/\s/g, "").split(",");
       this.autoEnlargeBracketsTriggers = this.settings.autoEnlargeBracketsTriggers.replace(/\s/g, "").split(",");
@@ -6726,35 +8709,9 @@ var LatexSuitePlugin = class extends import_obsidian4.Plugin {
     });
   }
   setSnippets(snippetsStr) {
-    const snippets2 = (0, import_json5.parse)(snippetsStr);
-    if (!this.validateSnippets(snippets2))
-      throw "Invalid snippet format.";
-    this.sortSnippets(snippets2);
+    const snippets2 = getSnippetsFromString(snippetsStr);
+    sortSnippets(snippets2);
     this.snippets = snippets2;
-  }
-  validateSnippets(snippets2) {
-    let valid = true;
-    for (const snippet of snippets2) {
-      if (!(snippet.trigger && snippet.replacement && snippet.options != void 0)) {
-        valid = false;
-        break;
-      }
-    }
-    return valid;
-  }
-  sortSnippets(snippets2) {
-    function compare(a, b) {
-      const aPriority = a.priority === void 0 ? 0 : a.priority;
-      const bPriority = b.priority === void 0 ? 0 : b.priority;
-      if (aPriority < bPriority) {
-        return 1;
-      }
-      if (aPriority > bPriority) {
-        return -1;
-      }
-      return 0;
-    }
-    snippets2.sort(compare);
   }
   setAutofractionExcludedEnvs(envsStr) {
     const envsJSON = JSON.parse(envsStr);

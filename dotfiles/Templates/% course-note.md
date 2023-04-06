@@ -19,8 +19,7 @@ if (path) {
 }
 %>
 
-- parent:: 
-- instructor::
+[parent:: ] [instructor::]
 
 # Lectures
 <%* if (maxlec) {tR += "`INPUT[slider(maxValue("+maxlec+")):lecture_create]`"} %>
@@ -40,7 +39,7 @@ if (j) {
 	j=1
 }
 
-if (dv.current().lecture_create){
+if (Math.max(j,dv.current().lecture_create)){
 j=Math.max(j,dv.current().lecture_create)
 }
 
@@ -59,7 +58,7 @@ dv.paragraph(createButton({
 }))
 ```
 
-<%* if (maxlec) {tR += "progress:: `$= let h= dv.pages('#lecture').filter(k =>  k.course.toString().includes(\"|"+title+"]]\")).sort(k => k.lecture, 'asc').lecture.last(); dv.paragraph(\"<progress style='height:15px;' value='\"+h+\"' max='"+maxlec+"'></progress> \"+h+\"/"+maxlec+"\")`"} %>
+<%* if (maxlec) {tR += "progress:: `$= let h= dv.pages('#lecture').filter(k => k.course  &&   k.course.toString().includes(\"|"+title+"]]\")).sort(k => k.lecture, 'asc').lecture.last(); if (h){h=h}else {h=0}; dv.paragraph(\"<progress style='height:15px;' value='\"+h+\"' max='"+maxlec+"'></progress> \"+h+\"/"+maxlec+"\")`"} %>
 
 ```dataview
 table WITHOUT ID "[["+file.name+"|Lecture "+lecture+"]]" as lecture, date, elink(rec, "rec") as rec, topics

@@ -5,9 +5,9 @@ modified: <% tp.file.last_modified_date("YYYY-MM-DDTHH:mm:ss") %>
 	let title = tp.file.title;
     const name = await tp.system.prompt("Problem Name");
 	if (name) {
-	title = "PROB! "+tp.file.creation_date("YYYY-MM-DD-")+name
+	title = "PROBLEM "+tp.file.creation_date("YYYY-MM-DD-")+name
 	} else {
-	title = "PROB! "+tp.file.creation_date("YYYY-MM-DD-HHmmss")
+	title = "PROBLEM "+tp.file.creation_date("YYYY-MM-DD-HHmmss")
 	}
 	await tp.file.rename(title);
 	const sbjo = ["math", "physics", "chemistry",  "biology", "cs", "programming", "astronomy", "earth-sci"];
@@ -17,4 +17,5 @@ title: <%* tR += `${name}` %>
 alias: [<%* tR += `${name}` %>]
 ---
 # <%* tR += `${name}` %>
+[resolved:: ]
 <% tp.file.cursor() %>

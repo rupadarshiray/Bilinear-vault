@@ -21,8 +21,6 @@ greeting = '🌞Good afternoon'
 dv.header(1, greeting)
 ```
 
-
-
 > [!info] ```dataviewjs
 > 
 > let ftMd = dv.pages("").file.sort(t => t.cday)[0]

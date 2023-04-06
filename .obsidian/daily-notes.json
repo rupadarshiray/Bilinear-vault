@@ -1,6 +1,6 @@
 {
-  "folder": "07 Daily notes",
+  "folder": "01 Life/01-01 Daily notes",
   "template": "dotfiles/Templates/% daily note",
   "autorun": false,
-  "format": "1YYYY/1YYYY-MM-DD"
+  "format": "YYYY/YYYY-MM-DD"
 }

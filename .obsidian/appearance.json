@@ -1,15 +1,18 @@
 {
-  "cssTheme": "Minimal",
-  "baseFontSize": 23,
+  "cssTheme": "AnuPpuccin",
+  "baseFontSize": 19,
   "translucency": false,
   "accentColor": "#007ec2",
-  "interfaceFontFamily": "",
-  "textFontFamily": "",
+  "interfaceFontFamily": "Karla",
+  "textFontFamily": "Karla",
   "monospaceFontFamily": "",
   "nativeMenus": false,
   "showViewHeader": true,
   "enabledCssSnippets": [
-    "snippet_folder_colours",
-    "snippet_vaultname"
+    "snippet_fonts",
+    "snippet_text",
+    "snippet_vaultname",
+    "supercharged-links-gen",
+    "minimal-cards"
   ]
 }

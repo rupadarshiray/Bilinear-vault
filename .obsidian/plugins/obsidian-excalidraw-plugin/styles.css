@@ -21,6 +21,10 @@
   display: none;
 }
 
+img.excalidraw-embedded-img {
+  width: 100%;
+}
+
 img.excalidraw-svg-right-wrap {
   float: right;
   margin: 0px 0px 20px 20px;
@@ -67,6 +71,17 @@ button.ToolIcon_type_button[title="Export"] {
   flex-grow: 1;
 }
 
+.excalidraw-prompt-button {
+  width: 9em;
+}
+
+.excalidraw-prompt-buttons-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+}
+
 li[data-testid] {
   border: 0 !important;
   margin: 0 !important;
@@ -96,8 +111,7 @@ li[data-testid] {
 
 .ex-coffee-div {
 	text-align: center;
-	margin-bottom: 20px;
-  
+	margin-bottom: 10px;
 }
 
 .excalidraw-scriptengine-install td>img {
@@ -157,6 +171,7 @@ li[data-testid] {
 
 .workspace-leaf-content .excalidraw-view {
   padding: 0px 1px; /*1px so on ipad swipe in from left and right still works*/
+  overflow: hidden;
 }
 
 .excalidraw-videoWrapper {
@@ -184,9 +199,8 @@ li[data-testid] {
 }
 
 .excalidraw-release .modal {
-  max-height: 90%;
-  width: auto;
-  max-width: 130ch;
+  max-height: 80%;
+  max-width: 42em;
 }
 
 .excalidraw .Island .scrollbar {
@@ -217,6 +231,113 @@ li[data-testid] {
 }
 
 textarea.excalidraw-wysiwyg {
-  border-color: transparent !important;
-  border-radius: 0 !important;
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;  
+}
+
+.is-tablet .excalidraw button,
+.is-mobile .excalidraw button {
+  padding: initial;
+  height: 1.8rem;
+}
+
+.excalidraw button,
+.ToolIcon button {
+  box-shadow: none;
+  justify-content: initial;
+}
+
+.excalidraw {
+  --default-button-size: 2rem !important;
+  --default-icon-size: 1rem !important;
+  --lg-button-size: 1.8rem !important;
+  --lg-icon-size: 1rem !important;
+}
+
+.excalidraw .tray-zoom {
+  pointer-events: initial;
+  padding-bottom: 0.05rem;
+  padding-top: 0.05rem;
+}
+
+.excalidraw-container.theme--dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+/* https://discordapp.com/channels/686053708261228577/989603365606531104/1041266507256184863 */
+/*.workspace-leaf {
+	contain: none !important;
+}*/
+
+.color-picker-content {
+  overflow-y: auto;
+  max-height: 10rem;
+}
+
+.excalidraw .FixedSideContainer_side_top {
+  top: 0.3rem;
+}
+
+.excalidraw .ToolIcon__keybinding {
+  font-size: 0.45rem !important;
+}
+
+.Island > .Stack > .Stack {
+  padding:0.2rem;
+}
+
+label.color-input-container > input {
+  max-width: 5rem;
+}
+
+.excalidraw .FixedSideContainer_side_top {
+  left: 10px !important;
+  top: 10px !important;
+  right: 10px !important;
+  bottom: 10px !important;
+}
+
+.excalidraw-hidden {
+  display: none !important;
+}
+
+.excalidraw .panelColumn .buttonList {
+  max-width: 13rem;
+}
+
+.excalidraw button {
+  width: initial;
+}
+
+.excalidraw input[type="color"] {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.excalidraw input[type="color"]::-webkit-color-swatch {
+    height: 1.65rem;
+}
+
+
+.excalidraw input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.excalidraw-settings input {
+  min-width: 10em;
+}
+
+div.excalidraw-draginfo {
+  position: absolute;
+  z-index: 1000;
+  color: var(--text-normal);
+  padding: 3px;
+  background: var(--color-base-40);
+  display: block;
+  border-radius: 5px;
 }

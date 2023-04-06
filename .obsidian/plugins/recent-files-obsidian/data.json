@@ -1,6 +1,54 @@
 {
   "recentFiles": [
     {
+      "basename": "STUDY Algebra",
+      "path": "06 Self-studying/STUDY Algebra/STUDY Algebra.md"
+    },
+    {
+      "basename": "06-01 Books",
+      "path": "06 Self-studying/06-01 Books/06-01 Books.md"
+    },
+    {
+      "basename": "06-02 Problems",
+      "path": "06 Self-studying/06-02 Problems/06-02 Problems.md"
+    },
+    {
+      "basename": "06 Self-studying",
+      "path": "06 Self-studying/06 Self-studying.md"
+    },
+    {
+      "basename": "07 Entertainment",
+      "path": "07 Entertainment/07 Entertainment.md"
+    },
+    {
+      "basename": "COURSE Abstract Algebra",
+      "path": "06 Self-studying/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md"
+    },
+    {
+      "basename": "08 Gardening",
+      "path": "08 Gardening/08 Gardening.md"
+    },
+    {
+      "basename": "% course-note",
+      "path": "dotfiles/Templates/% course-note.md"
+    },
+    {
+      "basename": "PROBLEM 2023-04-06-How to glue together spaces",
+      "path": "06 Self-studying/06-02 Problems/PROBLEM 2023-04-06-How to glue together spaces.md"
+    },
+    {
+      "basename": "% problem",
+      "path": "dotfiles/Templates/% problem.md"
+    },
+    {
+      "basename": "% new longform",
+      "path": "dotfiles/Templates/% new longform.md"
+    },
+    {
+      "basename": "05 2312 RXB23",
+      "path": "05 2312 RXB23/05 2312 RXB23.md"
+    },
+    {
       "basename": "readme",
       "path": "readme.md"
     },
@@ -9,94 +57,99 @@
       "path": "Home.md"
     },
     {
-      "basename": "MTH101.L01",
-      "path": "05 '2209 Uni Sem 1/MTH101/Lectures/MTH101.L01.md"
-    },
-    {
-      "basename": "List of files",
-      "path": "dotfiles/Vault Management/List of files.md"
+      "basename": "str.group",
+      "path": "00 Longform notes/math/str.group.md"
     },
     {
       "basename": "Markdown guide",
-      "path": "dotfiles/Vault Management/Markdown guide.md"
+      "path": "09 Vacuum/Markdown guide.md"
     },
     {
-      "basename": "12022-09-26",
-      "path": "07 Daily notes/12022/12022-09-26.md"
+      "basename": "List of files",
+      "path": "09 Vacuum/List of files.md"
     },
     {
-      "basename": "Abstract Algebra",
-      "path": "05 '22 Self-studying/'22 Courses/Abstract Algebra.md"
+      "basename": "05 23 Uni",
+      "path": "05 23 Uni/05 23 Uni.md"
     },
     {
-      "basename": "05 '22 Self-studying",
-      "path": "05 '22 Self-studying/05 '22 Self-studying.md"
+      "basename": "01 Life",
+      "path": "01 Life/01 Life.md"
     },
     {
-      "basename": "05 '2209 Uni Sem 1",
-      "path": "05 '2209 Uni Sem 1/05 '2209 Uni Sem 1.md"
+      "basename": "03 Creative B",
+      "path": "03 Creative B/03 Creative B.md"
     },
     {
-      "basename": "math",
-      "path": "00 Bilinear notes/math/math.md"
+      "basename": "02 Creative A",
+      "path": "02 Creative A/02 Creative A.md"
     },
     {
-      "basename": "00 Bilinear notes",
-      "path": "00 Bilinear notes/00 Bilinear notes.md"
+      "basename": "04-01 Library",
+      "path": "04 Academia/04-01 Library/04-01 Library.md"
     },
     {
-      "basename": "05 '22 Uni",
-      "path": "05 '22 Uni/05 '22 Uni.md"
+      "basename": "00 Longform notes",
+      "path": "00 Longform notes/00 Longform notes.md"
+    },
+    {
+      "basename": "05 2309 Uni Sem 1",
+      "path": "05 2309 Uni Sem 1/05 2309 Uni Sem 1.md"
+    },
+    {
+      "basename": "2023-04-06",
+      "path": "01 Life/01-01 Daily notes/2023/2023-04-06.md"
     },
     {
       "basename": "MTH101",
-      "path": "05 '2209 Uni Sem 1/MTH101/MTH101.md"
+      "path": "05 2309 Uni Sem 1/MTH101/MTH101.md"
     },
     {
-      "basename": "MTH101.L01 20221007182040.excalidraw",
-      "path": "05 '2209 Uni Sem 1/MTH101/Lectures/Attachments/MTH101.L01 20221007182040.excalidraw.md"
+      "basename": "MTH101.L01",
+      "path": "05 2309 Uni Sem 1/MTH101/Lectures/MTH101.L01.md"
     },
     {
-      "basename": "str.group",
-      "path": "00 Bilinear notes/math/str.group.md"
+      "basename": "MTH101.L02",
+      "path": "05 2309 Uni Sem 1/MTH101/Lectures/MTH101.L02.md"
+    },
+    {
+      "basename": "math",
+      "path": "00 Longform notes/math/math.md"
+    },
+    {
+      "basename": "math 20220925133922.excalidraw",
+      "path": "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md"
+    },
+    {
+      "basename": "% new",
+      "path": "dotfiles/Templates/% new.md"
     },
     {
       "basename": "str",
-      "path": "00 Bilinear notes/math/str.md"
+      "path": "00 Longform notes/math/str.md"
     },
     {
-      "basename": "% daily note",
-      "path": "dotfiles/Templates/% daily note.md"
+      "basename": "physics",
+      "path": "00 Longform notes/physics/physics.md"
     },
     {
-      "basename": "% course-note",
-      "path": "dotfiles/Templates/% course-note.md"
+      "basename": "programming",
+      "path": "00 Longform notes/programming/programming.md"
     },
     {
       "basename": "% lecture-note",
       "path": "dotfiles/Templates/% lecture-note.md"
     },
     {
-      "basename": "MTH101.L02",
-      "path": "05 '2209 Uni Sem 1/MTH101/Lectures/MTH101.L02.md"
+      "basename": "MTH101.L01 20221007182040.excalidraw",
+      "path": "05 2309 Uni Sem 1/MTH101/Lectures/Attachments/MTH101.L01 20221007182040.excalidraw.md"
     },
     {
-      "basename": "math 20220925133922.excalidraw",
-      "path": "00 Bilinear notes/math/Attachments/math 20220925133922.excalidraw.md"
-    },
-    {
-      "basename": "% problem",
-      "path": "dotfiles/Templates/% problem.md"
-    },
-    {
-      "basename": "% new bilinear",
-      "path": "dotfiles/Templates/% new bilinear.md"
-    },
-    {
-      "basename": "% new",
-      "path": "dotfiles/Templates/% new.md"
+      "basename": "% daily note",
+      "path": "dotfiles/Templates/% daily note.md"
     }
   ],
   "omittedPaths": [],
-  "maxLength": null
+  "maxLength": null,
+  "openType": "tab"
 }
