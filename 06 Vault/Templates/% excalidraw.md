@@ -4,7 +4,6 @@ modified: <% tp.file.last_modified_date("YYYY-MM-DDTHH:mm:ss") %>
 tags: []
 alias: []
 excalidraw-plugin: parsed
-BC-ignore-dendron: true
 ---
 
 ==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠==

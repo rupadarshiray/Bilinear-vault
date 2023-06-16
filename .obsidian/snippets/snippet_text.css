@@ -7,3 +7,392 @@ h6,
 .cm-s-obsidian .cm-header {
       font-family: 'Cuprum' !important;
 }
+
+.theme-light,
+.theme-dark {
+      /*──────────The Modified PRIMARY Color Palette for Dark Theme──────────*/
+      --color-d-whiter: hsl(33, 66%, 90%);
+      --color-d-white: hsl(34, 50%, 80%);
+      --color-d-gray: var(--color-d-gray-50);
+      --color-d-gray-10: hsl(254, 18%, 62%);
+      --color-d-gray-20: hsl(255, 27%, 55%);
+      --color-d-gray-30: hsl(254, 24%, 30%);
+      --color-d-gray-40: hsl(253, 22%, 30%);
+      --color-d-gray-50: hsl(253, 20%, 20%);
+      --color-d-gray-60: hsl(250, 19%, 17%);
+      --color-d-gray-70: hsl(248, 15%, 11%);
+      --color-d-gray-80: hsl(240, 20%, 9%);
+      --color-d-gray-90: hsl(240, 15%, 13%);
+      --color-d-gray-100: hsl(240, 20%, 8%);
+      --color-d-black: hsl(264, 22%, 5%);
+      --color-d-blacker: hsl(255, 17%, 9%);
+      --color-d-shadow-10: rgba(29, 21, 13, 0.45);
+      --color-d-shadow-50: rgba(29, 26, 22, 0.75);
+      --color-d-shadow-100: rgba(19, 16, 13, 0.95);
+      --color-d-shadow-cover: rgba(37, 34, 29, 0.74);
+      --color-d-yellow: var(--color-d-yellow-500);
+      --color-d-yellow-300: hsl(46, 91%, 69%);
+      --color-d-yellow-500: hsl(50, 100%, 46%);
+      --color-d-yellow-700: hsl(43, 100%, 42%);
+      --color-d-yellow-900: hsl(39, 92%, 33%);
+      --color-d-yellow-a: hsl(43, 75%, 52%);
+      --color-d-red: var(--color-d-red-500);
+      --color-d-red-300: hsl(4, 100%, 68%);
+      --color-d-red-500: hsl(4, 65%, 60%);
+      --color-d-red-700: hsl(4, 90%, 61%);
+      --color-d-red-900: hsl(4, 77%, 38%);
+      --color-d-red-a: hsl(4, 61%, 53%);
+      --color-d-blue: var(--color-d-blue-500);
+      --color-d-blue-300: hsl(198, 39%, 56%);
+      --color-d-blue-500: hsl(198, 62%, 57%);
+      --color-d-blue-700: hsl(198, 57%, 55%);
+      --color-d-blue-900: hsl(198, 75%, 35%);
+      --color-d-blue-a: hsl(197, 58%, 48%);
+      --color-d-orange: var(--color-d-orange-500);
+      --color-d-orange-300: hsl(22, 92%, 64%);
+      --color-d-orange-500: hsl(22, 92%, 57%);
+      --color-d-orange-700: hsl(21, 88%, 51%);
+      --color-d-orange-900: hsl(20, 80%, 41%);
+      --color-d-orange-a: hsl(27, 77%, 51%);
+      --color-d-green: var(--color-d-green-500);
+      --color-d-green-300: hsl(150, 66%, 53%);
+      --color-d-green-500: hsl(154, 52%, 46%);
+      --color-d-green-700: hsl(154, 61%, 39%);
+      --color-d-green-900: hsl(155, 81%, 24%);
+      --color-d-green-a: hsl(96, 50%, 49%);
+      --color-d-violet: var(--color-d-violet-500);
+      --color-d-violet-300: hsl(256, 63%, 74%);
+      --color-d-violet-500: hsl(263, 60%, 67%);
+      --color-d-violet-700: hsl(256, 52%, 57%);
+      --color-d-violet-900: hsl(256, 44%, 50%);
+      --color-d-violet-a: hsl(246, 53%, 67%);
+      /*~ Highlights */
+      --ui-color-highlight-text: var(--color-d-black);
+      --ui-color-highlight-bg: hsl(43, 61%, 56%);
+      --color-highlight-yellow: rgba(255, 187, 0, 0.2);
+      --color-highlight-red: rgba(240, 79, 106, 0.2);
+      --color-highlight-blue: rgba(40, 178, 194, 0.2);
+      --color-highlight-orange: rgba(255, 115, 0, 0.2);
+      --color-highlight-green: rgba(153, 189, 36, 0.2);
+      --color-highlight-violet: rgba(113, 122, 255, 0.2);
+}
+
+.theme-dark {
+      --md-color-text: var(--text-normal);
+      --md-color-text-muted: var(--text-muted);
+      --md-color-text-faint: var(--text-faint);
+      --md-color-bold: var(--color-d-red-700);
+      --md-color-italic: var(--color-d-blue-700);
+      --md-color-bolditalic: var(--color-d-whiter);
+      --md-color-strikethrough: var(--text-faint);
+      --md-color-highlight-text: var(--text-normal);
+      --md-color-highlight-bg: var(--color-highlight-yellow);
+      --md-color-bold-highlight-text: var(--text-normal);
+      --md-color-bold-highlight-bg: var(--color-highlight-red);
+      --md-color-italic-highlight-text: var(--text-normal);
+      --md-color-italic-highlight-bg: var(--color-highlight-blue);
+      --md-color-bi-highlight-text: var(--text-normal);
+      --md-color-bi-highlight-bg: var(--color-highlight-green);
+      --md-color-comment: var(--text-muted);
+      --md-color-footnote: var(--text-normal);
+      --md-color-footnote-link: var(--color-d-green-700);
+      --md-color-footnote-link-hover: var(--color-d-green-500);
+      --md-color-footnote-link-active: var(--color-d-green-900);
+      --md-color-reslink: var(--color-d-yellow-500);
+      --md-color-reslink-hover: var(--color-d-yellow-300);
+      --md-color-reslink-active: var(--color-d-yellow-700);
+      --md-color-unreslink: var(--text-muted);
+      --md-color-unreslink-hover: var(--color-d-yellow-500);
+      --md-color-unreslink-active: var(--color-d-yellow-700);
+      --md-color-extlink: var(--color-d-yellow-500);
+      --md-color-extlink-hover: var(--color-d-yellow-300);
+      --md-color-extlink-active: var(--color-d-yellow-700);
+      --md-color-blockquotes: var(--text-normal);
+      --md-color-blockquotes-formatting: var(--text-faint);
+      --md-color-blockquotes-border: var(--background-modifier-border);
+      --md-color-blockquotes-bg: var(--color-d-blacker);
+      --md-color-tag: var(--color-d-blue-700);
+      --md-color-tag-hover: var(--color-d-blue-300);
+      --md-color-tag-active: var(--color-d-blue-900);
+      --md-color-code-yellow-1: var(--color-d-yellow-700);
+      --md-color-code-yellow-2: var(--color-d-yellow-500);
+      --md-color-code-red-1: var(--color-d-red-500);
+      --md-color-code-red-2: var(--color-d-red-300);
+      --md-color-code-blue-1: var(--color-d-blue-300);
+      --md-color-code-blue-2: var(--color-d-blue-500);
+      --md-color-code-gray: var(--text-faint);
+      --md-color-code-white: var(--color-d-whiter);
+      --md-color-formatting: var(--color-d-gray-40);
+      --md-color-border: var(--background-modifier-border);
+      --md-embed-bg: var(--color-d-gray-90);
+      --md-color-bullet: var(--md-color-text-faint);
+      --md-find-highlight-bg: var(--color-highlight-violet);
+      --md-unchecked-bg-color: rgba(0, 0, 0, 0.2);
+      --md-unchecked-bg-color-hover: var(--color-d-gray-100);
+      --md-unchecked-bg-color-active: var(--color-d-gray-70);
+      --md-checked-bg-color: var(--color-d-green-900);
+}
+
+/*──────────Emphasis──────────*/
+/* Bold */
+strong,
+.cm-strong,
+.cm-s-obsidian span.cm-quote.cm-strong,
+.markdown-preview-view strong {
+      color: var(--md-color-bold) !important;
+}
+
+/* Italic */
+em,
+.cm-em,
+.cm-s-obsidian span.cm-quote.cm-em,
+.markdown-preview-view em {
+      color: var(--md-color-italic) !important;
+}
+
+/* Bold & Italic */
+strong em,
+em strong,
+.cm-strong.cm-em,
+.markdown-preview-view strong em {
+      color: var(--md-color-bolditalic);
+}
+
+/* Strikethrough */
+del,
+.cm-strikethrough,
+.cm-s-obsidian span.cm-quote.cm-strikethrough,
+.markdown-preview-view del {
+      color: var(--md-color-strikethrough);
+}
+
+del:hover,
+.cm-strikethrough:hover,
+.cm-s-obsidian span.cm-quote.cm-strikethrough:hover,
+.markdown-preview-view del:hover {
+      text-decoration: none;
+}
+
+.markdown-preview-view h1 del,
+.markdown-preview-view h2 del,
+.markdown-preview-view h3 del,
+.markdown-preview-view h4 del,
+.markdown-preview-view h5 del,
+.markdown-preview-view h6 del {
+      color: var(--md-color-strikethrough);
+}
+
+/* Highlight [Highlight] */
+mark,
+.cm-s-obsidian span.cm-highlight,
+.markdown-source-view.is-live-preview .cm-header.cm-formatting-highlight,
+.cm-s-obsidian span.cm-quote.cm-highlight,
+.callout mark,
+.markdown-preview-view mark,
+.popover mark,
+.markdown-embed mark {
+      color: var(--md-color-highlight-text);
+      background: var(--md-color-highlight-bg);
+      padding: 2px 2px;
+      border-radius: var(--scale-2-1);
+}
+
+/* Highlight [Bold + Highlight] */
+.cm-s-obsidian span.cm-highlight.cm-strong,
+.cm-s-obsidian span.cm-quote.cm-highlight.cm-strong {
+      color: var(--md-color-bold-highlight-text);
+      background: var(--md-color-bold-highlight-bg);
+}
+
+.markdown-preview-view.markdown-preview-view mark strong,
+.markdown-embed.markdown-embed mark strong,
+.reveal mark strong {
+      color: var(--md-color-bold-highlight-text);
+}
+
+.callout strong>mark,
+.markdown-preview-view.markdown-preview-view strong>mark,
+.popover strong>mark,
+.markdown-embed.markdown-embed strong>mark,
+.reveal strong>mark {
+      background: var(--md-color-bold-highlight-bg);
+}
+
+/* Highlight [Italic + Highlight] */
+.cm-s-obsidian span.cm-highlight.cm-em,
+.cm-s-obsidian span.cm-quote.cm-highlight.cm-em {
+      color: var(--md-color-italic-highlight-text);
+      background: var(--md-color-italic-highlight-bg);
+}
+
+.callout em>mark,
+.markdown-preview-view mark em,
+.popover mark em,
+.markdown-embed mark em,
+.reveal mark em {
+      color: var(--md-color-italic-highlight-text);
+}
+
+.callout em>mark,
+.markdown-preview-view.markdown-preview-view em>mark,
+.popover em>mark,
+.markdown-embed.markdown-embed em>mark,
+.reveal em>mark {
+      background: var(--md-color-italic-highlight-bg);
+}
+
+/* Highlight [Bold + Italic + Highlight] */
+.cm-s-obsidian span.cm-highlight.cm-strong.cm-em,
+.cm-s-obsidian span.cm-quote.cm-highlight.cm-strong.cm-em {
+      color: var(--md-color-bi-highlight-text);
+      background: var(--md-color-bi-highlight-bg);
+}
+
+.callout strong>em>mark,
+.markdown-preview-view.markdown-preview-view strong>em>mark,
+.popover strong>em>mark,
+.markdown-embed.markdown-embed strong>em>mark,
+.reveal strong>em>mark {
+      background: var(--md-color-bi-highlight-bg);
+}
+
+/* Comments */
+.cm-s-obsidian span.cm-comment,
+.cm-s-obsidian span.cm-comment.cm-quote {
+      color: var(--md-color-comment);
+}
+
+
+/*──────────Internal & External Links──────────*/
+/* Opacity of Unresolved Links Fix 
+.markdown-source-view.mod-cm6 .is-unresolved,
+.markdown-preview-view .internal-link.is-unresolved {
+  opacity: 1;
+}
+*/
+/* Source View Resolved Links 
+.markdown-source-view.mod-cm6 span:where(.cm-url.cm-url, .cm-blockid, .cm-inline-code.cm-link, .cm-hmd-internal-link, .cm-header.cm-hmd-internal-link, .cm-hmd-internal-link .cm-underline) {
+  color: var(--md-color-reslink);
+  text-decoration: underline solid 1px;
+  text-underline-position: under;
+  transition: var(--duration-superfast) var(--motion-smooth);
+}
+
+.markdown-source-view.mod-cm6 span:where(.cm-url.cm-url, .cm-blockid, .cm-inline-code.cm-link, .cm-hmd-internal-link, .cm-header.cm-hmd-internal-link, .cm-hmd-internal-link .cm-underline):hover {
+  color: var(--md-color-reslink-hover);
+  text-decoration: underline solid 1px;
+}
+
+.markdown-source-view.mod-cm6 span:where(.cm-url.cm-url, .cm-blockid, .cm-inline-code.cm-link, .cm-hmd-internal-link, .cm-header.cm-hmd-internal-link, .cm-hmd-internal-link .cm-underline):active {
+  color: var(--md-color-reslink-active);
+  text-decoration: underline solid 1px;
+}
+
+.no-link-underline.no-link-underline .markdown-source-view.mod-cm6 span:where(.cm-url.cm-url, .cm-blockid, .cm-inline-code.cm-link, .cm-hmd-internal-link, .cm-header.cm-hmd-internal-link, .cm-hmd-internal-link .cm-underline) {
+  text-decoration: none;
+}*/
+
+/* Source View Unresolved Links 
+.markdown-source-view.mod-cm6 span.is-unresolved span:where(.cm-url, .cm-blockid, .cm-link, .cm-underline) {
+  color: var(--md-color-unreslink);
+  text-decoration: underline solid 1px;
+  text-underline-position: under;
+  transition: var(--duration-superfast) var(--motion-smooth);
+}
+.markdown-source-view.mod-cm6 span.is-unresolved span:where(.cm-url, .cm-blockid, .cm-link, .cm-underline):hover {
+  color: var(--md-color-unreslink-hover);
+}
+.markdown-source-view.mod-cm6 span.is-unresolved span:where(.cm-url, .cm-blockid, .cm-link, .cm-underline):active {
+  color: var(--md-color-unreslink-active);
+}
+.no-link-underline.no-link-underline .markdown-source-view.mod-cm6 span.is-unresolved {
+  text-decoration: none;
+}
+
+.markdown-source-view.mod-cm6 span.is-unresolved .cm-hmd-internal-link {
+  color: var(--md-color-unreslink);
+}
+.markdown-source-view.mod-cm6 span.is-unresolved .cm-hmd-internal-link:hover {
+  text-decoration: none;
+}
+
+.no-link-underline .cm-s-obsidian span.cm-hmd-internal-link:hover {
+  text-decoration: none;
+}
+*/
+
+
+
+
+
+/* .theme-dark {
+  --ctp-rosewater: 246, 201, 153;
+  --ctp-flamingo: 245, 189, 166;
+  --ctp-pink: 228, 157, 248;
+  --ctp-mauve: 197, 146, 222;
+  --ctp-red: 240, 120, 160;
+  --ctp-maroon: 230, 102, 102;
+  --ctp-peach: 230, 195, 125;
+  --ctp-yellow: 241, 250, 140;
+  --ctp-green: 130, 235, 130;
+  --ctp-teal: 174, 177, 83 !important;
+  --ctp-sky: 139, 233, 253;
+  --ctp-sapphire: 104, 197, 240;
+  --ctp-blue: 95, 126, 222;
+  --ctp-lavender: 154, 141, 247;
+  --ctp-text: 248, 248, 242;
+  --ctp-subtext1: 211, 211, 197;
+  --ctp-subtext0: 191, 191, 181;
+  --ctp-overlay2: 139, 143, 167;
+  --ctp-overlay1: 110, 114, 145;
+  --ctp-overlay0: 88, 92, 116;
+  --ctp-surface2: 68, 71, 90;
+  --ctp-surface1: 56, 59, 76;
+  --ctp-surface0: 48, 50, 65;
+  --ctp-base: 14, 24, 16 !important;
+  --ctp-mantle: 23, 33, 23 !important;
+  --ctp-crust: 20, 20, 25;
+} */
+
+hr {
+      border-color: var(--color-accent) !important;
+}
+
+body {
+      --indentation-guide-color: var(--color-accent) !important;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+      color: var(--color-accent);
+}
+
+blockquote,
+.cm-quote {
+      color: var(--color-accent) !important;
+}
+
+/* .anp-colorful-frame:not(.anp-card-layout, .anp-border-layout).anp-mini-tab-toggle.is-focused .mod-active.mod-top .workspace-tab-header.is-active .workspace-tab-header-inner-icon,
+.anp-colorful-frame:not(.anp-card-layout, .anp-border-layout).anp-mini-tab-toggle.is-focused .mod-active.mod-top .workspace-tab-header.is-active .workspace-tab-header-inner-title {
+  color: var(--color-accent) !important;
+} */
+
+body:not(.is-mobile) .empty-state-action-list:hover,
+.nav-folder-title-content:hover {
+      color: var(--color-accent) !important;
+      transition: 2s
+}
+
+body:not(.is-mobile) .empty-state-action-list,
+.nav-folder.mod-root>.nav-folder-title .nav-folder-title-content {
+      transition: 2s
+}
+
+.colorful-frame.is-hidden-frameless:not(.minimal-focus-mode) .workspace-split.mod-left-split>.workspace-leaf-resize-handle:after,
+.colorful-frame.is-hidden-frameless:not(.minimal-focus-mode) .workspace-split.mod-right-split>.workspace-leaf-resize-handle:after,
+.colorful-frame.is-hidden-frameless:not(.minimal-focus-mode) .workspace-split.mod-vertical>*>.workspace-leaf-resize-handle:after {
+      background: var(--color-accent);
+}
+
+.workspace-ribbon.side-dock-ribbon.mod-left {
+      background: var(--background-primary);
+}

@@ -1,0 +1,124 @@
+:root {
+  --primary-background: #12111a;
+  --secondary-background: #0f0e14;
+  --tertiary-background: #22202b;
+  --quaternary-background: #24222e;
+  --white: #F8F8F3;
+  --gray-1: #586e75;
+  --gray-2: #D5D4DE;
+  --red: #FF5555;
+  --orange: #FE9580;
+  --green: #8AFF7F;
+  --cyan: #81FFEA;
+  --cyan-transparent: rgba(129, 255, 234, 0.3);
+  --purple: #9580FF;
+  --purple-transparent: rgba(58, 56, 71, 0.5);
+  --pink: #e100ff;
+  /* #FE7FBF; */
+  --blue: #00588E;
+  --yellow: #FEFF7F;
+  --purpletwo: #e100ff
+}
+
+/*----------------------------------------------------------------
+  
+    Colors Applied to Variables
+  
+    */
+
+/* Original Minimal Theme Variables Modified */
+
+
+.theme-light,
+.theme-dark {
+  --background-primary: var(--primary-background);
+  --background-primary-alt: var(--secondary-background);
+  --background-secondary: var(--secondary-background);
+  --background-secondary-alt: var(--primary-background);
+  --background-tertiary: var(--tertiary-background);
+  --background-modifier-border: var(--tertiary-background);
+  --background-modifier-border-hover: var(--quaternary-background);
+  --background-modifier-border-focus: var(--quaternary-background);
+  --background-modifier-box-shadow: rgba(0, 0, 0, 0.3);
+  /* --text-normal: var(--white);
+      --text-muted: var(--gray-2);
+      --text-faint: var(--purple-transparent); */
+  --background-transparent: hsla(var(--primary-background), 0);
+  --background-translucent: hsla(var(--primary-background), 0.85);
+  --background-match-highlight: hsla(var(--accent-h), 40%, 62%, 0.2);
+  --background-modifier-accent: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-d) - 10%));
+  /* --text-accent: var(--pink);
+      --text-accent-hover: var(--aqua);
+      --text-on-accent: var(--purple);
+      --icon-hex:FFF;
+      --interactive-accent: var(--tertiary-background);
+      --interactive-accent-hover: var(--quaternary-background);
+      --quote-opening-modifier:var(--orange);
+      --interactive-accent-rgb: 123, 108, 217;
+      --text-selection: var(--cyan-transparent);
+      --text-highlight-bg: var(--blue);
+      --text-highlight-bg-active:rgba(255, 255, 255, 0.1);
+      --background-modifier-cover:hsla(var(--base-h),var(--base-s),calc(var(--base-d) - 12%),0.8);
+      --background-accent: var(--white);
+      --background-modifier-form-field: rgba(0, 0, 0, 0.2);
+      --background-modifier-form-field-highlighted: rgba(0, 0, 0, 0.5);
+      --background-modifier-success: var(--green);
+      --background-modifier-error: var(--red);
+      --background-modifier-error-rgb: 61, 0, 0;
+      --background-modifier-error-hover: var(--red);
+      --background-modifier-cover: rgba(0, 0, 0, 0.6);
+      --text-error: var(--red);
+      --text-error-hover: var(--red);
+      --interactive-normal: var(--tertiary-background);
+      --interactive-hover: var(--quaternary-background);
+      --scrollbar-active-thumb-bg: var(--quaternary-background);
+      --scrollbar-bg: var(--primary-background);
+      --scrollbar-thumb-bg: var(--tertiary-background);
+      --border-color: var(--quaternary-background); */
+
+
+
+  /* @jackal's Extra Color Variables for Specific Elements */
+
+  --cursor: var(--cyan);
+  --vim-cursor: var(--cyan);
+  --headers: var(--green);
+  --h1: var(--green);
+  --h2: var(--green);
+  --h3: var(--green);
+  --h4: var(--text-normal);
+  --h5: var(--text-normal);
+  --h6: var(--text-muted);
+  --bold: var(--purple);
+  --italics: var(--pink);
+  --strikethrough: var(--gray-1);
+  --highlight: var(--yellow);
+  --internal-link: var(--cyan);
+  --internal-link-unresolved: var(--blue);
+  --external-link: var(--orange);
+  --external-link-url: var(--gray-1);
+  --tag: var(--green);
+  --footnote: var(--blue);
+  --block-id: var(--cyan);
+  --checkbox: var(--purple);
+  --list: var(--purple);
+  --math: var(--red);
+  --inline-code: var(--red);
+  --code-block: var(--red);
+  --pre-code: var(--gray-2);
+  --toggle-on: var(--purpletwo);
+  --toggle-off: var(--secondary-background);
+  --icon: var(--purple);
+  --icon-hover: var(--white);
+  --frontmatter: var(--red);
+  --active-file: var(--purpletwo);
+}
+
+
+.callout {
+  background-color: var(--background-primary) !important;
+}
+
+.nav-files-container {
+  background-color: var(--background-primary) !important;
+}

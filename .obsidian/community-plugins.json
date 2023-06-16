@@ -2,7 +2,6 @@
   "dataview",
   "obsidian-excalidraw-plugin",
   "templater-obsidian",
-  "obsidian-style-settings",
   "media-extended",
   "breadcrumbs",
   "buttons",
@@ -20,5 +19,6 @@
   "obsidian-banners",
   "obsidian-minimal-settings",
   "supercharged-links-obsidian",
-  "obsidian-meta-bind-plugin"
+  "obsidian-meta-bind-plugin",
+  "obsidian-style-settings"
 ]

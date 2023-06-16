@@ -1,0 +1,134 @@
+/* Headings */
+:root {
+  --h1-color: #fa4d1e;
+  --h2-color: #F89C1C;
+  --h3-color: #e9f72b;
+  --h4-color: #aade62;
+  --h5-color: #62deac;
+  --h6-color: #62b7de;
+}
+
+.cm-s-obsidian .cm-header-1,
+.markdown-preview-view h1 {
+  /* font-size: 2em !important; */
+  color: var(--h1-color) !important;
+  font-weight: 500 !important;
+  /* line-height: 1.5em !important; */
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  /* text-align: right !important; */
+}
+
+.cm-s-obsidian .cm-header-2,
+.markdown-preview-view h2 {
+  color: var(--h2-color) !important;
+  font-weight: 500 !important;
+  /* font-size: 2.15rem !important; */
+  /* line-height: 1.2em !important; */
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cm-s-obsidian .cm-header-3,
+.markdown-preview-view h3 {
+  color: var(--h3-color) !important;
+  font-weight: 500 !important;
+  /* font-size: 2.05rem !important; */
+  /* line-height: 1em !important; */
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cm-s-obsidian .cm-header-4,
+.markdown-preview-view h4 {
+  font-weight: 500 !important;
+  /* font-size: 1.8rem !important; */
+  color: var(--h4-color) !important;
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cm-s-obsidian .cm-header-5,
+.markdown-preview-view h5 {
+  color: var(--h5-color) !important;
+  /* font-size: 1.7rem !important; */
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cm-s-obsidian .cm-header-6,
+.markdown-preview-view h6 {
+  color: var(--h6-color) !important;
+  /* font-size: 1.5rem !important; */
+  letter-spacing: 0px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
+
+/* Cyberpunk Heading 
+.theme-dark .cm-header-1,
+.theme-dark .HyperMD-header-1,
+.theme-dark h1 {
+  text-shadow: 0 0 0.5em var(--h1-color);
+}
+
+.cm-s-obsidian .cm-header-1 a,
+.markdown-preview-view h1 a,
+h1 mjx-container[jax="CHTML"][display="true"],
+.cm-header-1 mjx-container[jax="CHTML"][display="true"] {
+  text-shadow: 0 0 0.5em var(--color-accent);
+}
+
+
+.theme-dark .cm-header-2,
+.theme-dark .HyperMD-header-2,
+.theme-dark h2 {
+  text-shadow: 0 0 0.5em var(--h2-color);
+}
+
+.theme-dark .cm-header-3,
+.theme-dark .HyperMD-header-3,
+.theme-dark h3 {
+  text-shadow: 0 0 0.5em var(--h3-color);
+}
+
+.theme-dark .cm-header-4,
+.theme-dark .HyperMD-header-4,
+.theme-dark h4 {
+  text-shadow: 0 0 0.5em var(--h4-color);
+}
+
+.theme-dark .cm-header-5,
+.theme-dark .HyperMD-header-5,
+.theme-dark h5 {
+  text-shadow: 0 0 0.5em var(--h5-color);
+}
+
+.theme-dark .cm-header-6,
+.theme-dark .HyperMD-header-6,
+.theme-dark h6 {
+  text-shadow: 0 0 0.5em var(--h6-color);
+}*/
+
+/* Fonts */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,500&display=swap');
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.cm-s-obsidian .cm-header {
+  font-family: 'Playfair Display', "Iosevka", 'Noto Serif Bengali' !important;
+  font-feature-settings: "zero", "ss17" on;
+  /* font-weight: 700 !important; */
+}

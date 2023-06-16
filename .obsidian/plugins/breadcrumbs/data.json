@@ -102,7 +102,7 @@
   "threadUnderCursor": false,
   "trailSeperator": "/",
   "treatCurrNodeAsImpliedSibling": false,
-  "trimDendronNotes": true,
+  "trimDendronNotes": false,
   "respectReadableLineLength": true,
   "userHiers": [
     {

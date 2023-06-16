@@ -4,34 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "b5c75030ca42d49b",
+        "id": "4ce27b7617694019",
         "type": "tabs",
         "children": [
           {
-            "id": "2b11cd39eaba6e5f",
+            "id": "5fc8697bba554dd1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "06 Self-studying/STUDY Algebra/STUDY Algebra.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "1d1a15ecb9a4f67c",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "8e96ba86ac1bea5b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "06 Self-studying/STUDY Algebra/STUDY Algebra.md",
+                "file": "Home.md",
                 "mode": "preview",
                 "source": false
               }
@@ -76,14 +58,6 @@
             }
           },
           {
-            "id": "4688608e0a4e24b7",
-            "type": "leaf",
-            "state": {
-              "type": "starred",
-              "state": {}
-            }
-          },
-          {
             "id": "44d5032b4bb07835",
             "type": "leaf",
             "state": {
@@ -103,7 +77,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 264.5
+    "width": 264.5,
+    "collapsed": true
   },
   "right": {
     "id": "fadd98a1a2dfcea5",
@@ -119,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "06 Self-studying/STUDY Algebra/STUDY Algebra.md",
+                "file": "Home.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -136,7 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "06 Self-studying/STUDY Algebra/STUDY Algebra.md",
+                "file": "Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -159,10 +134,33 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "06 Self-studying/STUDY Algebra/STUDY Algebra.md"
+                "file": "Home.md"
               }
             }
           },
+          {
+            "id": "199e93ed70502c95",
+            "type": "leaf",
+            "state": {
+              "type": "BC-tree",
+              "state": {}
+            }
+          },
+          {
+            "id": "734170b0bd1fd499",
+            "type": "leaf",
+            "state": {
+              "type": "BC-matrix",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 5
+      },
+      {
+        "id": "384e5599efbdaada",
+        "type": "tabs",
+        "children": [
           {
             "id": "c67d438edf228ec5",
             "type": "leaf",
@@ -175,17 +173,15 @@
               }
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 359.5,
+    "width": 311.5,
     "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
-      "obsidian-excalidraw-plugin:Create new drawing": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -195,41 +191,45 @@
       "random-note:Open random note": false,
       "audio-recorder:Start/stop recording": false,
       "workspaces:Manage workspace layouts": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false,
       "templater-obsidian:Templater": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
       "breadcrumbs:Breadcrumbs Visualisation": false
     }
   },
-  "active": "742e7d10ad13cf23",
+  "active": "5fc8697bba554dd1",
   "lastOpenFiles": [
-    "06 Self-studying/06-01 Books/06-01 Books.md",
-    "06 Self-studying/06-02 Problems/06-02 Problems.md",
-    "06 Self-studying/06 Self-studying.md",
-    "07 Entertainment/07 Entertainment.md",
-    "06 Self-studying/STUDY Algebra/STUDY Algebra.md",
-    "06 Self-studying/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
-    "08 Gardening/08 Gardening.md",
-    "06 Self-studying/STUDY Algebra",
-    "06 Self-studying/STUDY Algebra/COURSE Abstract Algebra/Lectures",
-    "dotfiles/Templates/% course-note.md",
-    "06 Self-studying/06-02 Problems/PROBLEM 2023-04-06-How to glue together spaces.md",
-    "dotfiles/Templates/% problem.md",
-    "dotfiles/Templates/% new longform.md",
-    "06 Self-studying/06-02 Problems/PROB! 2023-04-06-Glue.md",
-    "05 2312 RXB23/05 2312 RXB23.md",
     "readme.md",
     "Home.md",
-    "00 Longform notes/math/str.group.md",
-    "09 Vacuum/Markdown guide.md",
-    "09 Vacuum/List of files.md",
-    "05 23 Uni/05 23 Uni.md",
-    "01 Life/01 Life.md",
+    "06 Vault/06 Vault.md",
+    "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md",
+    "06 Vault/Markdown guide.md",
     "03 Creative B/03 Creative B.md",
+    "06 Vault/Templates/% lecture-note.md",
+    "06 Vault/Templates/% course-note.md",
+    "06 Vault/Templates/% daily note.md",
+    "06 Vault/Templates/% excalidraw.md",
+    "06 Vault/Templates/% new.md",
+    "06 Vault/Templates/% new longform.md",
+    "06 Vault/Templates/% problem.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L02.md",
+    "05 Work A/05 Work A.md",
+    "07 Entertainment/07 Entertainment.md",
+    "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md",
+    "04 Academia/04-04 Problems/04-04 Problems.md",
+    "06 Vault/List of files.md",
+    "2312 RXB23/2312 RXB23.md",
+    "08 Gardening/08 Gardening.md",
+    "05 Work A",
+    "23 Uni/23 Uni.md",
+    "2309 Uni Sem 1/MTH101/MTH101.md",
     "02 Creative A/02 Creative A.md",
-    "04 Academia/04-01 Library/04-01 Library.md",
-    "00 Longform notes/00 Longform notes.md",
-    "05 2309 Uni Sem 1/05 2309 Uni Sem 1.md",
-    "01 Life/01-01 Daily notes/2023/2023-04-06.md",
+    "04 Academia/04-03 Notes",
+    "04 Academia/04-02 Studying",
+    "04 Academia/04-03 Notes/STUDY Algebra",
+    "06 Self-studying/STUDY Algebra/COURSE Abstract Algebra/Lectures",
     "01 Life/01-01 Daily notes/2023"
   ]
 }
