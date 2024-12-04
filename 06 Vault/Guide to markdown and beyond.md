@@ -2,13 +2,16 @@
 
 Obsidian understands standard markdown syntaxes, including: **bold**, *italic*, ~~strikethrough~~, ==highlight== and many more:
 
+## Headings
+
+```
 # Heading 1
 ## Heading 2
 ### Heading 3
 #### Heading 4
 ##### Heading 5
 ###### Heading 6
-
+```
 
 ## Links
 Links use a set of square brackets (`[]`) for describing the link text, followed by regular parentheses (`()`) containing the URL.
@@ -16,11 +19,12 @@ Links use a set of square brackets (`[]`) for describing the link text, followed
 [Rick and Morty](https://www.imdb.com/title/tt2861424/).
 
 ## Lists
-Press supports ordered (numbered) and unordered (bulleted) lists. Unordered lists use asterisks, pluses, and hyphens — interchangeably — as list markers:
+Press supports ordered (numbered) and unordered (bulleted) lists. Unordered lists use "-".
 
 - National Treasure
-+ Ghost Rider
-* Face/Off
+- Ghost Rider
+- Face/Off
+
 
 Ordered lists use numbers followed by periods:
 
@@ -34,6 +38,7 @@ Lines starting with three asterisks (`*`), hyphens (`-`) or underscores (`_`) ar
 ---
 
 ## Quotes
+
 > A paragraph starting with a `>` are rendered as a quote.
 
 ## Callouts
@@ -72,9 +77,6 @@ fun helloWorld() {
   \begin{axis}[
     view={60}{30}, % Change the viewing angle
     axis lines=middle,
-    xlabel={$x$},
-    ylabel={$y$},
-    zlabel={$z$},
     domain=-2:2, % X and Y domain limits
     samples=25, % Number of samples for plotting
     ]

@@ -4,24 +4,40 @@
     "type": "split",
     "children": [
       {
-        "id": "9436d7ae87cb79f5",
+        "id": "28f5c2fe9385988a",
         "type": "tabs",
         "children": [
           {
-            "id": "8b08a26852fc4d8c",
+            "id": "2269337aa0f0c770",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Home.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Home"
+            }
+          },
+          {
+            "id": "c4b1667efdcbfb07",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "06 Vault/Guide to markdown and beyond.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "Guide to markdown and beyond"
             }
           }
-        ]
+        ],
+        "currentTab": 1,
+        "stacked": true
       }
     ],
     "direction": "vertical"
@@ -211,34 +227,34 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "8b08a26852fc4d8c",
+  "active": "c4b1667efdcbfb07",
   "lastOpenFiles": [
-    "06 Vault/06 Vault.md",
-    "06 Vault/Guide to markdown and beyond.md",
-    "2312 RXB23/2312 RXB23.md",
     "Home.md",
+    "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md",
+    "04 Academia/04-04 Problems/04-04 Problems.md",
+    "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md",
+    "04 Academia/04-03 Notes/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
+    "04 Academia/04-01 Library/04-01 Library.md",
+    "06 Vault/Guide to markdown and beyond.md",
+    "06 Vault/06 Vault.md",
+    "06 Vault/Templates/% course-note.md",
+    "06 Vault/Templates/% daily note.md",
+    "06 Vault/Templates/% excalidraw.md",
+    "06 Vault/Templates/% lecture-note.md",
+    "06 Vault/Templates/% new.md",
+    "06 Vault/Templates/% problem.md",
+    "06 Vault/Templates/% new longform.md",
     "readme.md",
-    "00 Longform notes/00 Longform notes.md",
+    "23 Uni/23 Uni.md",
+    "2312 RXB23/2312 RXB23.md",
     "01 Life/01 Life.md",
     "07 Entertainment/07 Entertainment.md",
-    "06 Vault/Templates/% new longform.md",
+    "2309 Uni Sem 1/MTH101/MTH101.md",
+    "00 Longform notes/00 Longform notes.md",
     "08 Gardening/08 Gardening.md",
-    "06 Vault/Templates/% excalidraw.md",
     "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md",
     "00 Longform notes/math/math.md",
     "00 Longform notes/programming/programming.md",
-    "00 Longform notes/physics/physics.md",
-    "00 Longform notes/math/str.group.md",
-    "00 Longform notes/math/str.md",
-    "02 Creative A/02 Creative A.md",
-    "03 Creative B/03 Creative B.md",
-    "05 Work A/05 Work A.md",
-    "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md",
-    "04 Academia/04-01 Library/04-01 Library.md",
-    "01 Life/01-01 Daily notes/2023/2023-04-06.md",
-    "06 Vault/Templates/% lecture-note.md",
-    "06 Vault/Templates/% course-note.md",
-    "06 Vault/Templates/% daily note.md",
     "05 Work A",
     "04 Academia/04-03 Notes",
     "04 Academia/04-02 Studying",

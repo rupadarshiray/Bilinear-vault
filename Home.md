@@ -85,3 +85,21 @@ dv.span(`
 
 
 ```
+
+
+
+## Some specifications chosen for this vault
+
+- Focused on having unique note titles.
+- Folder
+	- numbers
+	- colors
+		- on explorer and graph view
+
+## Personalize your vault
+
+- Change your date of birth and name in [[Home]]
+
+## Learn how to use Obsidian
+
+![[Guide to markdown and beyond]]
