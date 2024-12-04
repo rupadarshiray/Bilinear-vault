@@ -1,21 +1,22 @@
-.recent-files-title {
-  display: flex;
-  justify-content: space-between;
+.recent-files-file {
+  .tree-item-spacer {
+    flex-grow: 1;
+  }
 }
 
-.recent-files-title-content {
-  flex-grow: 1;
+.recent-files-title {
+  justify-content: flex-start;
+  align-items: unset;
 }
 
 .recent-files-file-delete {
+  justify-content: right;
   display: none;
-  color: var(--nav-item-color);
-  height: 17px;
 }
 
 .recent-files-title:hover .recent-files-file-delete {
-  display: block;
-  cursor: pointer;
+  display: flex;
+  cursor: var(--cursor);
 }
 
 .recent-files-file-delete:hover {

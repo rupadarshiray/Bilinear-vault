@@ -1,0 +1,2846 @@
+% !TeX encoding = ISO-8859-1
+% Ce fichier contient le code de l'extension "chemfig"
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                    %
+\def\CFname                    {chemfig}                             %
+\def\CFver                       {1.41}                              %
+%                                                                    %
+\def\CFdate                   {2019/05/21}                           %
+%                                                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%____________________________________________________________________
+% Author     : Christian Tellechea                                   |
+% Status     : Maintained                                            |
+% Email      : unbonpetit@netc.fr                                    |
+% Package URL: https://www.ctan.org/pkg/chemfig                      |
+% Bug tracker: https://framagit.org/unbonpetit/chemfig/issues        |
+% Repository : https://framagit.org/unbonpetit/chemfig/tree/master   |
+% Copyright  : Christian Tellechea 2010-2019                         |
+% Licence    : Released under the LaTeX Project Public License v1.3c |
+%              or later, see http://www.latex-project.org/lppl.txt   |
+% Files      : 1) chemfig.tex                                        |
+%              2) chemfig.sty                                        |
+%              3) t-chemfig.tex                                      |
+%              4) README                                             |
+%              5) chemfig_doc_fr.tex                                 |
+%              6) chemfig_doc_fr.pdf                                 |
+%              7) chemfig_doc_en.tex                                 |
+%              8) chemfig_doc_fr.pdf                                 |
+%--------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                       P R É A L A B L E                        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-------------------------- Annonce package --------------------------
+\ifdefined\ProvidesPackage\else
+	\immediate\write -1 {%
+	Package: \CFname\space\CFdate\space\space v\CFver\space\space
+	Draw molecule with an easy syntax (CT)}%
+\fi
+
+%-------------------------- Régime catcodes --------------------------
+\begingroup
+	\def\X#1{\catcode\number`#1=\number\catcode`#1\relax}
+	\xdef\CFrestorecatcode{\X\[\X\]\X\:\X\(\X\)\X\,\X\-\X\=\X\~\X\!\X\?\X\<\X\>\X\;\X\*\X\|\X\@\X\ \X\_}%
+\endgroup
+\catcode`\[12 \catcode`\]12 \catcode`\:12 \catcode`\(12
+\catcode`\)12 \catcode`\,12 \catcode`\-12 \catcode`\=12
+\catcode`\~12 \catcode`\!12 \catcode`\?12 \catcode`\<12
+\catcode`\>12 \catcode`\;12 \catcode`\*12 \catcode`\|12
+\catcode`\@12 \catcode`\#6  \catcode`\ 10 \catcode`\_11
+
+%-------------------- Vérification des prérequis ---------------------
+\def\CF_error#1{\errmessage{Package \CFname\space Error: #1.}}
+\def\CF_checkprimitive#1#2#3{% Vérifie que #1 est une primitive et sinon, émet le message #2 et exécute #3
+	\begingroup
+		\edef\__tempa{\meaning#1}\edef\__tempb{\string#1}\expandafter
+	\endgroup
+	\ifx\__tempa\__tempb\else
+		\CF_error{#2}%
+		\def\CF_temp{#3}%
+		\CFrestorecatcode\expandafter\CF_temp
+	\fi
+}
+\CF_checkprimitive\eTeXversion
+	{You are not using an eTeX engine, \CFname\space cannot work.}
+	{\endinput}%
+\CF_checkprimitive\expanded
+	{the \string\expanded\space primitive is not provided by your TeX engine, \CFname\space v\CFver\space cannot work: loading \CFname\space v1.4}
+	{\input chemfigold.tex\relax\endinput}%
+
+%------------------------ Chargement simplekv ------------------------
+\unless\ifdefined\skvname
+	\begingroup\def\CFtemp{\endgroup\input simplekv.tex\relax}%
+	\expandafter\CFtemp
+\fi
+
+%-------------------------- Chargement tikz --------------------------
+\unless\ifdefined\tikzpicture
+	\begingroup\def\CFtemp{\endgroup\input tikz.tex\relax}%
+	\expandafter\CFtemp
+\fi
+\usetikzlibrary{arrows.meta}
+
+%--------------------------- Allocations -----------------------------
+\newcount\CF_cntatomgroup
+\newcount\CF_cntgroup
+\newcount\CF_cntatom
+\newcount\CF_cntcycle
+\newcount\CF_cntcompound
+
+\newif\ifCF_incycle
+\newif\ifCF_cyclearc
+\newif\ifCF_definesubmol
+\newif\ifCF_adjustnamedp
+\newif\ifCF_macrofixedbondlength
+\newif\ifCF_lewisoverlay
+
+\newdimen\CF_dim
+\newdimen\CF_arrowsize
+\newdimen\CF_zero \CF_zero=0pt
+
+\newbox\CF_boxlewis
+\newbox\CF_box
+\newbox\CF_boxstuff
+
+\newtoks\CF_substtoks
+
+%-------------------------- Petites macros ---------------------------
+\let\CF_begintikzpicture\tikzpicture
+\let\CF_endtikzpicture  \endtikzpicture
+\def\CF_quark{\CF_quark}
+\def\CF_execfirst#1#2{#1}
+\def\CF_execsecond#1#2{#2}
+\def\CF_id#1{#1}
+\def\CF_gobarg#1{}
+\def\CF_gobtwoargs#1#2{}
+\def\CF_firsttonil#1#2\_nil{#1}
+\def\CF_sanitizelastitem#1,\empty#2\_nil{#1}
+\def\CF_gobtikzinstruction#1;{}
+\def\CF_makeother#1{\catcode`#1=12\relax}
+\def\CF_lettoken#1#2{\let#1= #2}\CF_lettoken\CF_sptoken{ }
+\def\CF_ifx#1#2{\ifx#1#2\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi}
+\def\CF_ifempty#1{\ifx\empty#1\empty\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi}
+\def\CF_ifnum#1{\ifnum#1\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi}
+\def\CF_doifempty#1{\ifx\empty#1\empty\expandafter\CF_id\else\expandafter\CF_gobarg\fi}
+\def\CF_doifnotempty#1{\ifx\empty#1\empty\expandafter\CF_gobarg\else\expandafter\CF_id\fi}
+\def\CF_gobtonil#1\_nil{}
+\edef\CFhash{\string#}
+\begingroup
+	\catcode`\_8
+	\expandafter\gdef\csname CF\string_underscore\endcsname{_}
+\endgroup
+\def\CF_threeea{\expandafter\expandafter\expandafter}
+\def\CF_exptwomacroargs#1#2#3{\CF_expsecond{\CF_expsecond#1{#2}}{#3}}
+\def\CF_expthreemacroargs#1#2#3#4{\CF_expsecond{\CF_exptwomacroargs#1{#2}{#3}}{#4}}
+\def\CF_swaparg#1#2{#2{#1}}
+\def\CF_expsecond#1#2{\expandafter\CF_swaparg\expandafter{#2}{#1}}% \CF_expsecond<{arg1>}{<arg2>} donne "<arg1>{*<arg2>}"
+\def\CF_eexpsecond#1#2{\expandafter\expandafter\expandafter\CF_swaparg\expandafter\expandafter\expandafter{#2}{#1}}% \CF_eexpsecond{<arg1>}{<arg2>} donne "<arg1>{**<arg2>}"
+\def\CF_swapunbrace#1#2{#2#1}
+\def\CF_expafter#1#2{\expandafter\CF_swapunbrace\expandafter{#2}{#1}}% \CF_expafter{<arg1>}{<arg2>} donne "<arg1>*<arg2>"
+\def\CF_eexpafter#1#2{\expandafter\expandafter\expandafter\CF_swapunbrace\expandafter\expandafter\expandafter{#2}{#1}}% \CF_eexpafter{<arg1>}{<arg2>} donne "<arg1>**<arg2>"
+\def\CF_addtomacro#1#2{\CF_expsecond{\def#1}{#1#2}}
+\def\CF_eaddtomacro#1#2{\CF_expsecond{\CF_addtomacro#1}{#2}}
+\def\CF_preaddtomacro#1#2{\CF_expsecond{\CF_preaddtomacroa#1{#2}}#1}
+\def\CF_preaddtomacroa#1#2#3{\def#1{#2#3}}
+\def\CF_addtotoks#1#2{#1\expandafter{\the#1#2}}
+\def\CF_eaddtotoks#1#2{\expandafter\CF_addtotoks\expandafter#1\expandafter{#2}}
+\def\CF_assigntonil#1#2\_nil{\def#1{#2}}
+\def\CF_edefaddtomacro#1#2{\CF_expsecond{\CF_addtomacro#1}{\expanded{#2}}}
+\def\CF_ifnextchar#1#2#3{%
+	\let\CF_ifnextchartok=#1% <- espace indésirable, bugfix v1.31
+	\def\CF_ifnextcharcodetrue{#2}%
+	\def\CF_ifnextcharcodefalse{#3}%
+	\futurelet\CF_temptok\CF_ifnextchara
+}
+\def\CF_ifnextchara{%
+	\CF_ifx\CF_temptok\CF_sptoken
+		{\CF_ifnextcharb
+		}
+		{\CF_ifx\CF_temptok\CF_ifnextchartok
+			\CF_ifnextcharcodetrue
+			\CF_ifnextcharcodefalse
+		}%
+}
+\expandafter\def\expandafter\CF_ifnextcharb\space{\futurelet\CF_temptok\CF_ifnextchara}
+\def\CF_ifstar#1{\CF_ifnextchar*{\CF_execfirst{#1}}}
+\def\CF_testopt#1#2{\CF_ifnextchar[{#1}{#1[{#2}]}}
+\def\CF_warning#1{\immediate\write-1{Package \CFname\space Warning: #1^^J}}
+\def\CF_ifinteger#1{%
+	\begingroup
+		\afterassignment\CF_afterinteger
+		\CF_cntcycle0#1\relax
+}
+\def\CF_afterinteger#1\relax{%
+	\endgroup
+	\CF_ifempty{#1}%
+}
+\def\CF_iffirsttokmatch#1#2{% est ce que #1 et #2 commencent par les mêmes tokens ?
+	\futurelet\CF_toksa\CF_gobtonil#1\relax\_nil
+	\futurelet\CF_toksb\CF_gobtonil#2\relax\_nil
+	\CF_ifx\CF_toksa\CF_toksb
+}
+\def\CF_iffirsttokin#1{% teste si le token qui commence #1 appartient aux tokens mis dans #2
+	\futurelet\CF_toksa\CF_gobtonil#1\relax\_nil
+	\CF_iffirsttokina
+}
+\def\CF_iffirsttokina#1{%
+	\CF_ifempty{#1}
+		{\CF_execsecond
+		}
+		{\futurelet\CF_toksb\CF_gobtonil#1\relax\_nil
+		\CF_ifx\CF_toksa\CF_toksb
+			{\CF_execfirst}
+			{\CF_expsecond\CF_iffirsttokina{\CF_gobarg#1}}%
+		}%
+}
+\def\CF_ifinstr#1#2{%
+	\def\CF_ifinstra##1#2##2\_nil{%
+		\ifx\empty##2\empty
+			\expandafter\CF_execsecond
+		\else
+			\expandafter\CF_execfirst
+		\fi}%
+	\CF_ifinstra#1\__nil#2\_nil
+}
+\def\CF_afterspace#1 #2\_nil{#2}
+\def\CF_valuetomacro#1[#2]#3{% #1= macro  #2=valeur défaut  #3=clé
+	\CF_eexpsecond{\def#1}{\useKV[chemfig]{#3}}%
+	\CF_ifx#1\empty
+		{\def#1{#2}}
+		{}%
+}
+
+%--------------------------- Substitution ----------------------------
+\def\CF_ifstartwith#1#2{% #1=<texte>  #2=<motif>
+	\CF_ifempty{#1}%
+		{\CF_execsecond
+		}
+		{\def\CF_startwithcode{#1}%
+		\def\CF_startwithpattern{#2}%
+		\CF_ifstartwitha
+		}%
+}
+\def\CF_ifstartwitha{%
+	\CF_grabfirstarg\CF_startwithcode\CF_firstargcode
+	\CF_grabfirstarg\CF_startwithpattern\CF_firstargpattern
+	\CF_ifx\CF_firstargcode\CF_firstargpattern
+		{\CF_expsecond\CF_ifempty\CF_startwithpattern
+			{\CF_execfirst
+			}
+			{\CF_expsecond\CF_ifempty\CF_startwithcode
+				\CF_execsecond
+				\CF_ifstartwitha
+			}%
+		}
+		{\CF_execsecond
+		}%
+}
+\def\CF_grabfirstarg#1#2{%
+	\CF_ifx#1\empty
+		{\let#2\empty
+		}
+		{\def\CF_grabmacro{#2}%
+		\CF_expsecond\CF_ifbracefirst#1%
+			{\expandafter\CF_grabbracearg#1\_nil#1}
+			{\CF_expafter{\futurelet\CF_nexttok\CF_grabfirstarga}#1\_nil#1}%
+		}%
+}
+\def\CF_grabfirstarga{%
+	\CF_ifx\CF_nexttok\CF_sptoken
+		\CF_grabspacearg
+		\CF_grabnormalarg
+}
+\def\CF_grabbracearg#1{%
+	\expandafter\def\CF_grabmacro{{#1}}%
+	\CF_grabargassigntonil\relax
+}
+\expandafter\def\expandafter\CF_grabspacearg\space{%
+	\expandafter\def\CF_grabmacro{ }%
+	\CF_grabargassigntonil\relax
+}
+\def\CF_grabnormalarg#1{%
+	\expandafter\def\CF_grabmacro{#1}%
+	\CF_grabargassigntonil\relax
+}
+\def\CF_grabargassigntonil#1\_nil#2{\CF_expsecond{\def#2}{\CF_gobarg#1}}
+\def\CF_ifbracefirst#1{\CF_ifnum{\catcode\CF_threeea`\expandafter\CF_firsttonil\detokenize{#1.}\_nil=1 }}
+\def\CF_substonly#1#2{% #1=entier maxi>0  #2=macro : dans la sc#1, remplace tous les <motif> par <pattern> sauf lorsque le motif est suivi d'un caractère >#1
+	\def\CF_atendsubstitute{\edef#2{\the\CF_substtoks}}% macro exécutée à la fin
+	\let\CF_substnogroups\CF_substnogrouponly
+	\CF_ifnum{#1>0 }
+		{\let\CF_testifx\empty
+		\foreach\CF_x in {1,...,#1}{\xdef\CF_testifx{\unexpanded\expandafter{\CF_testifx}\unexpanded\expandafter{\expandafter\ifx\CF_x\CF_nexttok1\fi}}}%
+		\let\CF_testif\empty
+		\foreach\CF_x in {1,...,#1}{\xdef\CF_testif{\unexpanded\expandafter{\CF_testif}\unexpanded\expandafter{\expandafter\if\CF_x\CF_nexttok1\fi}}}%
+		\CF_expsecond\CF_substi#2%
+		}
+		{\CF_substall#2%
+		}%
+}
+\def\CF_substnogrouponly{%
+	\CF_exptwomacroargs\CF_ifstartwith\CF_substcode\CF_substsubst
+		{\CF_grabfirstarg\CF_substcode\CF_temp
+		\CF_expafter{\futurelet\CF_nexttok\CF_gobtonil}\CF_substcode\relax\_nil
+		\CF_ifnum{0\CF_testifx=1 }% si le prochain token est \let-égal à 1...#1
+			{\edef\CF_nexttok{\CF_threeea\CF_firsttonil\expandafter\string\CF_substcode\_nil}% le détokéniser
+			\CF_ifnum{0\CF_testif=1 }
+				{\CF_eaddtotoks\CF_substtoks\CF_temp
+				\CF_grabfirstarg\CF_substcode\CF_temp
+				\CF_eaddtotoks\CF_substtoks\CF_temp
+				}
+				{\CF_eaddtotoks\CF_substtoks\CF_substpattern
+				}%
+			}
+			{\CF_eaddtotoks\CF_substtoks\CF_substpattern
+			}%
+		\CF_substgroups
+		}
+		{\CF_expsecond\CF_ifempty\CF_substcode
+			{\CF_atendsubstitute
+			}
+			{\CF_grabfirstarg\CF_substcode\CF_substauxarg
+			\CF_eaddtotoks\CF_substtoks\CF_substauxarg
+			\CF_substgroups
+			}%
+		}%
+}
+\def\CF_substall#1{% #1=macro
+	\def\CF_atendsubstitute{\edef#1{\the\CF_substtoks}}% macro exécutée à la fin
+	\let\CF_substnogroups\CF_substnogroupall
+	\CF_expsecond\CF_substi#1%
+}
+\def\CF_substnogroupall{%
+	\CF_exptwomacroargs\CF_ifstartwith\CF_substcode\CF_substsubst
+		{\CF_eaddtotoks\CF_substtoks\CF_substpattern
+		\CF_grabfirstarg\CF_substcode\CF_temp
+		\CF_substgroups
+		}
+		{\CF_expsecond\CF_ifempty\CF_substcode
+			{\CF_atendsubstitute
+			}
+			{\CF_grabfirstarg\CF_substcode\CF_substauxarg
+			\CF_eaddtotoks\CF_substtoks\CF_substauxarg
+			\CF_substgroups
+			}%
+		}%
+}
+\def\CF_substi#1#2#3{% #1=<texte> #2=<motif> #3=<motif de substi>
+	\def\CF_substcode{#1}\def\CF_substsubst{#2}\def\CF_substpattern{#3}%
+	\CF_substtoks={}%
+	\CF_substgroups
+}
+
+\def\CF_substgroups{%
+	\CF_expsecond\CF_ifbracefirst\CF_substcode
+		{\CF_grabfirstarg\CF_substcode\CF_substauxarg
+		\begingroup
+			\def\CF_atendsubstitute{%
+				\expandafter\endgroup\expandafter\CF_addtotoks\expandafter\CF_substtoks\expandafter{\expandafter{\the\CF_substtoks}}%
+				\CF_substgroups
+			}%
+			\CF_substtoks{}% initialiser à vide
+			\expandafter\def\expandafter\CF_substcode\CF_substauxarg
+			\CF_substgroups
+		}%
+		{\CF_substnogroups
+		}%
+}
+
+%---------------------------- Paramètres -----------------------------
+\def\setchemfig{\setKV[chemfig]}
+\def\resetchemfig{%
+	\setKVdefault[chemfig]{%
+		atom style          ={},% code tikz mis à la fin de every node/.style
+		chemfig style       ={},% code tikz mis à la fin de l'arugment optionnel de \tikzpicture
+		bond join           =false,
+		fixed length        =false,
+		cram rectangle      =false,
+		cram width          =1.5ex,
+		cram dash width     =1pt,
+		cram dash sep       =2pt,
+		atom sep            =3em,
+		bond offset         =2pt,
+		double bond sep     =2pt,
+		angle increment     =45,
+		node style          ={},
+		bond style          ={},
+		lewis | width       =0.3ex,
+		lewis sep           =0.4ex,
+		lewis length        =1.5ex,
+		lewis style         ={},
+		lewis dist          =0.3em,
+		lewis radius        =0.15ex,
+		lewis diag coeff    =1,
+		cycle radius coeff  =0.75,
+		stack sep           =1.5pt,
+		scheme debug        =false,
+		compound style      ={},
+		compound sep        =5em,
+		arrow offset        =4pt,
+		arrow angle         =0,
+		arrow coeff         =1,
+		arrow style         ={},
+		arrow double sep    =2pt,
+		arrow double coeff  =0.6,
+		arrow double harpoon=true,
+		arrow label sep     =3pt,
+		arrow head          =-CF,
+		+ sep left          =0.5em,
+		+ sep right         =0.5em,
+		+ vshift            =0pt,
+	}%
+}
+\resetchemfig
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%               D E S S I N     M O L É C U L E S                %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\CF_sanitizecatcode{%
+	\CF_makeother\[\CF_makeother\]\CF_makeother\:\CF_makeother\(\CF_makeother\)%
+	\CF_makeother\,\CF_makeother\-\CF_makeother\=\CF_makeother\~\CF_makeother\!%
+	\CF_makeother\?\CF_makeother\<\CF_makeother\>\CF_makeother\;\CF_makeother\*%
+	\CF_makeother\|\CF_makeother\#\CF_makeother\@%
+}
+
+\def\CF_nodecontent{\CF_expsecond\printatom{\csname atom_\number\CF_cntatom\endcsname\CF_nodestrut}}
+
+\def\chemskipalign{%
+	\CF_doifempty\CF_bondoutcontentsaved% sauf si un \chemskipalign a été fait à l'atome précédent
+		{\global\let\CF_bondoutcontentsaved\CF_bondoutcontent}% sauvegarder l'atome d'où vient la liaison
+	\let\CF_nodestrut\empty
+}
+
+\def\CF_emptynode{{}}
+
+\def\definesubmol{\CF_definesubmoltrue\def_submol}
+\def\redefinesubmol{\CF_definesubmolfalse\def_submol}
+
+\def\def_submol#1{%
+	\CF_cntatomgroup=0 % nombre d'arguments supposé
+	\def\CF_temp{#1}% nom
+	\futurelet\CF_toksa\CF_submoltestnxttok
+}
+
+\def\CF_submoltestnxttok{%
+	\if[\noexpand\CF_toksa\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi
+		{\begingroup\CF_sanitizecatcode\CF_expsecond\CF_submolgrabopt{\CF_temp}%
+		}
+		{\afterassignment\CF_submoltestnxttoka% pas d'argument entre crochet
+		\CF_cntatomgroup=0% cherche le nombre d'arguments éventuels
+		}%
+}
+
+\def\CF_submoltestnxttoka{\futurelet\CF_toksa\CF_submoltestnxttokb}
+
+\def\CF_submoltestnxttokb{%
+	\if[\noexpand\CF_toksa\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi
+		{\begingroup\CF_sanitizecatcode\CF_expsecond\CF_submolgrabopt{\CF_temp}}
+		{\CF_expsecond{\def_submola}\CF_temp{}}%
+}
+
+\def\CF_submolgrabopt#1[#2]#{\endgroup\def_submola{#1}{#2}}
+
+\def\def_submola#1{% #1 nom
+	\CF_ifnum{0\CF_ifnum{\CF_cntatomgroup<0 }1{\CF_ifnum{\CF_cntatomgroup>9 }10}>0 }
+		{\CF_error{Invalid number of arguments in submol \detokenize\expandafter{\string#1}. Defining it with 0 argument}%
+		\CF_cntatomgroup=0
+		}
+		{}%
+	\ifcat\relax\expandafter\noexpand\CF_firsttonil#1\_nil\expandafter\CF_execfirst\else\expandafter\CF_execsecond\fi% si #1 est une séquence de contrôle
+		{\expandafter\ifdefined\CF_firsttonil#1\_nil
+			\ifCF_definesubmol
+				\CF_warning{the submol \expandafter\string\CF_firsttonil#1\_nil\space is already defined, the previous definition is lost}%
+			\fi
+		\fi
+		\begingroup
+			\CF_sanitizecatcode
+			\def_submolb{#1}%
+		}
+		{\ifcsname CF__#1\endcsname
+			\ifCF_definesubmol
+				\CF_warning{the submol "#1" is already defined, the previous definition is lost}%
+			\fi
+		\fi
+		\begingroup
+			\CF_sanitizecatcode
+			\expandafter\def_submolb\csname CF__#1\endcsname
+		}%
+}
+
+\def\def_submolb#1#2#3{% #1 nom sous forme de macro, #2 = code si liaison arrive de droite , #3 = code si liaison arrive de gauche, \CF_cntatomgroup = nombre d'arguments
+	\def\CF_tempa{#2}\CF_doifnotempty{#2}{\CF_expsecond{\CF_expsecond\CF_substonly{\number\CF_cntatomgroup}\CF_tempa}{\CFhash}{\CFhash}}%
+	\def\CF_tempb{#3}\CF_expsecond{\CF_expsecond\CF_substonly{\number\CF_cntatomgroup}\CF_tempb}{\CFhash}{\CFhash}%
+	\CF_expsecond{\CF_expsecond{\def_submolc{#1}}\CF_tempa}\CF_tempb
+}
+
+\def\def_submolc#1#2#3{% #1 nom sous forme de macro, #2 = code si liaison arrive de droite , #3 = code si liaison arrive de gauche, \CF_cntatomgroup = nombre d'arguments
+	\endgroup
+	\begingroup
+		\global\toks0{\gdef\CFthesubmol}%
+		\CF_ifnum{\CF_cntatomgroup>0 }
+			{\foreach\CF_x in {1,...,\CF_cntatomgroup}{%
+				\global\toks0\expandafter{\expanded{\the\toks0\CFhash\CF_x}}%
+				}%
+			}
+			{}%
+		\CF_sanitizecatcode \catcode`\#6 \endlinechar-1 \everyeof{\noexpand}%
+		\CF_ifempty{#2}%
+			{\scantokens\expandafter{\the\toks0{\empty#3}}%
+			}%
+			{\scantokens\expandafter{%
+				\the\toks0{%
+					\csname CF_exec%
+						\ifdim\csname CF_currentangle\endcsname pt>90pt
+							\ifdim\csname CF_currentangle\endcsname pt<270pt
+								first%
+							\else
+								second%
+							\fi
+						\else
+							second%
+						\fi
+					\endcsname
+					{#2}{#3}%
+					}%
+				}%
+			}%
+	\endgroup
+	\let#1\CFthesubmol
+}
+
+\def\CF_seeknode#1#2#3{% cherche un noeud au début de #1 l'assigne dans la sc #2 et met le reste dans #3
+	\let#2\empty
+	\def#3{#1}%
+	\CF_iffirsttokmatch{#1}{ }%
+		{\CF_expsecond\CF_seeknodea{\romannumeral-`\.\noexpand#1}#2#3}% ignore les espaces au début du groupe d'atome
+		{\CF_seeknodea{#1}#2#3}%
+}
+
+\def\CF_seeknodea#1#2#3{%
+	\CF_ifempty{#1}%
+		{\let#3\empty
+		}
+		{\futurelet\CF_toksa\CF_gobtonil#1\relax\_nil
+		\CF_ifx\CF_toksa\CF_sptoken
+			{\CF_addtomacro#2{ }%
+			\CF_expsecond\CF_seeknodea{\CF_afterspace#1\_nil}#2#3%
+			}%
+			{\CF_ifx\CF_toksa\bgroup
+				{\CF_eaddtomacro#2{\expandafter{\CF_firsttonil#1\_nil}}%
+				\CF_expsecond\CF_seeknodea{\CF_gobarg#1}#2#3%
+				}%
+				{\CF_iffirsttokina{-=(*<>!~}%
+					{\def#3{#1}%
+					}%
+					{\CF_eaddtomacro#2{\CF_firsttonil#1\_nil}%
+					\CF_expsecond\CF_seeknodea{\CF_gobarg#1}#2#3%
+					}%
+				}%
+			}%
+		}%
+}
+
+% on sait que #1 commence par -,=,~,<,>. On analyse cette liaison
+% #2 reçoit le type de liaisons (1 pour -, 2 pour =, 3 pour ~)
+\def\CF_assignbondcode#1#2{%
+	\futurelet\CF_toksa\CF_gobtonil#1\_nil
+	\edef#2{%
+		\ifx-\CF_toksa1\else
+		\ifx=\CF_toksa2\else
+		\ifx~\CF_toksa3\else
+		\ifx>\CF_toksa4\else
+		\ifx<\CF_toksa5\else0% si 0 --> il y a une erreur non due à l'utilisateur
+		\fi\fi\fi\fi\fi}%
+	\ifnum#2>3 % si c'est une liaison de Cram
+		\CF_expafter{\futurelet\CF_toksa\CF_gobtonil}{\CF_gobarg#1\_nil}% chope le caractère suivant
+		\CF_ifx:\CF_toksa
+			{\edef#2{\number\numexpr#2+2}% si c 'est un ":", signe du pointillé, ajoute 2
+			}%
+			{\CF_ifx|\CF_toksa% si c 'est un "|", signe du triangle évidé, ajouter 4
+				{\edef#2{\number\numexpr#2+4}}
+				{}%
+			}%
+	\fi
+}
+
+\def\CF_grabbondoffseta#1,#2\_nil{%
+	\def\CF_startoffset{#1}\def\CF_endoffset{#2}%
+}
+
+\def\CF_grabbondoffset#1(#2)#3\_nil{%
+	\CF_doifnotempty{#2}%
+		{\CF_ifinstr{#2},%
+			{\CF_grabbondoffseta#2\_nil}%
+			{\def\CF_startoffset{#2}}%
+		}%
+	\def\CF_remainafterbond{#3}%
+}
+
+\def\CF_analysebond#1#2{%
+	\CF_assignbondcode{#1}#2%
+	\CF_expsecond{\def\CF_remainafterbond}{\CF_gobarg#1}%mange le premier signe de la liaison
+	\let\CF_doublebondtype\CF_zero
+	\ifnum#2=2 % si c'est une double liaison, regarde s'il y a un + ou - derrière
+		\CF_expafter{\futurelet\CF_toksa\CF_gobtonil}{\CF_gobarg#1\_nil}%
+		\CF_ifx^\CF_toksa
+			{\def\CF_doublebondtype{1}%
+			\CF_expsecond{\def\CF_remainafterbond}{\CF_gobtwoargs#1}% mange le "^"
+			}
+			{\expandafter\ifx\CF_underscore\CF_toksa
+				\def\CF_doublebondtype{2}%
+				\CF_expsecond{\def\CF_remainafterbond}{\CF_gobtwoargs#1}% mange le "_"
+			\fi
+			}%
+	\else
+		\ifnum#2>5 % si c'est une laision de Cram pointillée ou triangle évidé
+			\CF_expsecond{\def\CF_remainafterbond}{\CF_gobtwoargs#1}% mange un caractère de plus
+		\fi
+	\fi
+	\CF_expsecond\CF_iffirsttokmatch\CF_remainafterbond\CFhash
+		{\CF_eexpsecond\CF_iffirsttokmatch{\expandafter\CF_gobarg\CF_remainafterbond.}(%si parenthèse juste après
+			{\expandafter\CF_grabbondoffset\CF_remainafterbond\_nil}
+			{}%
+		}%
+		{}%
+	\CF_expsecond\CF_iffirsttokmatch\CF_remainafterbond @%
+		{\expandafter\CF_grabmovearg\CF_remainafterbond\_nil}%
+		{}%
+	\CF_expsecond\CF_iffirsttokmatch{\CF_remainafterbond}[%
+		{\expandafter\CF_analyseoptarg\CF_remainafterbond\_nil\CF_remainafterbond
+		}%
+		{\let\CF_currentstringangle\CF_defaultstringangle
+		\let\CF_currentlength\CF_defaultlength
+		\let\CF_currentfromatom\CF_defaultfromatom
+		\let\CF_currenttoatom\CF_defaulttoatom
+		\let\CF_currenttikz\CF_defaulttikz
+		\let\CF_movebondname\empty
+		}%
+	\ifCF_incycle
+		\pgfmathsetmacro\CF_cycleincrementangle{360/\CF_cyclenum+\CF_initcycleangle}%
+		\edef\CF_currentstringangle{::+\CF_cycleincrementangle}%
+		\def\CF_initcycleangle{0}%
+		\let\CF_currentlength\CF_defaultlength% et on ignore la longueur de liaison spécifiée
+	\fi
+	\CF_expsecond\CF_setbondangle{\CF_currentstringangle}\CF_currentangle
+}
+
+\def\CF_setbondangle#1#2{% le code de la direction est contenu dans #1, en sortie, #2 contient l'angle
+	\CF_ifempty{#1}%
+		{\let#2\CF_defaultangle
+		}
+		{\if:\expandafter\noexpand\CF_firsttonil#1\_nil
+			\if:\CF_threeea\noexpand\expandafter\CF_firsttonil\CF_gobarg#1\_nil
+				\pgfmathsetmacro#2{\CF_previousangle+\expandafter\CF_gobarg\CF_gobarg#1}%
+			\else
+				\pgfmathsetmacro#2{\CF_gobarg#1}%
+			\fi
+		\else
+			\pgfmathsetmacro#2{#1*\CF_angleincrement}%
+		\fi% puis normalise l'angle entre 0 et 360
+		\ifdim\ifdim#2pt<0pt -\fi#2pt>360pt
+			\pgfmathsetmacro#2{#2-360*floor(#2/360)}%
+		\fi% si |#2|>360
+		\ifdim#2pt<0pt
+			\pgfmathsetmacro#2{#2+360}%
+		\fi
+		}%
+}
+
+\def\CF_analysemovearg#1,#2\_nil#3{%
+	\def#3{#1}\def\CF_movebondcoeff{#2}%
+}
+
+% Argument limités légitimes ici car #2 (qui est ce qui suit "@{<nom>}" dans l'argument optionnel) ne DOIT PAS
+% commencer par une accolade.
+\def\CF_grabmovearg @#1#2\_nil{%
+	\CF_ifinstr{#1},%
+		{\CF_analysemovearg#1\_nil\CF_movebondname}%
+		{\def\CF_movebondname{#1}\def\CF_movebondcoeff{0.5}}%
+	\def\CF_remainoptarg{#2}%
+}
+
+\def\CF_testemptyandassign#1#2#3{%
+	\CF_ifempty{#2}
+		{\let#1#3}
+		{\def#1{#2}}%
+}
+
+\def\CF_parseoptlist#1,#2,#3,#4,#5\_nil{%
+	\CF_testemptyandassign\CF_currentstringangle{#1}\CF_defaultstringangle
+	\CF_testemptyandassign\CF_currentlength     {#2}\CF_defaultlength
+	\CF_testemptyandassign\CF_currentfromatom   {#3}\CF_defaultfromatom
+	\CF_testemptyandassign\CF_currenttoatom     {#4}\CF_defaulttoatom
+	\CF_expsecond{\CF_testemptyandassign\CF_currenttikz}{\CF_sanitizelastitem#5,\empty\_nil}\CF_defaulttikz
+}%
+
+\def\CF_analyseoptarg[#1]{%
+	\CF_doifnotempty{#1}%
+		{\CF_iffirsttokmatch{#1}{@}%
+			{\CF_grabmovearg#1\_nil
+			}
+			{\let\CF_movebondname\empty
+			\def\CF_remainoptarg{#1}%
+			}%
+		\expandafter\CF_parseoptlist\CF_remainoptarg,\empty,\empty,\empty,\empty\_nil
+		}%
+	\CF_analyseoptarga\relax
+}
+
+\def\CF_analyseoptarga#1\_nil#2{%
+	\CF_expsecond{\def#2}{\CF_gobarg#1}%
+}
+
+\def\CF_seeksubmol{%
+	\CF_expsecond{\def\CF_molecule}{\romannumeral-`\.\expandafter\noexpand\CF_molecule}%
+	\CF_expsecond\CF_iffirsttokmatch{\CF_molecule}!%
+		{\CF_eexpsecond{\def\CF_molecule}{\expandafter\CF_gobarg\CF_molecule}% enlève le "!"
+		\CF_ifx\empty\CF_molecule
+			{\CF_error{no submol name found after "!"}}
+			{}%
+		\ifcat\relax\CF_threeea\noexpand\expandafter\CF_firsttonil\CF_molecule*\_nil
+			\expandafter\CF_seeksubmola\CF_molecule\_nil
+		\else
+			\expandafter\CF_seeksubmolb\CF_molecule\_nil
+		\fi
+		\CF_seeksubmol
+		}%
+		{}%
+}
+
+\def\CF_seeksubmola#1{\CF_seeksubmolc#1\relax}
+
+\def\CF_seeksubmolb#1{\expandafter\CF_seeksubmolc\csname CF__#1\endcsname\relax}% nom de la sous molécule
+
+\def\CF_seeksubmolc#1#2\_nil{%#1=macro de la sous molécule #2=reste du code commençant par \relax
+	\CF_expsecond{\CF_eexpsecond{\def\CF_molecule}}{\expandafter#1\CF_gobarg#2}% supprime le \relax puis ajoute la macro au début et la 2-développe
+}
+
+\def\CF_insertemptygroup#1{% insère {} au début de la sc #1
+	\CF_expsecond{\def#1}{\expandafter{\expandafter}#1}%
+}
+
+\def\chemfig{\CF_testopt\CF_chemfiga{}}
+
+\def\CF_chemfiga[#1]{%
+	\begingroup
+		\CF_sanitizecatcode
+		\CF_exptwomacroargs\CF_chemfigb\CF_begintikzpicture\CF_endtikzpicture[#1]%
+}
+
+\def\CF_chemfigb#1#2[#3]#4{%
+	\endgroup
+	\begingroup
+		\setchemfig{#3}%
+		\expanded{% début du tikzpicture
+			\unexpanded{#1}[%
+				remember picture,%
+				every node/.style={%
+					anchor=base,%
+					inner sep=0pt,%
+					outer sep=0pt,%
+					minimum size=0pt,%
+					\unexpanded\CF_threeea{\useKV[chemfig]{atom style}}%
+					},%
+				baseline,%
+				\unexpanded\CF_threeea{\useKV[chemfig]{chemfig style}}%
+				]%
+			}%
+			\begingroup% \endgroup rajouté en sortie de tracé par \CF_chemfigd
+				\let\CF_hooklist\empty
+				\CF_expsecond\setchemfig{#3}%
+				\ifboolKV[chemfig]{fixed length}
+						{\CF_macrofixedbondlengthtrue}
+						{\CF_macrofixedbondlengthfalse}%
+				\ifboolKV[chemfig]{bond join}
+					{\let\CF_drawaxisbond\CF_drawaxisbondjoin}
+					{\let\CF_drawaxisbond\CF_drawaxisbondnojoin}%
+				\ifboolKV[chemfig]{cram rectangle}
+					{\let\CF_clipcramornot\CF_gobtikzinstruction}
+					{\let\CF_clipcramornot\clip}%
+				\CF_valuetomacro\CF_crambasewidth   [1.5ex]{cram width}%
+				\CF_valuetomacro\CF_cramdashlength  [1pt]{cram dash width}%
+				\CF_valuetomacro\CF_cramdashsep     [2pt]{cram dash sep}%
+				\CF_valuetomacro\CF_atomsep         [3em]{atom sep}% espacement des atomes liés
+				\CF_valuetomacro\CF_bondoffset      [2pt]{bond offset}%
+				\CF_valuetomacro\CF_doublesep       [2pt]{double bond sep}%
+				\CF_valuetomacro\CF_angleincrement  [45]{angle increment}%
+				\CF_valuetomacro\CF_nodestyle       []{node style}%
+				\CF_valuetomacro\CF_bondstyle       []{bond style}%
+				\CF_valuetomacro\CF_stacksep        [1.5pt]{stack sep}%
+				\CF_valuetomacro\CF_cycleradiuscoeff[0.75]{cycle radius coeff}% coeff multiplicateur du rayon des arcs dans les cycles
+				\CF_incyclefalse
+				\CF_cntgroup0
+				\let\CF_lastaction\CF_zero% 0=début du dessin 1=tracé d'un noeud 2=tracé d'une liaison
+				\let\CF_startoffset\empty
+				\let\CF_endoffset\empty
+				\let\CF_bondoutcontentsaved\empty
+				\def\CF_cycleanglecorrection{180/\CF_cyclenum}%
+				\def\CF_defaultangle{0}%
+				\def\CF_defaultstringangle{:0}% angle pris par défaut si le champ est vide
+				\def\CF_defaultlength{1}%
+				\let\CF_defaultfromatom\empty% numero de l'atome d'où partent les liaisons par défaut
+				\let\CF_defaulttoatom\empty% numéro de l'atome où arrivent les laisons par défaut
+				\let\CF_defaulttikz\empty
+				\let\CF_previousbondangle\empty
+				\let\CF_joinbond\CF_zero
+				\let\CF_previoustikz\empty
+				\everyeof{\_nil}\endlinechar-1
+				\CF_sanitizecatcode
+				\expandafter\CF_assigntonil\expandafter\CF_molecule\scantokens{#4}%
+				\CF_expsecond{\CF_substall\CF_molecule}\CFhash\CFhash
+				\CF_expsecond\CF_chemfigc{\CF_molecule}%
+			%\endgroup <-- rajouté par \CF_chemfigd
+		#2% fin du tikzpicture
+	\endgroup
+	\let\CF_flipstate\CF_zero
+}
+
+\def\CF_chemfigc#1{% #1 est le code de la molécule
+	\ifnum\CF_lastaction=3
+		\ifCF_incycle
+			\def\CF_defaultangle{0}%
+		\else
+			\ifnum\CF_cntcycle=0 % si c'est le début d'un cycle
+				\pgfmathsetmacro\CF_defaultangle{\CF_previousangle+180+\CF_cycleanglecorrection}% on met la liaison à +180° + correction
+			\else
+				\pgfmathsetmacro\CF_defaultangle{\CF_previousangle-90+180/\CF_cyclenum}% sinon à la bissectrice du sommet du cycle
+			\fi
+		\fi
+		\let\CF_defaultstringangle\empty
+	\fi
+	\let\CF_currentangle\CF_defaultangle
+	\def\CF_molecule{#1}%
+	\CF_seeksubmol% alias en premier ?
+	\if[\CF_threeea\noexpand\expandafter\CF_firsttonil\CF_molecule\_nil
+		\expandafter\CF_analyseoptarg\CF_molecule\_nil\CF_molecule
+		\CF_expsecond\CF_setbondangle{\CF_currentstringangle}\CF_currentangle
+		\let\CF_defaultangle\CF_currentangle
+		\let\CF_previousangle\CF_currentangle
+		\CF_doifnotempty\CF_currentstringangle{\let\CF_defaultangle\CF_currentangle}%
+		\CF_doifnotempty\CF_currentlength     {\let\CF_defaultlength\CF_currentlength}%
+		\CF_doifnotempty\CF_currentfromatom   {\let\CF_defaultfromatom\CF_currentfromatom}%
+		\CF_doifnotempty\CF_currenttoatom     {\let\CF_defaulttoatom\CF_currenttoatom}%
+		\CF_doifnotempty\CF_currenttikz       {\let\CF_defaulttikz\CF_currenttikz}%
+		\CF_seeksubmol
+	\fi
+	\edef\CF_defaultstringangle{:\CF_defaultangle}%
+	\let\CF_currentlength\CF_defaultlength
+	\let\CF_currentfromatom\CF_defaultfromatom
+	\let\CF_currenttoatom\CF_defaulttoatom
+	\let\CF_currenttikz\CF_defaulttikz
+	\ifCF_incycle% si on commence un cycle
+		\let\CF_currentangle\CF_previousangle
+		\ifCF_cyclearc% on doit tracer l'arc de cercle dans le cycle ?
+			\pgfmathsetmacro\CF_cyclearcradius{\CF_cycleradiuscoeff*\CF_currentlength*\CF_atomsep/(2*tan(180/\CF_cyclenum))}%
+			\pgfmathsetmacro\CF_cyclearcinitangle{\CF_currentangle+\CF_initcycleangle+180/\CF_cyclenum+90}
+			\pgfmathparse{\CF_currentlength*\CF_atomsep/(2*sin(180/\CF_cyclenum))}%
+			\node[at=(\CF_bondoutnode),shift=(\CF_cyclearcinitangle:\pgfmathresult pt)](arccenter){};% le centre de l'arc
+			\node[at=(arccenter),shift=(\CF_cyclearcstartangle:\CF_cyclearcradius pt)](initarc){};% le début de l'arc
+			\CF_expafter{\draw[}\CF_cyclearcdirecttikz](initarc) arc (\CF_cyclearcstartangle:\CF_cyclearcendangle:\CF_cyclearcradius pt);
+		\fi
+	\else
+		\let\CF_currentangle\CF_defaultangle
+	\fi
+	\ifnum\CF_lastaction=0
+		\let\CF_previousangle\CF_defaultangle
+		\node(CF_node){};
+		\CF_expsecond\CF_iffirsttokin{\CF_molecule}{-=(*~?<>}%
+			{\CF_insertemptygroup\CF_molecule}%
+			{}%
+	\fi
+	\CF_chemfigd
+}
+
+\def\CF_chemfigd{%
+	\let\CF_nextaction\CF_chemfigd% à priori, on reboucle
+	\CF_ifx\CF_molecule\empty
+		{\let\CF_nextaction\endgroup
+		}
+		{\CF_seeksubmol
+		\CF_expsecond\CF_seeknode{\CF_molecule}\CF_currentatomgroup\CF_molecule
+		\CF_ifx\empty\CF_currentatomgroup% pas de noeud pour commencer ?
+			{\def\CF_bondoutnode{%
+				n\CF_lastgroupnumber-%
+				\ifx\CF_currentfromatom\empty
+					\ifdim\CF_currentangle pt<90pt
+						\number\CF_cntatomgroup
+					\else
+						\ifdim\CF_currentangle pt>270pt
+							\number\CF_cntatomgroup
+						\else
+							1%
+						\fi
+					\fi
+				\else
+					\CF_currentfromatom
+				\fi}%
+			\CF_expafter{\futurelet\CF_toksa\CF_gobtonil}{\CF_molecule\relax\_nil}%
+			\CF_iffirsttokina{-=<>~}% la suite est une liaison
+				{\ifnum\CF_lastaction=2 % c'est la deuxième liaison consécutive ?
+					\CF_insertemptygroup\CF_molecule% insère un groupe vide
+					\edef\CF_bondoutnode{\CF_bondoutnode}%
+				\else
+					\ifCF_incycle
+						\advance\CF_cntcycle1
+					\fi
+					\CF_expsecond\CF_analysebond{\CF_molecule}\CF_bondtype
+					\edef\CF_bondoutnode{\CF_bondoutnode}%
+					\let\CF_molecule\CF_remainafterbond
+					\ifCF_incycle
+						\ifnum\CF_cntcycle=\CF_cyclenum\relax
+							\CF_threeea\CF_execfirst
+						\else
+							\ifnum\CF_cntcycle=1
+								\let\CF_cyclefirsttikz\CF_currenttikz
+								\CF_doifnotempty\CF_startoffset{\let\CF_cyclejoinlast\CF_zero}%
+							\fi
+							\CF_threeea\CF_execsecond
+						\fi
+					\else
+						\expandafter\CF_execsecond
+					\fi
+						{\let\CF_nextaction\endgroup
+						\CF_drawbond\CF_bondtype{\CF_bondoutnode}{\CF_hookcycle}\CF_previousatomgroup\CF_hookatomgroup
+						}%
+						{\node[at=(\CF_bondoutnode\ifCF_incycle\else\ifCF_macrofixedbondlength.\CF_currentangle\fi\fi),shift=(\ifcase\CF_flipstate\or180-\or-\fi\CF_currentangle:\CF_currentlength*\CF_atomsep)](CF_node){};
+						\let\CF_previousangle\CF_currentangle
+						\def\CF_lastaction{2}%
+						}%
+				\fi
+				\ifcat\relax\detokenize\expandafter{\romannumeral-`\.\expandafter\noexpand\CF_molecule}\relax
+				% s'il ne reste plus rien après la liaison (sans tenir compte de l'espace devant)-> insère un groupe vide
+					\CF_insertemptygroup\CF_molecule
+				\fi
+				}%
+				{\edef\CF_bondoutnode{\CF_bondoutnode}% évalue le l'atome de départ de liaison
+				\CF_ifx(\CF_toksa% une parenthèse pour commencer ?
+					{\ifnum\CF_lastaction=2 % il y avait une liaison juste avant ?
+						\CF_insertemptygroup\CF_molecule
+					\else
+						\CF_expsecond\CF_grabsubmol{\CF_molecule}%
+						\begingroup
+							\ifCF_incycle\def\CF_lastaction{3}\fi% on était dans un cycle
+							\CF_incyclefalse
+							\aftergroup\CF_chemfigd
+							\def\CF_nextaction{\CF_expsecond\CF_chemfigc{\CF_molinparen}}%
+					\fi
+					}%
+					{\CF_ifx\CF_molecule\empty
+						{\let\CF_nextaction\endgroup
+						}
+						{% ce qui reste après le noeud courant n'est pas vide, ne commence pas par "-=~", ni par une parenthèse
+						\CF_ifx*\CF_toksa% un cycle ?
+							{\ifnum\CF_lastaction=2
+								\CF_insertemptygroup\CF_molecule% insère un groupe vide
+							\else
+								\ifCF_incycle
+									\def\CF_lastaction{3}%
+								\fi% on était dans un cycle
+								\ifnum\CF_lastaction=3
+									\let\CF_lastcyclenum\CF_cyclenum
+								\fi
+								\CF_eexpsecond\CF_iffirsttokmatch{\expandafter\CF_gobarg\CF_molecule}*%
+									{\CF_eexpsecond{\def\CF_molecule}{\expandafter\CF_gobarg\CF_molecule}% enlève la 1er étoile
+									\CF_eexpsecond\CF_iffirsttokmatch{\expandafter\CF_gobarg\CF_molecule}[% un crochet ensuite ?
+										{\expandafter\CF_cycleparsepreamblewithoptarg\CF_molecule\_nil% \begingroup inclus
+										}%
+										{\def\CF_cyclearcstartangle{0}\def\CF_cyclearcendangle{360}%
+										\let\CF_cyclearcdirecttikz\empty
+										\expandafter\CF_cycleparsepreamble\CF_molecule\_nil% \begingroup inclus
+										}%
+									\CF_cyclearctrue
+									}%
+									{\expandafter\CF_cycleparsepreamble\CF_molecule\_nil% \begingroup inclus
+									\CF_cyclearcfalse
+									}%
+								\CF_cntcycle0
+								\edef\CF_hookcycle{\CF_bondoutnode}%
+								\let\CF_hookatomgroup\CF_previousatomgroup
+								\CF_ifx\CF_hookatomgroup\CF_emptynode
+									{\def\CF_cyclejoinlast{1}}% joindre le dernier
+									{\def\CF_cyclejoinlast{0}}
+								\CF_incycletrue
+								\ifnum\CF_lastaction=3
+									\pgfmathsetmacro\CF_initcycleangle{360/\CF_lastcyclenum-180}% c'est un cycle dans un cycle
+								\else
+									\pgfmathsetmacro\CF_initcycleangle{-180/\CF_cyclenum-90+\CF_cycleanglecorrection}%
+								\fi
+								\aftergroup\CF_chemfigd
+								\def\CF_nextaction{\CF_expsecond\CF_chemfigc{\CF_molinparen}}%
+							\fi
+							}%
+							{\CF_error{something went wrong here: \detokenize\expandafter{\CF_molecule}^^JIf you think it's a bug, please, send a Minimal Example to the author}%
+							}%
+						}%
+					}%
+				}%
+			}%
+			{\CF_expthreemacroargs\CF_drawatomgroup\CF_currentangle\CF_currenttoatom\CF_currentatomgroup
+			}%
+		}%
+	\CF_nextaction
+}
+
+\def\CF_cycleparsepreamble*#1#2\_nil{%
+	\ifnum#1<3
+		\CF_error{a cycle must be at least a triangle.^^JThe number following "*" must be 3 or more}%
+	\fi
+	\def\CF_molecule{#2}%
+	\CF_expsecond\CF_grabsubmol{\CF_molecule}%
+	\begingroup
+	\def\CF_cyclenum{#1}%
+}
+
+\def\CF_cycleparsepreamblewithoptarg*[#1]#2#3\_nil{%
+	\CF_cycleparseoptarg#1,\empty,\empty,\empty\_nil
+	\CF_cycleparsepreamble*#2#3\_nil
+}
+
+\def\CF_cycleparseoptarg#1,#2,#3\_nil{%
+	\CF_ifempty{#1}
+		{\def\CF_cyclearcstartangle{0}}
+		{\def\CF_cyclearcstartangle{#1}}%
+	\CF_ifempty{#2}
+		{\def\CF_cyclearcendangle{360}}
+		{\def\CF_cyclearcendangle{#2}}%
+	\CF_expsecond{\def\CF_cyclearcdirecttikz}{\CF_sanitizelastitem#3,\empty\_nil}%
+}
+
+\def\CF_grabsubmol#1{%
+	\begingroup
+		\catcode`(1 \catcode`)2
+		\CF_threeea
+	\endgroup
+	\expandafter\CF_grabsubmola\scantokens{\relax#1}%
+}
+
+\def\CF_grabsubmola#1\_nil{%
+	\expandafter\CF_assigntonil\expandafter\CF_molecule\scantokens\CF_threeea{\expandafter\CF_gobarg    \CF_gobarg#1}%
+	\expandafter\CF_assigntonil\expandafter\CF_molinparen\scantokens\CF_threeea{\expandafter\CF_firsttonil\CF_gobarg#1\_nil}%
+}
+
+\def\CF_ifcarisupperletter#1{%
+	\ifcat\relax\noexpand#1%
+		\let\CF_next\CF_execsecond% faux si c'est une sc
+	\else
+		\ifnum`#1<`A
+			\let\CF_next\CF_execsecond
+		\else
+			\ifnum`#1>`Z
+				\let\CF_next\CF_execsecond
+			\else
+				\let\CF_next\CF_execfirst
+			\fi
+		\fi
+	\fi
+	\CF_next
+}
+
+% Créé 4 noeuds au dessus et au dessous des noeuds #1 et #2
+% à une distance de #3 du noeud #1 et #4 du noeud #2
+\def\CF_createnormnodes#1#2#3#4{%
+	\CF_doifnotempty{#3}
+		{\node[shape=coordinate,at=(#1),xshift=#3*\CF_normx,yshift=#3*\CF_normy](#11){};
+		\node[shape=coordinate,at=(#1),xshift=-#3*\CF_normx,yshift=-#3*\CF_normy](#12){};
+		}%
+	\CF_doifnotempty{#4}
+		{\node[shape=coordinate,at=(#2),xshift=#4*\CF_normx,yshift=#4*\CF_normy](#21){};
+		\node[shape=coordinate,at=(#2),xshift=-#4*\CF_normx,yshift=-#4*\CF_normy](#22){};
+		}%
+}
+
+\def\CF_computenodevect#1#2{%
+	\pgfextractx\CF_dim{\pgfpointanchor{#1}{center}}\edef\CF_dimax{\the\CF_dim}%
+	\pgfextracty\CF_dim{\pgfpointanchor{#1}{center}}\edef\CF_dimay{\the\CF_dim}%
+	\pgfextractx\CF_dim{\pgfpointanchor{#2}{center}}\edef\CF_dimbx{\the\CF_dim}%
+	\pgfextracty\CF_dim{\pgfpointanchor{#2}{center}}\edef\CF_dimby{\the\CF_dim}%
+	\pgfmathsetmacro\CF_vectorlen{veclen(\CF_dimbx-\CF_dimax,\CF_dimby-\CF_dimay)}%
+	\pgfmathsetmacro\CF_normx{(\CF_dimay-\CF_dimby)/\CF_vectorlen}%
+	\pgfmathsetmacro\CF_normy{(\CF_dimbx-\CF_dimax)/\CF_vectorlen}%
+}
+
+\def\CF_setoffset#1#2{%
+	\CF_doifempty#1%
+		{\edef#1{%
+			\ifx#2\CF_emptynode
+				0pt%
+			\else
+				\ifx#2\empty
+					0pt%
+				\else
+					\CF_bondoffset
+				\fi
+			\fi}%
+		}%
+}
+
+\def\CF_drawbond#1#2#3#4#5{% #1=type de liaison #2 et #3:nom de noeuds de début et fin #4 et #5: contenu des atomes de début et fin
+	\CF_setoffset\CF_startoffset#4%
+	\CF_setoffset\CF_endoffset#5%
+	\let\CF_currentbondstyle\CF_bondstyle
+	\CF_doifnotempty\CF_currenttikz{\CF_eaddtomacro\CF_currentbondstyle{\expandafter,\CF_currenttikz}}%
+	\path(#2)--(#3)coordinate[pos=0](#2@)coordinate[pos=1](#3@);%
+	\CF_computenodevect{#2@}{#3@}%
+	\pgfmathsetmacro\CF_startcoeff{\CF_startoffset/\CF_vectorlen}%
+	\pgfmathsetmacro\CF_endcoeff{1-\CF_endoffset/\CF_vectorlen}%
+	\path(#2@)--(#3@)coordinate[pos=\CF_startcoeff](#2@@)coordinate[pos=\CF_endcoeff](#3@@);%
+	\CF_doifnotempty\CF_movebondname% on doit poser un noeud sur la liaison
+		{\path(#2@@)--(#3@@)coordinate[overlay,pos=\CF_movebondcoeff](\CF_movebondname);
+		\let\CF_movebondname\empty
+		}%
+	\ifcase#1\relax
+		\CF_error{unknown bond type, this error should not occur^^JIf you think it's a bug, send a Minimal Example to the author}%
+	\or% 1 = liaison simple
+		\CF_drawaxisbond{#2}{#3}% trace la liaison simple dans l'axe
+	\or% 2 = liaison double
+		\ifCF_incycle
+			\ifnum\CF_doublebondtype=0
+				\def\CF_doublebondtype{1}%
+			\fi
+			\ifnum\CF_flipstate>0
+				\def\CF_doublebondtype{2}%
+			\fi
+			\pgfmathsetmacro\CF_doublebondlengthcorrection{\CF_doublesep*tan(180/\CF_cyclenum)}%
+		\fi
+		\ifcase\CF_doublebondtype
+			\CF_createnormnodes{#2@@}{#3@@}{\CF_doublesep/2}{\CF_doublesep/2}%
+			\CF_drawbonda(#2@@1)--(#3@@1);
+			\CF_drawbonda(#2@@2)--(#3@@2);
+			\let\CF_joinbond\CF_zero
+		\or
+			\CF_createnormnodes{#2@@}{#3@@}\CF_doublesep\CF_doublesep
+			\CF_drawaxisbond{#2}{#3}% trace la liaison simple dans l'axe\CF_drawbonda(#2@@)--(#3@@);
+			\begingroup% ajuste éventuellement les longueurs des liaisons doubles
+				\ifCF_incycle
+					\ifdim\CF_startoffset=0pt
+						\CF_edefaddtomacro\CF_currentbondstyle{,shorten <=\CF_doublebondlengthcorrection pt}%
+					\fi
+					\ifdim\CF_endoffset=0pt
+						\CF_edefaddtomacro\CF_currentbondstyle{,shorten >=\CF_doublebondlengthcorrection pt}%
+					\fi
+				\fi
+				\CF_drawbonda(#2@@1)--(#3@@1);
+			\endgroup
+		\or
+			\CF_createnormnodes{#2@@}{#3@@}\CF_doublesep\CF_doublesep
+			\CF_drawaxisbond{#2}{#3}% trace la liaison simple dans l'axe\CF_drawbonda(#2@@)--(#3@@);
+			\begingroup% ajuste éventuellement les longueurs des liaisons doubles
+				\ifCF_incycle
+					\ifdim\CF_startoffset=0pt
+						\CF_edefaddtomacro\CF_currentbondstyle{,shorten \ifnum\CF_flipstate=0 <=-\else>=\fi\CF_doublebondlengthcorrection pt}%
+					\fi
+					\ifdim\CF_endoffset=0pt
+						\CF_edefaddtomacro\CF_currentbondstyle{,shorten \ifnum\CF_flipstate=0 >=-\else<=\fi\CF_doublebondlengthcorrection pt}%
+					\fi
+				\fi
+				\CF_drawbonda(#2@@2)--(#3@@2);
+			\endgroup
+		\fi
+	\or% 3 = liaison triple
+		\CF_createnormnodes{#2@@}{#3@@}\CF_doublesep\CF_doublesep
+		\CF_drawaxisbond{#2}{#3}% trace la liaison simple dans l'axe\CF_drawbonda(#2@@)--(#3@@);
+		\CF_drawbonda(#2@@1)--(#3@@1);
+		\CF_drawbonda(#2@@2)--(#3@@2);
+	\or% 4 = liaison Cram pleine de #2 vers #3
+		\CF_createnormnodes{#2@@}{#3@@}{\CF_crambasewidth/2}{}%
+		\CF_expafter{\filldraw[}\CF_currentbondstyle,line join=bevel](#2@@1)--(#2@@2)--(#3@@)--cycle;
+		\let\CF_joinbond\CF_zero
+	\or% 5 = liaison Cram creuse de #3 vers #2
+		\CF_createnormnodes{#3@@}{#2@@}{\CF_crambasewidth/2}{}%
+		\CF_expafter{\filldraw[}\CF_currentbondstyle,line join=bevel](#3@@1)--(#3@@2)--(#2@@)--cycle;
+		\let\CF_joinbond\CF_zero
+	\or% 6 = liaison Cram pointillée de #2 vers #3
+		\scope
+			\CF_createnormnodes{#2@@}{#3@@}{\CF_crambasewidth/2}{}%
+			\CF_clipcramornot(#2@@1)--(#2@@2)--(#3@@)--(#2@@1);
+			\CF_expafter{\draw[}\CF_currentbondstyle,dash pattern=on \CF_cramdashlength off \CF_cramdashsep,line width=\CF_crambasewidth](#2@@)--(#3@@);
+		\endscope
+		\let\CF_joinbond\CF_zero
+	\or% 7 = liaison Cram pointillée de #3 vers #2
+		\scope
+			\CF_createnormnodes{#3@@}{#2@@}{\CF_crambasewidth/2}{}%
+			\CF_clipcramornot(#3@@1)--(#3@@2)--(#2@@)--(#3@@1);
+			\CF_expafter{\draw[}\CF_currentbondstyle,dash pattern=on \CF_cramdashlength off \CF_cramdashsep,line width=\CF_crambasewidth](#3@@)--(#2@@);
+		\endscope
+		\let\CF_joinbond\CF_zero
+	\or% 8 = liaison cram rectangle évidé de #2 vers #3
+		\CF_createnormnodes{#2@@}{#3@@}{\CF_crambasewidth/2}{}%
+		\CF_expafter{\draw[}\CF_currentbondstyle,line join=bevel](#2@@1)--(#2@@2)--(#3@@)--cycle;
+		\let\CF_joinbond\CF_zero
+	\or% 9 = liaison cram rectangle évidé de #3 vers #1
+		\CF_createnormnodes{#3@@}{#2@@}{\CF_crambasewidth/2}{}%
+		\CF_expafter{\draw[}\CF_currentbondstyle,line join=bevel](#3@@1)--(#3@@2)--(#2@@)--cycle;
+		\let\CF_joinbond\CF_zero
+	\else
+		\CF_error{unknown bond type, this error should not occur^^JIf you think it's a bug, send a Minimal Example to the author}%
+	\fi
+	\let\CF_startoffset\empty
+	\let\CF_endoffset\empty
+	\let\CF_previoustikz\CF_currenttikz
+	\let\CF_previousbondangle\CF_previousangle
+	\def\CF_previousbond{#1}%
+}
+
+\def\CF_drawaxisbondnojoin#1#2{\CF_drawbonda(#1@@)--(#2@@);}
+
+\def\CF_drawaxisbondjoin#1#2{% dessine une liaison simple dans l'axe avec raccord rétrograde
+	\ifCF_incycle\ifnum\CF_cntcycle=\CF_cyclenum\relax
+		\let\CF_nexttikz\CF_cyclefirsttikz
+	\fi\fi
+	\ifnum\CF_joinbond=0
+		\ifCF_incycle
+			\ifnum\CF_cntcycle=\CF_cyclenum\relax
+				\ifnum\CF_cyclejoinlast=1
+					\CF_drawbonda(#1@@)--(#2@@)--%
+						([shift=(\CF_previousbondangle+2*\CF_cycleincrementangle:.5\pgflinewidth)]#2@@);
+				\else
+					\CF_drawbonda(#1@@)--(#2@@);
+				\fi
+			\else
+				\CF_drawbonda(#1@@)--(#2@@);
+			\fi
+		\else
+			\CF_drawbonda(#1@@)--(#2@@);
+		\fi
+		\def\CF_joinbond{1}%
+	\else
+		\CF_ifx\CF_previoustikz\CF_currenttikz
+			{\def\CF_joinbond{1}%
+			\CF_ifx\CF_previousatomgroup\CF_emptynode
+				{\CF_ifx\CF_previousbondangle\empty% si début molécule
+					{\CF_drawbonda(#1@@)--(#2@@);
+					}
+					{\ifdim\CF_startoffset=0pt
+						\ifCF_incycle
+							\ifnum\CF_cntcycle=\CF_cyclenum\relax
+								\ifnum\CF_cyclejoinlast=1
+									\CF_ifx\CF_cyclefirsttikz\CF_currenttikz
+										{\CF_drawbonda([shift=(\CF_previousbondangle:-.5\pgflinewidth)]#1@@)--(#1@@)--(#2@@)--%
+										([shift=(\CF_previousbondangle+2*\CF_cycleincrementangle:.5\pgflinewidth)]#2@@);
+										}
+										{\CF_drawbonda([shift=(\CF_previousbondangle:-.5\pgflinewidth)]#1@@)--(#1@@)--(#2@@);
+										}%
+								\else
+									\CF_drawbonda([shift=(\CF_previousbondangle:-.5\pgflinewidth)]#1@@)--(#1@@)--(#2@@);
+								\fi
+							\else
+								\CF_drawbonda([shift=(\CF_previousbondangle:-.5\pgflinewidth)]#1@@)--(#1@@)--(#2@@);
+							\fi
+						\else
+							\CF_drawbonda([shift=(\CF_previousbondangle:-.5\pgflinewidth)]#1@@)--(#1@@)--(#2@@);
+						\fi
+					\else
+						\CF_drawbonda(#1@@)--(#2@@);
+					\fi
+					}%
+				}
+				{\CF_drawbonda(#1@@)--(#2@@);}%
+			}
+			{\ifCF_incycle
+				\ifnum\CF_cntcycle=\CF_cyclenum\relax
+					\ifnum\CF_cyclejoinlast=1
+						\CF_ifx\CF_nexttikz\CF_currenttikz
+							{\CF_drawbonda(#1@@)--(#2@@)--([shift=(\CF_previousbondangle+2*\CF_cycleincrementangle:.5\pgflinewidth)]#2@@);}%
+							{\CF_drawbonda(#1@@)--(#2@@);}%
+					\else
+						\CF_drawbonda(#1@@)--(#2@@);
+					\fi
+				\else
+					\CF_drawbonda(#1@@)--(#2@@);
+				\fi
+			\else
+				\CF_drawbonda(#1@@)--(#2@@);
+			\fi
+			}%
+	\fi
+	\ifdim\CF_endoffset=0pt \else
+		\let\CF_joinbond\CF_zero
+	\fi
+}
+
+\def\CF_drawbonda{\CF_expafter{\draw[}\CF_currentbondstyle]}
+
+\def\CF_hookdrawall{% dessine tous les crochets contenus dans la sc \CF_hookdraw
+	\CF_doifnotempty\CF_hookdrawlist
+		{\expandafter\CF_hookdrawfirst\CF_hookdrawlist\_nil% trace un lien de crochet à crochet
+		\CF_hookdrawall
+		}%
+}
+
+\def\CF_hookdrawfirst[#1,#2,#3]#4#5#6#7#8\_nil{%
+	\def\CF_hookdrawlist{#8}%
+	\begingroup
+		\let\CF_joinbond\CF_zero
+		\def\CF_currenttikz{#3}%
+		\def\CF_hookstartcontent{#6}\def\CF_hookendcontent{#7}%
+		\CF_ifinteger{#2}%
+			{\CF_drawbond{#2}{#4}{#5}\CF_hookstartcontent\CF_hookendcontent
+			}%
+			{\CF_assignbondcode{#2}\CF_bondcurrentnum
+			\CF_drawbond\CF_bondcurrentnum{#4}{#5}\CF_hookstartcontent\CF_hookendcontent
+			}%
+	\endgroup
+}
+
+\def\CF_extractatom#1-#2\_nil{#2}% transforme le bound@outnode en n° de l'atome
+
+\def\CF_gobblemovearg @#1#2\_nil#3{%
+	\expandafter\def\csname atom_\number\CF_cntatom\endcsname{#2}%
+	\CF_ifinstr{#1},%
+		{\CF_analysemovearg#1\_nil#3\let\CF_movebondcoeff\empty}%
+		{\def#3{#1}}%
+	\CF_doifempty{#2}{\let\CF_nodestrut\empty}%
+}%
+
+\def\hflipnext{\def\CF_flipstate{1}}
+
+\def\vflipnext{\def\CF_flipstate{2}}
+\let\CF_flipstate\CF_zero
+
+\def\CF_drawatomgroup#1#2#3{% #1=angle d'arrivée de la liaison #2=numero atome sur lequel arrive la liaison #3=groupe d'atomes
+	\expandafter\let\expandafter\CF_bondoutcontent% assigne le contenu de l'atome d'où part la liaison
+		\csname
+			\ifdefined\CF_bondoutnode
+				atom_\expandafter\CF_extractatom\CF_bondoutnode\_nil
+			\else
+				empty%
+			\fi
+		\endcsname
+	\global\advance\CF_cntgroup1
+	\let\CF_currentatom\empty
+	\global\let\CF_hookdrawlist\empty
+	\CF_cntatomgroup0
+	\CF_iffirsttokmatch{#3}?
+		{\CF_drawatomgroupa{{}#3}}
+		{\CF_drawatomgroupa{#3}}%
+	\def\CF_currentatomgroup{#3}%
+	\CF_removemovearg\CF_currentatomgroup% enlève les "@{<nom>}"
+	\CF_ifinstr{#3}?%
+		{\CF_removehook\CF_currentatomgroup
+		\ifcat\relax\detokenize\expandafter{\romannumeral-`\.\expandafter\noexpand\CF_currentatomgroup}\relax
+			\let\CF_currentatomgroup\CF_emptynode
+		\fi
+		}%
+		{}%
+	\CF_doifnotempty{#2}
+		{\ifnum#2<1
+			\CF_warning{no atom found at position #2, pershaps you mispelled the optional argument of the bond.}%
+		\else
+			\ifnum#2>\CF_cntatomgroup
+				\CF_error{no atom found at position #2, pershaps you mispelled the optional argument of the bond.}%
+			\fi
+		\fi
+		}%
+	\edef\CF_hookatomnumber{%
+		\CF_ifempty{#2}
+			{\ifdim#1pt>90pt
+				\ifdim#1pt<270pt
+					\number\CF_cntatomgroup
+				\else
+					1%
+				\fi
+			\else
+				1%
+			\fi
+			}
+			{#2%
+			}%
+	}%
+	\CF_cntatom\CF_hookatomnumber
+	\CF_ifx\CF_currentatomgroup\CF_emptynode
+		{\let\CF_nodestrut\empty
+		}
+		{\CF_ifx\empty\CF_bondoutcontentsaved
+			{\def\CF_nodestrut{\vphantom\CF_bondoutcontent}}%
+			{\def\CF_nodestrut{\vphantom\CF_bondoutcontentsaved}}%
+		}%
+	\edef\CF_optstring{anchor=\ifnum\CF_lastaction=0 base\else\ifCF_incycle center\else\ifCF_macrofixedbondlength 180+#1\else center\fi\fi\fi,at=(CF_node),\CF_nodestyle}% premier atome de la molécule affiché
+	\loop
+		\unless\ifnum\CF_cntatom>\CF_cntatomgroup
+		\CF_eexpafter
+			{\futurelet\CF_toksa}
+			{\expandafter\expandafter\expandafter\CF_gobtonil\csname atom_\number\CF_cntatom\endcsname\_nil}%
+		\CF_ifx @\CF_toksa% l'atome courant commence par un "@"
+			{\CF_threeea\CF_gobblemovearg\csname atom_\number\CF_cntatom\endcsname\_nil\CF_moveatomname
+			\CF_expafter{\node[}\CF_optstring,overlay](\CF_moveatomname){\phantom{\CF_nodecontent}};%
+			\let\CF_moveatomname\empty
+			}
+			{}%
+		\CF_expafter{\node[}\CF_optstring](n\number\CF_cntgroup-\number\CF_cntatom){\CF_nodecontent};%
+		\let\CF_nodestrut\empty
+		\advance\CF_cntatom1
+		\edef\CF_optstring{anchor=base \ifnum\CF_flipstate=1 east\else west\fi,at=(n\number\CF_cntgroup-\number\numexpr\CF_cntatom-1.base \ifnum\CF_flipstate=1 west\else east\fi),\CF_nodestyle}%
+	\repeat
+	\CF_cntatom\CF_hookatomnumber
+	\ifnum\CF_lastaction=2 % s'il faut tracer une liaison
+		\gdef\CF_cycleanglecorrection{0}% alors c'est qu'un cycle ne peut pas commencer la molécule : annulation de la correction d'angle
+		\CF_drawbond\CF_bondtype{\CF_bondoutnode}{n\number\CF_cntgroup-\number\CF_cntatom}\CF_previousatomgroup\CF_currentatomgroup
+	\fi
+	\def\CF_lastaction{1}% met la dernière action à 1 : affichage d'un noeud
+	\loop
+		\ifnum\CF_cntatom>1
+		\advance\CF_cntatom-1
+		\edef\CF_optstring{anchor=base \ifnum\CF_flipstate=1 west\else east\fi,at=(n\number\CF_cntgroup-\number\numexpr\CF_cntatom+1.base \ifnum\CF_flipstate=1 east\else west\fi),\CF_nodestyle}%
+		\CF_eexpafter
+			{\futurelet\CF_toksa}
+			{\expandafter\expandafter\expandafter\CF_gobtonil\csname atom_\number\CF_cntatom\endcsname\_nil}%
+		\CF_ifx @\CF_toksa% l'atome courant commence par un "@"
+			{\CF_threeea\CF_gobblemovearg\csname atom_\number\CF_cntatom\endcsname\_nil\CF_moveatomname
+			\CF_expafter{\node[}\CF_optstring,overlay](\CF_moveatomname){\phantom{\CF_nodecontent}};%
+			\let\CF_moveatomname\empty
+			}
+			{}%
+		\CF_expafter{\node[}\CF_optstring](n\number\CF_cntgroup-\number\CF_cntatom){\CF_nodecontent};%
+	\repeat
+	\CF_hookdrawall
+	\edef\CF_lastgroupnumber{\number\CF_cntgroup}%
+	\let\CF_previousatomgroup\CF_currentatomgroup
+}
+
+\def\CF_keepmovearg @#1#2\_nil{\def\CF_currentatom{@{#1}}}
+
+\def\CF_drawatomgroupa#1{% transforme #1 en un groupe d'atomes
+	\CF_ifempty{#1}
+		{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+		}
+		{\advance\CF_cntatomgroup1
+		\futurelet\CF_toksa\CF_gobtonil#1\_nil
+		\CF_ifx @\CF_toksa
+			{\CF_keepmovearg#1\_nil
+			\CF_removemovearga#1\_nil\CF_aftermovearg
+			\CF_expsecond\CF_drawatomgroupb{\CF_aftermovearg}%
+			}%
+			{\let\CF_currentatom\empty
+			\CF_drawatomgroupb{#1}%
+			}%
+		}%
+}
+
+\def\CF_drawatomgroupb#1{%
+	\CF_ifempty{#1}
+		{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+		}
+		{\futurelet\CF_toksa\CF_gobtonil#1\_nil
+		\CF_ifx\bgroup\CF_toksa
+			{\CF_eaddtomacro\CF_currentatom{\expandafter{\CF_firsttonil#1\_nil}}%
+			\CF_expsecond\CF_drawatomgroupba{\CF_gobarg#1}%
+			}%
+			{\CF_ifx\CF_sptoken\CF_toksa
+				{\CF_addtomacro\CF_currentatom{ }%
+				\CF_expsecond\CF_drawatomgroupba{\CF_afterspace#1\_nil}%
+				}%
+				{\CF_eaddtomacro\CF_currentatom{\CF_firsttonil#1\_nil}%
+				\CF_expsecond\CF_drawatomgroupba{\CF_gobarg#1}%
+				}%
+			}%
+		}%
+}
+
+% enlève tous les "@{nom}" de la sc #1
+\def\CF_removemovearg#1{%
+	\CF_expsecond\CF_ifinstr{#1}@%
+		{\expandafter\CF_removemovearga#1\_nil#1%
+		\CF_removemovearg#1%
+		}%
+		{}%
+}
+
+% enlève le premier "@{<nom>}" de l'argument et l'assigne à #2
+\def\CF_removemovearga#1\_nil#2{%
+	\def\CF_removemoveargb##1@{%
+		\CF_expsecond{\def#2}{\CF_gobarg##1}% mange le \relax
+		\CF_removemoveargc\relax
+	}%
+	\def\CF_removemoveargc##1\_nil{\CF_eaddtomacro#2{\CF_gobtwoargs##1}}% mange le \relax et le <nom>
+	\CF_removemoveargb\relax#1\_nil
+}
+
+\def\CF_drawatomgroupba#1{% transforme #1 en un groupe d'atomes
+	\CF_ifempty{#1}
+		{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+		\let\CF_currentatom\empty
+		}
+		{\futurelet\CF_toksa\CF_gobtonil#1\_nil
+		\CF_ifx @\CF_toksa
+			{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+			\let\CF_currentatom\empty
+			\CF_drawatomgroupa{#1}%
+			}%
+			{\CF_ifx|\CF_toksa
+				{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+				\let\CF_currentatom\empty
+				\CF_expsecond\CF_drawatomgroupa{\CF_gobarg#1}%
+				}%
+				{\CF_ifx\CF_sptoken\CF_toksa
+					{\CF_addtomacro\CF_currentatom{ }%
+					\CF_expsecond\CF_drawatomgroupba{\CF_afterspace#1\_nil}%
+					}%
+					{\CF_ifx\bgroup\CF_toksa
+						{\CF_eaddtomacro\CF_currentatom{\expandafter{\CF_firsttonil#1\_nil}}%
+						\CF_expsecond\CF_drawatomgroupba{\CF_gobarg#1}%
+						}%
+						{\CF_expsecond\CF_ifcarisupperletter{\CF_firsttonil#1\_nil}%
+							{\expandafter\let\csname atom_\number\CF_cntatomgroup\endcsname\CF_currentatom
+							\let\CF_currentatom\empty
+							\CF_drawatomgroupa{#1}%
+							}%
+							{\CF_ifx?\CF_toksa
+								{\CF_expsecond\CF_iffirsttokmatch{\CF_gobarg#1}[% un crochet après le "?"
+									{\expandafter\CF_graboptarg\CF_gobarg#1\_nil\CF_afterhook}%
+									{\CF_expafter{\CF_graboptarg[]}{\CF_gobarg#1}\_nil\CF_afterhook}%
+								\CF_exptwomacroargs\CF_ifinstr{\CF_hooklist}{\expandafter(\CF_hookcurrentname)}% crochet déjà défini ?
+									{\CF_expsecond\CF_hookparselist{\CF_hookcurrentname}% chercher les caractéristiques du crochet sauvegardé
+									\CF_edefaddtomacro\CF_hookdrawlist{%
+										[\CF_hookcurrentname,\CF_hookcurrentlink,\CF_hookcurrenttikz]{\CF_hooksavedcoord}{n\number\CF_cntgroup-\number\CF_cntatomgroup}}%
+									\CF_eaddtomacro\CF_hookdrawlist{\expandafter{\CF_hooksavedcontent}}%
+									\CF_eaddtomacro\CF_hookdrawlist{\expandafter{\CF_currentatom}}% ajoute les 4 arguments à la liste des crochets à tracer
+									\global\let\CF_hookdrawlist\CF_hookdrawlist
+									}%
+									{\CF_edefaddtomacro\CF_hooklist{(\CF_hookcurrentname)|n\number\CF_cntgroup-\number\CF_cntatomgroup|}%
+									\CF_eaddtomacro\CF_hooklist{\CF_currentatom|}%
+									\global\let\CF_hooklist\CF_hooklist
+									}%
+								\CF_expsecond\CF_drawatomgroupba{\CF_afterhook}%
+								}%
+								{\CF_eaddtomacro\CF_currentatom{\CF_firsttonil#1\_nil}%
+								\CF_expsecond\CF_drawatomgroupba{\CF_gobarg#1}%
+								}%
+							}%
+						}%
+					}%
+				}%
+			}%
+		}%
+}
+
+\def\CF_kookdefaultname{a}
+\def\CF_hookdefaultlink{-}
+\def\CF_hookdefaulttikz{}
+
+\def\CF_hookparseoptarg#1,#2,#3\_nil{%
+	\CF_testemptyandassign\CF_hookcurrentname{#1}\CF_kookdefaultname
+	\CF_testemptyandassign\CF_hookcurrentlink{#2}\CF_hookdefaultlink
+	\CF_testemptyandassign\CF_hookcurrenttikz{#3}\CF_hookdefaulttikz
+}
+
+\def\CF_graboptarg[#1]#2\_nil#3{%
+	\CF_hookparseoptarg#1,,\_nil
+	\def#3{#2}%
+}
+
+\def\CF_hookparselist#1{% #1 est le nom du noeud à retrouver
+	\def\CF_hookparselista##1(#1)|##2|##3|##4\_nil{\def\CF_hooksavedcoord{##2}\def\CF_hooksavedcontent{##3}}%
+	\expandafter\CF_hookparselista\CF_hooklist\_nil
+}
+
+\def\CF_removehook#1{%
+	\CF_expsecond\CF_ifinstr{#1}?%
+		{\CF_expafter{\CF_removehooka\relax}#1\_nil#1%
+		\CF_removehook#1%
+		}
+		{}%
+}
+
+\def\CF_removehooka#1?#2\_nil#3{%
+	\CF_iffirsttokmatch{#2}[%
+		{\CF_removehookb#1?#2\_nil#3}
+		{\CF_expsecond{\def#3}{\CF_gobarg#1#2}}%
+}
+
+\def\CF_removehookb#1?[#2]#3\_nil#4{\CF_expsecond{\def#4}{\CF_gobarg#1#3}}
+
+\def\Lewis{%
+	\CF_lewisoverlayfalse
+	\CF_testopt\CF_lewisa{}%
+}
+
+\def\lewis{%
+	\CF_lewisoverlaytrue
+	\CF_testopt\CF_lewisa{}%
+}
+
+\def\CF_lewisa[#1]{%
+	\begingroup
+		\CF_doifnotempty{#1}{\setchemfig{#1}}%
+		\CF_valuetomacro\CF_lewiswidthdouble[0.3ex]{lewis | width}%
+		\CF_valuetomacro\CF_lewisoffset     [0.4ex]{lewis sep}%
+		\CF_valuetomacro\CF_lewislength     [1.5ex]{lewis length}%
+		\CF_valuetomacro\CF_lewisstyle      []{lewis style}%
+		\CF_valuetomacro\CF_lewisdist       [0.3em]{lewis dist}%
+		\CF_valuetomacro\CF_lewisradius     [0.15ex]{lewis radius}%
+		\CF_valuetomacro\CF_lewisdiagcoeff  [1]{lewis diag coeff}%
+		\ifCF_lewisoverlay
+			\CF_addtomacro\CF_lewisstyle{,overlay}%
+		\fi
+		\CF_lewisb
+}
+
+\def\CF_lewisb#1{%
+		\CF_lewisc#1\_nil
+	\endgroup
+}
+
+\def\CF_lewisc#1,#2\_nil{%
+	\setbox\CF_boxlewis\hbox{\printatom{#2}}% mettre en dehors de tikzpicture (si \printatom ne passe pas en mode math)
+	\tikzpicture[every node/.style={anchor=base,inner sep=0pt,outer sep=0pt,minimum size=0pt},baseline]%
+		\CF_makeother;\CF_makeother:%
+		\node(CF_lewis@anchor){};
+		\def\CF_lewisremainpos{#1}%
+		\let\CF_lewispreviouspos\empty
+		\loop
+			\unless\ifx\CF_lewisremainpos\empty
+				\edef\CF_lewiscurrentpos{\expandafter\CF_firsttonil\CF_lewisremainpos\_nil}%
+				\edef\CF_lewisremainpos{\expandafter\CF_gobarg\CF_lewisremainpos}%
+				\pgfmathsetmacro\CF_lewisx{\wd\CF_boxlewis/2+\ifcase\CF_lewiscurrentpos\space1\or1\or0\or-1\or-1\or-1\or0\or1\fi*(\wd\CF_boxlewis/2)}%
+				\pgfmathsetmacro\CF_lewisy{\ht\CF_boxlewis/2+\ifcase\CF_lewiscurrentpos\space0\or1\or1\or1\or0\or-1\or-1\or-1\fi*(\ht\CF_boxlewis/2\ifnum\CF_lewiscurrentpos>4 +\dp\CF_boxlewis\fi)}%
+				\edef\CF_lewisxoffset{\ifcase\CF_lewiscurrentpos\space1\or0.70711\or0\or-0.70711\or-1\or-0.70711\or0\or0.70711\fi}%
+				\edef\CF_lewisyoffset{\ifcase\CF_lewiscurrentpos\space0\or0.70711\or1\or0.70711\or0\or-0.70711\or-1\or-0.70711\fi}%
+				\ifodd\CF_lewiscurrentpos\relax
+					\pgfmathsetmacro\CF_lewiscurrentoffset{\CF_lewisoffset*\CF_lewisdiagcoeff}%%
+				\else
+					\let\CF_lewiscurrentoffset\CF_lewisoffset
+				\fi
+				\if.\expandafter\CF_firsttonil\CF_lewisremainpos\relax\_nil
+					\edef\CF_lewisremainpos{\expandafter\CF_gobarg\CF_lewisremainpos}%
+					\CF_expafter{\draw[fill,black,}{\CF_lewisstyle]}%
+						(\CF_lewisx pt+\CF_lewisxoffset*\CF_lewiscurrentoffset,\CF_lewisy pt+\CF_lewisyoffset*\CF_lewiscurrentoffset)circle(\CF_lewisradius);%
+				\else
+					\if|\expandafter\CF_firsttonil\CF_lewisremainpos\relax\_nil
+						\edef\CF_lewisremainpos{\expandafter\CF_gobarg\CF_lewisremainpos}%
+						\pgfmathsetmacro\CF_lewisx{\CF_lewisx pt+\CF_lewisxoffset*\CF_lewiscurrentoffset}%
+						\pgfmathsetmacro\CF_lewisy{\CF_lewisy pt+\CF_lewisyoffset*\CF_lewiscurrentoffset}%
+						\CF_expafter{\draw[}\CF_lewisstyle]%
+							(\CF_lewisx pt+\CF_lewislength*\CF_lewisyoffset/2 pt,\CF_lewisy-\CF_lewislength*\CF_lewisxoffset/2 pt)--
+							(\CF_lewisx pt+\CF_lewislength*\CF_lewisyoffset/2 pt+\CF_lewisxoffset*\CF_lewiswidthdouble,\CF_lewisy-\CF_lewislength*\CF_lewisxoffset/2 pt+\CF_lewisyoffset*\CF_lewiswidthdouble)--
+							(\CF_lewisx pt-\CF_lewislength*\CF_lewisyoffset/2 pt+\CF_lewisxoffset*\CF_lewiswidthdouble,\CF_lewisy+\CF_lewislength*\CF_lewisxoffset/2 pt+\CF_lewisyoffset*\CF_lewiswidthdouble)--
+							(\CF_lewisx pt-\CF_lewislength*\CF_lewisyoffset/2 pt,\CF_lewisy+\CF_lewislength*\CF_lewisxoffset/2 pt)--cycle;%
+					\else
+						\if:\expandafter\CF_firsttonil\CF_lewisremainpos\relax\_nil
+							\edef\CF_lewisremainpos{\expandafter\CF_gobarg\CF_lewisremainpos}%
+							\pgfmathsetmacro\CF_lewisx{\CF_lewisx pt+\CF_lewisxoffset*\CF_lewiscurrentoffset}%
+							\pgfmathsetmacro\CF_lewisy{\CF_lewisy pt+\CF_lewisyoffset*\CF_lewiscurrentoffset}%
+							\CF_expafter{\draw[fill,black,}{\CF_lewisstyle]}%
+								(\CF_lewisx pt+\CF_lewisdist*\CF_lewisyoffset/2 pt,\CF_lewisy-\CF_lewisdist*\CF_lewisxoffset/2 pt)circle(\CF_lewisradius)%
+								(\CF_lewisx pt-\CF_lewisdist*\CF_lewisyoffset/2 pt,\CF_lewisy+\CF_lewisdist*\CF_lewisxoffset/2 pt)circle(\CF_lewisradius);%
+						\else
+							\pgfmathsetmacro\CF_lewisx{\CF_lewisx pt+\CF_lewisxoffset*\CF_lewiscurrentoffset}%
+							\pgfmathsetmacro\CF_lewisy{\CF_lewisy pt+\CF_lewisyoffset*\CF_lewiscurrentoffset}%
+							\CF_expafter{\draw[}\CF_lewisstyle]%
+								(\CF_lewisx pt+\CF_lewislength*\CF_lewisyoffset/2 pt,\CF_lewisy-\CF_lewislength*\CF_lewisxoffset/2 pt)--%
+								(\CF_lewisx pt-\CF_lewislength*\CF_lewisyoffset/2 pt,\CF_lewisy+\CF_lewislength*\CF_lewisxoffset/2 pt);%
+						\fi
+					\fi
+				\fi
+		\repeat
+		\node[anchor=base west]at(CF_lewis@anchor){\box\CF_boxlewis};%
+	\endtikzpicture
+}
+
+\def\Chembelow{\begingroup\let\CF_temp\CF_gobarg\CF_chembelowa}
+
+\def\chembelow{\begingroup\let\CF_temp\CF_id\CF_chembelowa}
+
+\def\CF_chembelowa{\CF_testopt\CF_chembelowb\CF_stacksep}
+
+\def\CF_chembelowb[#1]#2#3{%
+	\setbox\CF_box\hbox{\printatom{#2}}%
+	\expandafter\vtop\CF_temp{to\ht\CF_box}{%
+		\offinterlineskip
+		\hbox{\printatom{#2}}%
+		\kern#1\relax
+		\hbox to\wd\CF_box{\hss\printatom{#3}\hss}%
+		\CF_temp\vss
+		}%
+	\endgroup
+}
+
+\def\Chemabove{\begingroup\let\CF_temp\CF_gobarg\CF_chemabovea}
+
+\def\chemabove{\begingroup\let\CF_temp\CF_id\CF_chemabovea}
+
+\def\CF_chemabovea{\CF_testopt\CF_chemaboveb\CF_stacksep}
+
+\def\CF_chemaboveb[#1]#2#3{%
+	\setbox\CF_box\hbox{\printatom{#2}}%
+	\expandafter\vbox\CF_temp{to\ht\CF_box}{%
+		\offinterlineskip
+		\CF_temp\vss
+		\hbox to\wd\CF_box{\hss\printatom{#3}\hss}%
+		\kern#1\relax
+		\hbox{\printatom{#2}}%
+	}%
+	\endgroup
+}
+
+\def\chemmove{\CF_testopt\CF_chemmove{}}
+
+\def\CF_chemmove[#1]#2{%
+	\CF_doifnotempty{#2}%
+		{\expandafter\tikzpicture\expanded{[overlay,remember picture,-CF\CF_ifempty{#1}{}{,\unexpanded{#1}}]}%
+			#2%
+		\endtikzpicture
+		}%
+}
+
+\def\chemnameinit#1{%
+	\setbox\CF_boxstuff\hbox{#1}%
+	\xdef\CF_dpmax{\the\dp\CF_boxstuff}%
+}
+\let\CF_dpmax\CF_zero
+
+\def\CF_parsemolname#1\\#2\_nil{%
+	\hbox to\CF_wdstuffbox{\hss#1\hss}%
+	\CF_doifnotempty{#2}{\CF_parsemolname#2\_nil}%
+}
+
+\def\chemname{%
+	\CF_ifstar
+		{\CF_adjustnamedpfalse\CF_chemnamea}
+		{\CF_adjustnamedptrue \CF_chemnamea}%
+}
+
+\def\CF_chemnamea{\CF_testopt\CF_chemnameb{1.5ex}}
+
+\def\CF_chemnameb[#1]#2#3{%
+	\setbox\CF_boxstuff\hbox{#2}%
+	\edef\CF_wdstuffbox{\the\wd\CF_boxstuff}\edef\CF_dpstuffbox{\the\dp\CF_boxstuff}%
+	\leavevmode
+	\ifdim\CF_dpmax<\CF_dpstuffbox\global\let\CF_dpmax\CF_dpstuffbox\fi
+	\vtop{%
+		\box\CF_boxstuff
+		\nointerlineskip
+		\kern\dimexpr#1\ifCF_adjustnamedp+\CF_dpmax-\CF_dpstuffbox\fi\relax
+		\CF_parsemolname#3\\\_nil
+	}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%           S C H É M A S      R É A C T I O N N E L S           %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\let\CF_schemenest\CF_zero
+
+\def\CF_subscheme{\CF_testopt\CF_subschemea{}}
+\def\CF_subschemea[#1]{\CF_testopt{\CF_subschemeb[#1]}{text}}
+\def\CF_subschemeb[#1][#2]#3{\schemestart[#1][#2]#3\schemestop}
+
+\def\chemleft#1#2\chemright#3{%
+	\leavevmode
+	\begingroup
+		\setbox0\hbox{$\vcenter{\hbox{}}$}\edef\CF_delimmathht{\the\ht0}%
+		\setbox0\hbox{#2}\edef\CF_delimdim{\the\dimexpr(\ht0+\dp0)/2}%
+		\edef\CF_delimshift{\the\dimexpr(\ht0-\dp0)/2-\CF_delimmathht}%
+		\raise\CF_delimshift\hbox{$\left#1\vrule height\CF_delimdim depth\CF_delimdim width0pt\right.$}\box0
+		\raise\CF_delimshift\hbox{$\left.\vrule height\CF_delimdim depth\CF_delimdim width0pt\right#3$}%
+	\endgroup
+}
+
+\def\chemright#1{%
+	\CF_warning{"\string\chemright\string#1" ignored! No \string\chemleft\space previously found.}%
+}
+
+\def\chemup#1#2\chemdown#3{%
+	\begingroup
+		\setbox0\hbox{\printatom{#2}}\edef\CF_delimdim{\the\dimexpr\wd0/2}%
+		\tikzpicture[every node/.style={inner sep=0pt,outer sep=0pt,minimum size=0pt},baseline]%
+			\node[anchor=base west](chem@stuff){\box0};%
+			\node[at=(chem@stuff.north),anchor=east,rotate=-90]{$\left#1\vrule height\CF_delimdim depth\CF_delimdim width0pt\right.$};%
+			\node[at=(chem@stuff.south),anchor=west,rotate=-90]{$\left.\vrule height\CF_delimdim depth\CF_delimdim width0pt\right#3$};%
+		\endtikzpicture
+	\endgroup
+}
+
+\def\chemdown#1{%
+	\CF_warning{"\string\chemdown\string#1" ignored! No \string\chemup\space previously found.}%
+}
+
+\def\CF_setstyle#1,#2,#3\_nil#4#5#6{%
+	\def#4{#1}\let#5\empty\let#6\empty
+	\CF_iffirsttokmatch\CF_quark{#2\relax}
+		{}%
+		{\def#5{#2}%
+		\CF_iffirsttokmatch\CF_quark{#3\relax}
+			{}%
+			{\CF_setstylea#3\_nil#6}%
+		}%
+}
+\def\CF_setstylea#1,\CF_quark#2\_nil#3{\def#3{#1}}
+
+\def\CF_and{\futurelet\CF_toksa\CF_anda}
+
+\def\CF_anda{%
+	\CF_ifx\CF_toksa\bgroup
+		{\CF_andb}
+		{\CF_andb{}}%
+}
+
+\def\CF_andb#1{%
+	\CF_setstyle#1,\CF_quark,\CF_quark\_nil\CF_signspaceante\CF_signspacepost\CF_signvshift
+	\CF_doifempty\CF_signspaceante{\CF_valuetomacro\CF_signspaceante[0.5em]{+ sep left}}%
+	\CF_doifempty\CF_signspacepost{\CF_valuetomacro\CF_signspacepost[0.5em]{+ sep right}}%
+	\CF_doifempty\CF_signvshift{\CF_valuetomacro\CF_signvshift[0pt]{+ vshift}}%
+	\raise\CF_signvshift\hbox{\kern\CF_signspaceante$+$\kern\CF_signspacepost}%
+}
+
+\def\schemestart{%
+	\begingroup
+	\xdef\CF_schemenest{\number\numexpr\CF_schemenest+1}%
+	\CF_testopt\CF_schemestarta{}%
+}
+
+\def\CF_schemestarta[#1]{%
+	\CF_valuetomacro\CF_defaultcompoundstyle[]{compound style}%
+	\CF_setstyle#1,\CF_quark,\CF_quark\_nil\CF_arrowangle\CF_arrowlength\CF_arrowstyle
+	\CF_doifempty\CF_arrowangle{\CF_valuetomacro\CF_arrowangle[0]{arrow angle}}%
+	\CF_doifempty\CF_arrowlength{\CF_valuetomacro\CF_arrowlength[1]{arrow coeff}}%
+	\CF_valuetomacro\CF_defaultarrowstyle[]{arrow style}%
+	\CF_valuetomacro\CF_arrowoffset[1em]{arrow offset}%
+	\CF_valuetomacro\CF_compoundsep[5em]{compound sep}%
+	\CF_valuetomacro\CF_arrowlabelsep[3pt]{arrow label sep}%
+	\CF_valuetomacro\CF_arrowhead[-CF]{arrow head}%
+	\CF_eexpsecond{\def\CF_arrowtip}{\expandafter\CF_gobarg\CF_arrowhead}%
+	\CF_eexpsecond{\CF_preaddtomacro\CF_defaultarrowstyle}{\useKV[chemfig]{arrow head},}%
+	\CF_ifx\empty\CF_arrowstyle
+		{\let\CF_arrowstyle\CF_defaultarrowstyle}
+		{\CF_expsecond{\CF_preaddtomacro\CF_arrowstyle}{\CF_defaultarrowstyle,}}% se rajoute après le style par défaut
+	\CF_valuetomacro\CF_arrowdoublesep[2pt]{arrow double sep}%
+	\pgfmathsetmacro\CF_arrowdoublesep{\CF_arrowdoublesep/2}%
+	\CF_valuetomacro\CF_arrowdoubleposstart[0.6]{arrow double coeff}%
+	\pgfmathsetmacro\CF_arrowdoubleposstart{(1-\CF_arrowdoubleposstart)/2}%
+	\pgfmathsetmacro\CF_arrowdoubleposend{1-\CF_arrowdoubleposstart}%
+	\ifboolKV[chemfig]{scheme debug}
+		{\tikzpicture[every node/.style={draw,anchor=base,inner sep=0pt,outer sep=0pt,minimum size=1.5pt},baseline,remember picture]}
+		{\tikzpicture[every node/.style={anchor=base,inner sep=0pt,outer sep=0pt,minimum size=0pt},baseline,remember picture]}%
+	\let\merge\CF_merge
+	\expandafter\let\csname+\endcsname\CF_and
+	\let\arrow\CF_arrow
+	\let\schemestop\CF_schemestop
+	\let\subscheme\CF_subscheme
+	\CF_testopt{\CF_schemestartb}{text}%
+}
+
+\def\CF_schemestartb[#1]{%
+	\ifnum\CF_schemenest=1 % la commande n'est pas imbriquée ?
+		\CF_cntcompound0
+	\fi
+	\edef\CF_currentnodename{c\number\CF_cntcompound}%
+	\let\CF_nextnodename\empty
+	\let\CF_nextnodestyle\empty
+	\let\CF_directarrowlist\empty
+	\ifboolKV[chemfig]{scheme debug}
+		{\node[fill,green](\CF_currentnodename){};}
+		{\node(\CF_currentnodename){};}%
+	\def\CF_nextnodeanchor{#1}%
+	\CF_doifempty\CF_nextnodeanchor{\def\CF_nextnodeanchor{text}}%
+	\let\CF_compound\empty
+	\CF_schemestartc
+}
+
+\def\CF_schemestartc{%
+	\futurelet\CF_toksa\CF_schemestarte
+}
+
+\expandafter\def\expandafter\CF_schemestartd\space{\futurelet\CF_toksa\CF_schemestarte}
+
+\def\CF_schemestarte{% ... et l'examine :
+	\CF_iffirsttokina{\arrow\schemestop\merge}%
+		{}
+		{\CF_ifx\CF_toksa\bgroup
+			{\CF_addnextarg
+			}
+			{\CF_ifx\CF_toksa\CF_sptoken
+				{\CF_addtomacro\CF_compound{ }%
+				\CF_schemestartd
+				}
+				{\afterassignment\CF_schemestartc
+				\CF_addtomacro\CF_compound
+				}%
+			}%
+		}%
+}
+
+\def\CF_addnextarg#1{\CF_addtomacro\CF_compound{{#1}}\CF_schemestartc}
+
+\def\CF_displaycompound#1#2{% #1 = nom et #2 = style
+	\CF_doifnotempty\CF_compound
+		{\global\advance\CF_cntcompound1
+		\CF_ifx\CF_defaultcompoundstyle\empty
+			{\let\CF_currentnodestyle\empty}
+			{\CF_expsecond{\def\CF_currentnodestyle}{\CF_defaultcompoundstyle,}}%
+		\CF_addtomacro\CF_currentnodestyle{anchor=\CF_nextnodeanchor,at=(\CF_currentnodename)}%
+		\CF_ifempty{#2}%
+			{\CF_doifnotempty\CF_nextnodestyle
+				{\CF_eaddtomacro\CF_currentnodestyle{\expandafter,\CF_nextnodestyle}}%
+			}
+			{\CF_doifnotempty\CF_nextnodestyle
+				{\CF_warning{two styles for the same node, first style "\CF_nextnodestyle" ignored}%
+				}%
+			\CF_addtomacro\CF_currentnodestyle{,#2}%
+			}%
+		\CF_ifempty{#1}
+			{\edef\CF_temp{%
+				\CF_ifempty\CF_nextnodename
+					{c\number\CF_cntcompound}
+					{\CF_nextnodename}%
+				}%
+			}
+			{\CF_doifnotempty\CF_nextnodename
+				{\CF_warning{two names for the same node, first name "\CF_nextnodename" ignored}%
+				}%
+			\edef\CF_temp{#1}%
+			}%
+		\CF_expafter{\node[}\CF_currentnodestyle](\CF_temp){\CF_compound};%
+		\ifboolKV[chemfig]{scheme debug}%
+			{\node[draw=none,anchor=270,at=(\CF_temp.90),fill=green!60,overlay,opacity=0.5]{\scriptsize\bfseries\CF_temp};%
+			}
+			{}%
+		\let\CF_currentnodename\CF_temp
+		}%
+}
+
+\def\CF_schemestop{%
+	\CF_displaycompound{}{}%
+	\CF_directarrowlist
+	\endtikzpicture
+	\xdef\CF_schemenest{\number\numexpr\CF_schemenest-1}%
+	\endgroup
+}
+
+\def\CF_analysearrowarg#1{\CF_analysearrowarga#1[]\_nil}
+
+\def\CF_analysearrowarga#1[#2]#3\_nil{%
+	\CF_ifinstr{#1}.
+		{\CF_addtomacro\CF_temp{#1[#2]}}
+		{\CF_addtomacro\CF_temp{#1.[#2]}}%
+}
+
+\def\CF_arrow{%
+	\CF_ifnextchar(%
+		{\CF_arrowa
+		}
+		{\CF_ifnextchar\bgroup
+			{\CF_arrowb(.[]--.[])}
+			{\CF_arrowb(.[]--.[]){}}%
+		}%
+}
+
+\def\CF_arrowa(#1--#2){%
+	\def\CF_temp{(}%
+	\CF_analysearrowarg{#1}%
+	\CF_addtomacro\CF_temp{--}%
+	\CF_analysearrowarg{#2}%
+	\CF_addtomacro\CF_temp)%
+	\CF_ifnextchar\bgroup
+		{\expandafter\CF_arrowb\CF_temp}
+		{\expandafter\CF_arrowb\CF_temp{}}%
+}
+
+\def\CF_arrowb(#1.#2[#3]--#4.#5[#6])#7{%
+	\def\CF_currentarrowtype{#7}% nom de la flèche
+	\CF_doifempty\CF_currentarrowtype{\def\CF_currentarrowtype{->}}%
+	\CF_testopt{\CF_arrowc(#1.#2[#3]--#4.#5[#6])}{}%
+}
+
+\def\CF_arrowc(#1.#2[#3]--#4.#5[#6])[#7]{%
+	\def\CF_temp{\CF_arrowe(#1.#2[#3]--#4.#5[#6])}%
+	\CF_arrowd#7,\empty,\empty\_nil
+}
+
+\def\CF_arrowd#1,#2,#3\_nil{%
+	\CF_addtomacro\CF_temp{{#1}}%
+	\CF_eaddtomacro\CF_temp{\expandafter{#2}}%
+	\expandafter\CF_eaddtomacro\expandafter\CF_temp\expandafter{\expandafter\expandafter\expandafter{\expandafter\CF_sanitizelastitem#3,\empty\_nil}}%
+	\CF_temp
+}
+
+% #1, #4 : nom des nodes    #2, #5 : ancres des nodes    #3, #6 : styles des nodes
+% #7 : angle flèche    #8 : longueur flèche    #9 : style tikz de la flèche
+\def\CF_arrowe(#1.#2[#3]--#4.#5[#6])#7#8#9{%
+	\let\CF_arrowcurrentstyle\CF_arrowstyle
+	\if @\expandafter\CF_firsttonil\detokenize{#1.}\_nil% si #1 commence par @
+		\if @\expandafter\CF_firsttonil\detokenize{#4.}\_nil
+			\CF_eaddtomacro\CF_directarrowlist{\expandafter\CF_directarrow\expandafter{\CF_currentarrowtype}{#1}{#2}{#4}{#5}{#9}}%
+			\let\CF_nextaction\CF_schemestartc
+		\else
+			\CF_doifnotempty\CF_arrowcurrentstyle{\CF_addtomacro\CF_arrowcurrentstyle,}%
+			\CF_doifnotempty{#9}{\CF_addtomacro\CF_arrowcurrentstyle{#9,}}%
+			\CF_displaycompound{}{#3}%
+			\def\CF_nextnodename{#4}%
+			\CF_expsecond{\def\CF_currentnodename}{\CF_gobarg#1}%
+			\let\CF_arrowstartname\CF_currentnodename
+			\let\CF_arrowendname\CF_nextnodename
+			\CF_arrowf{#7}{#8}{#2}{#5}%
+			\def\CF_nextnodestyle{#6}%
+		\fi
+	\else
+		\CF_doifnotempty\CF_arrowcurrentstyle{\CF_addtomacro\CF_arrowcurrentstyle,}%
+		\CF_doifnotempty{#9}{\CF_addtomacro\CF_arrowcurrentstyle{#9,}}%
+		\if @\expandafter\CF_firsttonil\detokenize{#2.}\_nil
+			\CF_error{syntax "(<name>--@<name>)" is not allowed}%
+		\else
+			\CF_displaycompound{#1}{#3}%
+			\edef\CF_arrowstartname{%
+				\CF_ifempty{#1}
+					\CF_currentnodename
+					{#1}%
+				\CF_doifnotempty{#2}{.#2}%
+			}%
+			\CF_arrowf{#7}{#8}{#2}{#5}%
+			\def\CF_nextnodename{#4}%
+			\def\CF_nextnodestyle{#6}%
+		\fi
+	\fi
+	\CF_arrowgobspaces% mange les espaces puis exécute \CF_nextaction
+}
+
+\def\CF_arrowgobspaces{\futurelet\CF_toksa\CF_arrowgobspacesa}
+
+\def\CF_arrowgobspacesa{%
+	\CF_ifx\CF_sptoken\CF_toksa
+		\CF_arrowgobspacesb
+		\CF_nextaction
+}
+
+\expandafter\def\expandafter\CF_arrowgobspacesb\space{\futurelet\CF_toksa\CF_arrowgobspacesa}
+
+\def\CF_arrowf#1#2#3#4{% #1=angle   #2=longueur    #3=ancre départ   #4=ancre arrivée
+	\def\CF_nextaction{\let\CF_compound\empty\CF_schemestartc}%
+	\def\CF_arrowcurrentangle{#1}\CF_doifempty\CF_arrowcurrentangle{\let\CF_arrowcurrentangle\CF_arrowangle}%
+	\def\CF_currentarrowlength{#2}\CF_doifempty\CF_currentarrowlength{\let\CF_currentarrowlength\CF_arrowlength}%
+	\node[at=(\CF_currentnodename.\CF_ifempty{#3}\CF_arrowcurrentangle{#3}),shift=(\CF_arrowcurrentangle:\CF_currentarrowlength*\CF_compoundsep),cyan,fill](end@arrow@i@\number\CF_schemenest){};%
+	\edef\CF_arrowendname{end@arrow@i@\number\CF_schemenest\CF_doifnotempty{#4}{.#4}}%
+	\ifboolKV[chemfig]{scheme debug}
+		{\node[at=(\CF_currentnodename.\CF_ifempty{#3}\CF_arrowcurrentangle{#3}),shift=(\CF_arrowcurrentangle:\CF_arrowoffset),red,fill](start@arrow){};%
+		\node[at=(\CF_currentnodename.\CF_ifempty{#3}\CF_arrowcurrentangle{#3}),shift=(\CF_arrowcurrentangle:\CF_currentarrowlength*\CF_compoundsep-\CF_arrowoffset),red,fill](end@arrow){};%
+		}
+		{\node[at=(\CF_currentnodename.\CF_ifempty{#3}\CF_arrowcurrentangle{#3}),shift=(\CF_arrowcurrentangle:\CF_arrowoffset)](start@arrow){};%
+		\node[at=(\CF_currentnodename.\CF_ifempty{#3}\CF_arrowcurrentangle{#3}),shift=(\CF_arrowcurrentangle:\CF_currentarrowlength*\CF_compoundsep-\CF_arrowoffset)](end@arrow){};%
+		}%
+	\def\CF_arrowstartnode{start@arrow}\def\CF_arrowendnode{end@arrow}%
+	\csname\expandafter\CF_grabarrowname\CF_currentarrowtype[\_nil\CF_threeea\endcsname
+		\expandafter\CF_grabarrowargs\CF_currentarrowtype[]\_nil[][][][][][][][]\_nil
+	\def\CF_currentnodename{end@arrow@i@\number\CF_schemenest}%
+	\edef\CF_nextnodeanchor{\CF_ifempty{#4}{180+\CF_arrowcurrentangle}{#4}}%
+}
+
+% trace un flèche initiée par (@nom--@nom)
+% #1=type de flèche   #2=nom depart   #3=ancre départ    #4=nom arrivée    #5=ancre arrivée    #6=style flèche
+\def\CF_directarrow#1#2#3#4#5#6{%
+	\CF_expsecond{\def\CF_arrowstartname}{\CF_gobarg#2}%
+	\CF_expsecond{\def\CF_arrowendname}{\CF_gobarg#4}%
+	\path[sloped,allow upside down](\CF_gobarg#2\ifx\empty#3\empty\else.#3\fi)--(\CF_gobarg#4\ifx\empty#5\empty\else.#5\fi)%
+		coordinate[pos=0,xshift=\CF_arrowoffset](start@direct@arrow)%
+		coordinate[pos=1,xshift=-\CF_arrowoffset](end@direct@arrow);%
+	\def\CF_arrowstartnode{start@direct@arrow}%
+	\def\CF_arrowendnode{end@direct@arrow}%
+	\pgfmathanglebetweenpoints
+		{\pgfpointanchor{\CF_gobarg#2}{\ifx\empty#3\empty center\else#3\fi}}% Ne pas utiliser \CF_ifempty ici !!!
+		{\pgfpointanchor{\CF_gobarg#4}{\ifx\empty#5\empty center\else#5\fi}}%
+	\let\CF_arrowcurrentangle\pgfmathresult
+	\CF_doifnotempty{#6}{\CF_addtomacro\CF_arrowcurrentstyle{#6,}}%
+	\csname\CF_grabarrowname#1[]\_nil\expandafter\endcsname\CF_grabarrowargs#1[]\_nil[][][][][][][][]\_nil
+}
+
+\def\CF_mergegrabchardir#1[#2][#3]#4\_nil{%
+	\CF_expafter{\futurelet\CF_toksa\CF_gobtonil}{\CF_firsttonil#1>\_nil}\_nil
+	\ifx>\CF_toksa
+		\def\CF_mergeangle{0}\def\CF_mergeextreme{xmax}\def\CF_mergesign{+}%
+	\else
+	\ifx<\CF_toksa
+		\def\CF_mergeangle{180}\def\CF_mergeextreme{xmin}\def\CF_mergesign{-}%
+	\else
+	\ifx^\CF_toksa
+		\def\CF_mergeangle{90}\def\CF_mergeextreme{ymax}\def\CF_mergesign{+}%
+	\else
+	\ifx v\CF_toksa
+		\def\CF_mergeangle{-90}\def\CF_mergeextreme{ymin}\def\CF_mergesign{-}%
+	\fi\fi\fi\fi
+	\def\CF_mergelabelup{#2}\def\CF_mergelabeldo{#3}%
+}
+
+\def\CF_merge#1({%
+	\CF_mergegrabchardir#1[][]\_nil
+	\CF_mergea(%
+}
+
+\def\CF_mergea#1--(#2){\CF_testopt{\CF_mergeb#1--(#2)}{}}
+
+\def\CF_mergeb#1--(#2)[#3]{%
+	\CF_displaycompound{}{}%
+	\CF_parsemergeopt#3,\CF_quark,\CF_quark,\CF_quark\_nil
+	\def\CF_mergexmax{-16383.99999pt}\let\CF_mergeymax\CF_mergexmax
+	\def\CF_mergexmin{16383.99999pt}\let\CF_mergeymin\CF_mergexmin
+	\CF_mergeparsenodelist#1(\relax)% calcule les maxi des positions
+	\pgfmathsetmacro\CF_mergeextremeresult{\csname CF_merge\CF_mergeextreme\endcsname\CF_mergesign\CF_mergefromcoeff*\CF_compoundsep}%
+	\CF_mergec#1(\relax)% trace les lignes entre les noeuds précédents et la ligne de jonction
+	\CF_expsecond{\def\CF_temp}{\expandafter[\CF_mergestyle,shorten <=0,shorten >=0,-]}%
+	\if x\expandafter\CF_firsttonil\CF_mergeextreme\_nil
+		\CF_addtomacro\CF_temp{(\CF_mergeextremeresult pt,\CF_mergeymax)--(\CF_mergeextremeresult pt,\CF_mergeymin)}%
+	\else
+		\CF_addtomacro\CF_temp{(\CF_mergexmin,\CF_mergeextremeresult pt)--(\CF_mergexmax,\CF_mergeextremeresult pt)}%
+	\fi
+	\expandafter\draw\CF_temp node[pos=\CF_mergesplitcoeff](merge@point){}% trace la ligne de jonction
+		node[at=(merge@point),shift=(\CF_mergeangle:\CF_compoundsep*\CF_mergetocoeff-\CF_arrowoffset)](end@merge){}%
+		node[at=(merge@point),shift=(\CF_mergeangle:\CF_compoundsep*\CF_mergetocoeff)](end@merge@i){};%
+	\let\CF_arrowcurrentangle\CF_mergeangle
+	\CF_expafter{\draw[}\CF_mergestyle,shorten <=0](merge@point)--(end@merge)%
+		\expandafter\CF_arrowdisplaylabela\expandafter{\CF_mergelabelup}{.5}+\expandafter\CF_arrowdisplaylabela\expandafter{\CF_mergelabeldo}{.5}-;%
+	\def\CF_currentnodename{end@merge@i}%
+	\let\CF_temp\empty
+	\CF_analysearrowarg{#2}%
+	\expandafter\CF_merged\CF_temp\_nil
+}
+
+\def\CF_mergec(#1){%
+	\if\relax\expandafter\noexpand\CF_firsttonil#1\_nil
+	\else
+		\CF_ifdot{#1}%
+			{\edef\merge_currentnodename{\CF_beforedot#1\_nil}%
+			\edef\merge_currentanchor{\CF_afterdot#1\_nil}%
+			}%
+			{\def\merge_currentnodename{#1}%
+			\let\merge_currentanchor\CF_mergeangle
+			}%
+		\if x\expandafter\CF_firsttonil\CF_mergeextreme\_nil
+			\pgfextracty\CF_dim{\pgfpointanchor\merge_currentnodename\merge_currentanchor}%
+			\CF_expafter{\draw[}\CF_mergestyle,shorten >=0,-]([shift=(\CF_mergeangle:\CF_arrowoffset)]\merge_currentnodename.\merge_currentanchor)--(\CF_mergeextremeresult pt,\CF_dim);%
+		\else
+			\pgfextractx\CF_dim{\pgfpointanchor\merge_currentnodename\merge_currentanchor}%
+			\CF_expafter{\draw[}\CF_mergestyle,shorten >=0,-]([shift=(\CF_mergeangle:\CF_arrowoffset)]\merge_currentnodename.\merge_currentanchor)--(\CF_dim,\CF_mergeextremeresult pt);%
+		\fi
+		\expandafter\CF_mergec
+	\fi
+}
+
+\def\CF_merged#1.#2[#3]\_nil{%
+	\def\CF_nextnodename{#1}%
+	\edef\CF_nextnodeanchor{%
+		\CF_ifempty{#2}
+			{180+\CF_mergeangle}
+			{#2}%
+		}%
+	\def\CF_nextnodestyle{#3}%
+	\let\CF_compound\empty
+	\CF_schemestartc
+}
+
+\def\CF_parsemergeopt#1,#2,#3,#4\_nil{%
+	\CF_ifempty{#1}
+		{\def\CF_mergefromcoeff{0.5}}
+		{\def\CF_mergefromcoeff{#1}}%
+	\def\CF_mergetocoeff{0.5}%
+	\def\CF_mergesplitcoeff{0.5}%
+	\CF_eexpsecond{\def\CF_mergestyle}{\useKV[chemfig]{arrow head}}%
+	\CF_iffirsttokmatch\CF_quark{#2\relax}
+		{}
+		{\CF_ifempty{#2}
+			{\def\CF_mergetocoeff{0.5}}
+			{\def\CF_mergetocoeff{#2}}%
+		\CF_iffirsttokmatch\CF_quark{#3\relax}
+			{}
+			{\CF_ifempty{#3}
+				{\def\CF_mergesplitcoeff{0.5}}
+				{\def\CF_mergesplitcoeff{#3}}%
+			\CF_iffirsttokmatch\CF_quark{#4\relax}
+				{}
+				{\CF_parsemergeopta#4\_nil}%
+			}%
+		}%
+}
+
+\def\CF_parsemergeopta#1,\CF_quark#2\_nil{%
+	\CF_ifempty{#1}
+		{}
+		{\CF_addtomacro\CF_mergestyle{,#1}}%
+}
+
+\def\CF_mergeparsenodelist(#1){%
+	\if\relax\expandafter\noexpand\CF_firsttonil#1\_nil
+	\else
+		\CF_ifdot{#1}%
+			{\edef\merge_currentnodename{\CF_beforedot#1\_nil}\edef\merge_currentanchor{\CF_afterdot#1\_nil}}%
+			{\def\merge_currentnodename{#1}\let\merge_currentanchor\CF_mergeangle}%
+		\pgfextractx\CF_dim{\pgfpointanchor\merge_currentnodename\merge_currentanchor}%
+		\ifdim\CF_dim>\CF_mergexmax
+			\edef\CF_mergexmax{\the\CF_dim}%
+		\fi
+		\ifdim\CF_dim<\CF_mergexmin
+			\edef\CF_mergexmin{\the\CF_dim}%
+		\fi
+		\pgfextracty\CF_dim{\pgfpointanchor\merge_currentnodename\merge_currentanchor}%
+		\ifdim\CF_dim>\CF_mergeymax
+			\edef\CF_mergeymax{\the\CF_dim}%
+		\fi
+		\ifdim\CF_dim<\CF_mergeymin
+			\edef\CF_mergeymin{\the\CF_dim}%
+		\fi
+		\expandafter\CF_mergeparsenodelist
+	\fi
+}
+
+\def\CF_grabarrowname#1[#2\_nil{\detokenize{CF_arrow(#1)}}
+\def\CF_grabarrowargs#1[#2\_nil{[#2}
+
+\def\CF_makeparametertext#1{%
+	\toks0{}%
+	\CF_cntgroup#1\relax
+	\CF_makeparametertexta1%
+}
+
+\def\CF_makeparametertexta#1{%
+	\unless\ifnum#1>\CF_cntgroup
+		\toks0\expandafter{\the\toks0[###1]}%
+		\expandafter\CF_makeparametertexta\expandafter{\number\numexpr#1+1\expandafter}%
+	\fi
+}
+
+% #1 est le nombre d'arguments optionnels, #2 est le nom et #3 le code
+\def\definearrow#1#2#3{%
+	\begingroup
+		\CF_makeparametertext{#1}%
+	\expandafter\endgroup
+	\expandafter\def\csname\detokenize{CF_arrow(#2)}\expandafter\endcsname\the\toks0{#3\CF_gobtonil}%
+}
+
+\def\CF_ifdot#1{\CF_ifdota#1.\_nil}
+\def\CF_ifdota#1.#2\_nil{\ifx\empty#2\empty\expandafter\CF_execsecond\else\expandafter\CF_execfirst\fi}
+\def\CF_beforedot#1.#2\_nil{#1}
+\def\CF_afterdot#1.#2\_nil{#2}
+
+\def\CF_rotatenode*#1#2\_nil{%
+	\CF_ifdot{#1}
+		{\CF_beforedot#1\_nil}
+		{#1}%
+}
+\def\CF_anchornode*#1#2\_nil#3{%
+	\CF_ifdot{#1}
+		{\CF_afterdot#1\_nil}
+		{\CF_arrowcurrentangle-#390-#1}%
+}
+
+% #1 = label  #2 = position  #3 = + ou - (au dessus ou au dessous)  #4 : nom du noeud de départ
+% #5 = label  #6 = position  #7 = + ou - (au dessus ou au dessous)  #8 : nom du noeud de fin
+\def\CF_arrowdisplaylabel#1#2#3#4#5#6#7#8{%
+	\CF_doifnotempty{#1#5}
+		{\path(#4)--(#8)\CF_arrowdisplaylabela{#1}{#2}{#3}\CF_arrowdisplaylabela{#5}{#6}{#7};}%
+}
+
+\def\CF_arrowdisplaylabela#1#2#3{%
+	\CF_doifnotempty{#1}
+		{\if*\expandafter\CF_firsttonil\detokenize{#1}\_nil
+			\ifboolKV[chemfig]{scheme debug}
+				{node[pos=#2,sloped,yshift=#3\CF_arrowlabelsep,draw,fill,cyan](shifted@node){}%
+				node[draw,rotate=\CF_rotatenode#1\_nil,anchor=\CF_anchornode#1\_nil#3,at=(shifted@node)]{\expandafter\CF_gobarg\CF_gobarg#1}%
+				}
+				{node[pos=#2,sloped,yshift=#3\CF_arrowlabelsep](shifted@node){}%
+				node[rotate=\CF_rotatenode#1\_nil,anchor=\CF_anchornode#1\_nil#3,at=(shifted@node)]{\expandafter\CF_gobarg\CF_gobarg#1}%
+				}%
+		\else
+			\ifboolKV[chemfig]{scheme debug}
+				{node[pos=#2,sloped,yshift=#3\CF_arrowlabelsep,draw,fill,cyan](shifted@node){}%
+				node[draw,pos=#2,anchor=-#390,sloped,yshift=#3\CF_arrowlabelsep]{#1}%
+				}
+				{node[pos=#2,anchor=-#390,sloped,yshift=#3\CF_arrowlabelsep]{#1}%
+				}
+		\fi
+		}%
+}
+
+% pose des noeuds décalés de la dimension #1 à (\CF_arrowstartnode) et (\CF_arrowendnode)
+\def\CF_arrowshiftnodes#1{%
+	\unless\ifdim\CF_ifempty{#1}\CF_zero{#1}=0pt
+		\expanded{%
+			\noexpand\path(\CF_arrowstartnode)--(\CF_arrowendnode)%
+			node[pos=0,sloped,yshift=#1](\CF_arrowstartnode1){}node[pos=1,sloped,yshift=#1](\CF_arrowendnode1){};}%
+		\edef\CF_arrowstartnode{\CF_arrowstartnode1}\edef\CF_arrowendnode{\CF_arrowendnode1}%
+	\fi
+}
+
+\definearrow3{->}{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode)--(\CF_arrowendnode);%
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow3{<-}{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowendnode)--(\CF_arrowstartnode);%
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow5{-/>}{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode)--(\CF_arrowendnode)%
+		coordinate[midway,shift=(\CF_arrowcurrentangle:-1pt)](midway@i)%
+		coordinate[midway,shift=(\CF_arrowcurrentangle:1pt)](midway@ii)%
+		coordinate[at=(midway@i),shift=(\CF_ifempty{#4}{225}{#4+180}+\CF_arrowcurrentangle:\CF_ifempty{#5}{5pt}{#5})](line@start)%
+		coordinate[at=(midway@i),shift=(\CF_ifempty{#4}{45}{#4}+\CF_arrowcurrentangle:\CF_ifempty{#5}{5pt}{#5})](line@end)%
+		coordinate[at=(midway@ii),shift=(\CF_ifempty{#4}{225}{#4+180}+\CF_arrowcurrentangle:\CF_ifempty{#5}{5pt}{#5})](line@start@i)%
+		coordinate[at=(midway@ii),shift=(\CF_ifempty{#4}{45}{#4}+\CF_arrowcurrentangle:\CF_ifempty{#5}{5pt}{#5})](line@end@i);
+	\draw(line@start)--(line@end);%
+	\draw(line@start@i)--(line@end@i);%
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow3{<->}{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_expafter{\draw[}\CF_arrowcurrentstyle,\CF_arrowtip-\CF_arrowtip](\CF_arrowstartnode)--(\CF_arrowendnode);%
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow3{<=>}{%
+	\CF_arrowshiftnodes{#3}%
+	\path[allow upside down](\CF_arrowstartnode)--(\CF_arrowendnode)%
+			node[pos=0,sloped,yshift=\CF_arrowdoublesep](\CF_arrowstartnode @u0){}%
+			node[pos=0,sloped,yshift=-\CF_arrowdoublesep](\CF_arrowstartnode @d0){}%
+			node[pos=1,sloped,yshift=\CF_arrowdoublesep](\CF_arrowstartnode @u1){}%
+			node[pos=1,sloped,yshift=-\CF_arrowdoublesep](\CF_arrowstartnode @d1){};%
+	\begingroup
+		\ifboolKV[chemfig]{arrow double harpoon}
+			{\pgfarrowharpoontrue}
+			{}%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @u0)--(\CF_arrowstartnode @u1);%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @d1)--(\CF_arrowstartnode @d0);%
+	\endgroup
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode%
+}
+
+\definearrow3{<->>}{%
+	\CF_arrowshiftnodes{#3}%
+	\path[allow upside down](\CF_arrowstartnode)--(\CF_arrowendnode)%
+			node[pos=0,sloped,yshift=1pt](\CF_arrowstartnode @u0){}%
+			node[pos=\CF_arrowdoubleposstart,sloped,yshift=-1pt](\CF_arrowstartnode @d0){}%
+			node[pos=1,sloped,yshift=1pt](\CF_arrowstartnode @u1){}%
+			node[pos=\CF_arrowdoubleposend,sloped,yshift=-1pt](\CF_arrowstartnode @d1){};%
+	\begingroup
+		\ifboolKV[chemfig]{arrow double harpoon}
+			{\pgfarrowharpoontrue}
+			{}%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @u0)--(\CF_arrowstartnode @u1);%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @d1)--(\CF_arrowstartnode @d0);%
+	\endgroup
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode%
+}
+
+\definearrow3{<<->}{%
+	\path[allow upside down](\CF_arrowstartnode)--(\CF_arrowendnode)%
+			node[pos=\CF_arrowdoubleposstart,sloped,yshift=1pt](\CF_arrowstartnode @u0){}%
+			node[pos=0,sloped,yshift=-1pt](\CF_arrowstartnode @d0){}%
+			node[pos=\CF_arrowdoubleposend,sloped,yshift=1pt](\CF_arrowstartnode @u1){}%
+			node[pos=1,sloped,yshift=-1pt](\CF_arrowstartnode @d1){};%
+	\begingroup
+		\ifboolKV[chemfig]{arrow double harpoon}
+			{\pgfarrowharpoontrue}
+			{}%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @u0)--(\CF_arrowstartnode @u1);%
+		\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode @d1)--(\CF_arrowstartnode @d0);%
+	\endgroup
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow30{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_arrowdisplaylabel{#1}{0.5}+\CF_arrowstartnode{#2}{0.5}-\CF_arrowendnode
+}
+
+\definearrow5{-U>}{%
+	\CF_arrowshiftnodes{#3}%
+	\CF_expafter{\draw[}\CF_arrowcurrentstyle](\CF_arrowstartnode)--(\CF_arrowendnode)node[midway](Uarrow@arctangent){};%
+	\CF_ifempty{#4}
+		{\def\CF_Uarrowradius{0.333}}
+		{\def\CF_Uarrowradius{#4}}%
+	\CF_ifempty{#5}%
+		{\def\CF_Uarrowabsangle{60}}
+		{\pgfmathsetmacro\CF_Uarrowabsangle{abs(#5)}}% ne prendre en compte que la valeur absolue de l'angle
+	\expandafter\draw\expanded{[\CF_ifempty{#1}{draw=none}{\unexpanded\expandafter{\CF_arrowcurrentstyle}},-]}(Uarrow@arctangent)%
+		arc[radius=\CF_compoundsep*\CF_currentarrowlength*\CF_Uarrowradius,start angle=\CF_arrowcurrentangle-90,delta angle=-\CF_Uarrowabsangle]node(Uarrow@start){};
+	\expandafter\draw\expanded{[\CF_ifempty{#2}{draw=none}{\unexpanded\expandafter{\CF_arrowcurrentstyle}}]}(Uarrow@arctangent)%
+		arc[radius=\CF_compoundsep*\CF_currentarrowlength*\CF_Uarrowradius,start angle=\CF_arrowcurrentangle-90,delta angle=\CF_Uarrowabsangle]node(Uarrow@end){};
+	\pgfmathsetmacro\CF_temp{\CF_Uarrowradius*cos(\CF_arrowcurrentangle)<0?"-":"+"}%
+	\ifdim\CF_Uarrowradius pt>0pt
+		\CF_arrowdisplaylabel{#1}{0}\CF_temp{Uarrow@start}{#2}{1}\CF_temp{Uarrow@end}%
+	\else
+		\CF_arrowdisplaylabel{#2}{0}\CF_temp{Uarrow@start}{#1}{1}\CF_temp{Uarrow@end}%
+	\fi
+}
+
+\def\CF_grabdelim#1#2#3\_nil{\def\CF_leftdelim{#1}\def\CF_rightdelim{#2}}
+\def\CF_resetdelim{%
+	\setKVdefault[CFdelimiters]{
+		delimiters   = (),
+		height       = 10pt,
+		depth        = ,
+		open xshift  = 0pt,
+		close xshift = ,
+		h align      = true,
+		auto rotate  = false,
+		rotate       = 0,
+		indice       = n
+		}%
+}
+
+\CF_resetdelim
+
+\def\polymerdelim{\CF_ifnextchar[{\CF_polymerdelima}{\CF_polymerdelima[]}}
+\def\CF_polymerdelima[#1]#2#3{%
+	\CF_resetdelim
+	\CF_doifnotempty{#1}{\setKV[CFdelimiters]{#1}}%
+	\expandafter\expandafter\expandafter\CF_grabdelim\useKV[CFdelimiters]{delimiters}()\_nil
+	\edef\CF_delimheight{\the\dimexpr\useKV[CFdelimiters]{height}}%
+	\CF_eexpsecond\CF_ifempty{\useKV[CFdelimiters]{depth}}
+		{\let\CF_delimdepth\CF_delimheight}
+		{\edef\CF_delimdepth{\the\dimexpr\useKV[CFdelimiters]{depth}}}%
+	\edef\CF_delimhalfdim{\the\dimexpr(\CF_delimheight+\CF_delimdepth)/2}%
+	\edef\CF_delimvshift {\the\dimexpr(\CF_delimheight-\CF_delimdepth)/2}%
+	\edef\CF_leftdelimxshift{\the\dimexpr\useKV[CFdelimiters]{open xshift}}%
+	\CF_eexpsecond\CF_ifempty{\useKV[CFdelimiters]{close xshift}}
+		{\edef\CF_rightdelimxshift{\the\dimexpr-\useKV[CFdelimiters]{open xshift}}}
+		{\edef\CF_rightdelimxshift{\the\dimexpr-\useKV[CFdelimiters]{close xshift}}}%
+	\chemmove{%
+		\nulldelimiterspace0pt
+		\pgfextractx\CF_dim{\pgfpointanchor{#2}{center}}\edef\CF_leftdelimx{\the\CF_dim}%
+		\pgfextracty\CF_dim{\pgfpointanchor{#2}{center}}\edef\CF_leftdelimy{\the\CF_dim}%
+		\pgfextractx\CF_dim{\pgfpointanchor{#3}{center}}\edef\CF_rightdelimx{\the\CF_dim}%
+		\pgfextracty\CF_dim{\pgfpointanchor{#3}{center}}\edef\CF_rightdelimy{\the\CF_dim}%
+		\def\CF_autorotate{0}%
+		\ifboolKV[CFdelimiters]{h align}
+			{\let\CF_rightdelimy\CF_leftdelimy
+			}
+			{%
+			\ifboolKV[CFdelimiters]{auto rotate}
+				{\pgfmathatantwo{\CF_rightdelimy-\CF_leftdelimy}{\CF_rightdelimx-\CF_leftdelimx}%
+				\let\CF_autorotate\pgfmathresult
+				}
+				{\CF_eexpsecond\CF_ifempty{\useKV[CFdelimiters]{rotate}}
+					{}
+					{\edef\CF_autorotate{\useKV[CFdelimiters]{rotate}}}%
+				}%
+			}%
+		\node[at={(\CF_leftdelimx+\CF_leftdelimxshift,\CF_leftdelimy+\CF_delimvshift)},rotate=\CF_autorotate]
+			{$\left\CF_leftdelim\vrule height\CF_delimhalfdim depth\CF_delimhalfdim width0pt\right.$};%
+		\node[at={(\CF_rightdelimx+\CF_rightdelimxshift,\CF_rightdelimy+\CF_delimvshift)},rotate=\CF_autorotate]
+			{$\left.\vrule height\CF_delimhalfdim depth\CF_delimhalfdim width0pt\right\CF_rightdelim
+				\CF_eexpsecond\CF_doifnotempty{\useKV[CFdelimiters]{indice}}
+					{\CF_underscore{\rlap{$\scriptstyle\useKV[CFdelimiters]{indice}$}}}
+			$};
+	}%
+}
+
+\catcode`\@11
+\pgfdeclarearrow{%
+	name = CF,%
+	defaults = {%
+		length  = 3pt 5 1,%
+		width'  = 0pt .8,%
+		inset'  = 0pt .5,%
+		line width = 0pt 1 1,%
+		round%
+	},%
+	setup code = {%
+		% Cap the line width at 1/4th distance from inset to tip
+		\pgf@x\pgfarrowlength
+		\advance\pgf@x by-\pgfarrowinset
+		\pgf@x.25\pgf@x
+		\ifdim\pgf@x<\pgfarrowlinewidth\pgfarrowlinewidth\pgf@x\fi
+		% Compute front miter length:
+		\pgfmathdivide@{\pgf@sys@tonumber\pgfarrowlength}{\pgf@sys@tonumber\pgfarrowwidth}%
+		\let\pgf@temp@quot\pgfmathresult%
+		\pgf@x\pgfmathresult pt%
+		\pgf@x\pgfmathresult\pgf@x%
+		\pgf@x4\pgf@x%
+		\advance\pgf@x by1pt%
+		\pgfmathsqrt@{\pgf@sys@tonumber\pgf@x}%
+		\pgf@xc\pgfmathresult\pgfarrowlinewidth% xc is front miter
+		\pgf@xc.5\pgf@xc
+		\pgf@xa\pgf@temp@quot\pgfarrowlinewidth% xa is extra harpoon miter
+		% Compute back miter length:
+		\pgf@ya.5\pgfarrowwidth%
+		\csname pgfmathatan2@\endcsname{\pgfmath@tonumber\pgfarrowlength}{\pgfmath@tonumber\pgf@ya}%
+		\pgf@yb\pgfmathresult pt%
+		\csname pgfmathatan2@\endcsname{\pgfmath@tonumber\pgfarrowinset}{\pgfmath@tonumber\pgf@ya}%
+		\pgf@ya\pgfmathresult pt%
+		\advance\pgf@yb by-\pgf@ya%
+		\pgf@yb.5\pgf@yb% half angle in yb
+		\pgfmathtan@{\pgf@sys@tonumber\pgf@yb}%
+		\pgfmathreciprocal@{\pgfmathresult}%
+		\pgf@yc\pgfmathresult\pgfarrowlinewidth%
+		\pgf@yc.5\pgf@yc%
+		\advance\pgf@ya by\pgf@yb%
+		\pgfmathsincos@{\pgf@sys@tonumber\pgf@ya}%
+		\pgf@ya\pgfmathresulty\pgf@yc% ya is the back miter
+		\pgf@yb\pgfmathresultx\pgf@yc% yb is the top miter
+		\ifdim\pgfarrowinset=0pt
+			\pgf@ya.5\pgfarrowlinewidth% easy: back miter is half linewidth
+		\fi
+		% Compute inset miter length:
+		\pgfmathdivide@{\pgf@sys@tonumber\pgfarrowinset}{\pgf@sys@tonumber\pgfarrowwidth}%
+		\let\pgf@temp@quot\pgfmathresult%
+		\pgf@x\pgfmathresult pt%
+		\pgf@x\pgfmathresult\pgf@x%
+		\pgf@x4\pgf@x%\pgf@ya
+		\advance\pgf@x by1pt%
+		\pgfmathsqrt@{\pgf@sys@tonumber\pgf@x}%
+		\pgf@yc\pgfmathresult\pgfarrowlinewidth% yc is inset miter
+		\pgf@yc.5\pgf@yc% 
+		% Inner length (pgfutil@tempdima) is now arrowlength - front miter - back miter
+		\pgfutil@tempdima\pgfarrowlength%
+		\advance\pgfutil@tempdima by-\pgf@xc%
+		\advance\pgfutil@tempdima by-\pgf@ya%
+		\pgfutil@tempdimb.5\pgfarrowwidth%
+		\advance\pgfutil@tempdimb by-\pgf@yb%
+		% harpoon miter correction
+		\ifpgfarrowroundjoin
+			\pgfarrowssetbackend{\pgf@ya\advance\pgf@x by-.5\pgfarrowlinewidth}%
+		\else
+			\pgfarrowssetbackend{0pt}
+		\fi
+		\ifpgfarrowharpoon
+			\pgfarrowssetlineend{\pgfarrowinset\advance\pgf@x by\pgf@yc\advance\pgf@x by.5\pgfarrowlinewidth}%
+		\else
+			\pgfarrowssetlineend{\pgfarrowinset\advance\pgf@x by\pgf@yc\advance\pgf@x by-.25\pgfarrowlinewidth}%
+			\ifpgfarrowreversed
+				\ifdim\pgfinnerlinewidth>0pt
+					\pgfarrowssetlineend{\pgfarrowinset}%
+				\else
+					\pgfarrowssetlineend{\pgfutil@tempdima\advance\pgf@x by\pgf@ya\advance\pgf@x by-.25\pgfarrowlinewidth}%
+				\fi
+			\fi
+		\fi
+		\ifpgfarrowroundjoin
+			\pgfarrowssettipend{\pgfutil@tempdima\advance\pgf@x by\pgf@ya\advance\pgf@x by.5\pgfarrowlinewidth}%
+		\else
+			\pgfarrowssettipend{\pgfarrowlength\ifpgfarrowharpoon\advance\pgf@x by\pgf@xa\fi}%
+		\fi
+		% The hull:
+		\pgfarrowshullpoint{\pgfarrowlength\ifpgfarrowroundjoin\else\ifpgfarrowharpoon\advance\pgf@x by\pgf@xa\fi\fi}{\ifpgfarrowharpoon-.5\pgfarrowlinewidth\else0pt\fi}%
+		\pgfarrowsupperhullpoint{0pt}{.5\pgfarrowwidth}%
+		\pgfarrowshullpoint{\pgfarrowinset}{\ifpgfarrowharpoon-.5\pgfarrowlinewidth\else 0pt\fi}%
+		% Adjust inset
+		\pgfarrowssetvisualbackend{\pgfarrowinset}%
+		\advance\pgfarrowinset by\pgf@yc%
+		% The following are needed in the code:
+		\pgfarrowssavethe\pgfutil@tempdima
+		\pgfarrowssavethe\pgfutil@tempdimb
+		\pgfarrowssavethe\pgfarrowlinewidth
+		\pgfarrowssavethe\pgf@ya
+		\pgfarrowssavethe\pgfarrowinset
+	},%
+	drawing code = {%
+		\pgfsetdash{}{0pt}%
+		\ifpgfarrowroundjoin\pgfsetroundjoin\else\pgfsetmiterjoin\fi
+		\ifdim\pgfarrowlinewidth=\pgflinewidth\else\pgfsetlinewidth{\pgfarrowlinewidth}\fi
+		\pgfpathmoveto{\pgfqpoint{\pgfutil@tempdima\advance\pgf@x by\pgf@ya}{0pt}}%
+		\pgfpathlineto{\pgfqpoint{\pgf@ya}{\pgfutil@tempdimb}}%
+		\pgfpathlineto{\pgfqpoint{\pgfarrowinset}{0pt}}%
+		\ifpgfarrowharpoon \else
+			\pgfpathlineto{\pgfqpoint{\pgf@ya}{-\pgfutil@tempdimb}}%
+		\fi
+		\pgfpathclose
+		\ifpgfarrowopen\pgfusepathqstroke\else\ifdim\pgfarrowlinewidth>0pt \pgfusepathqfillstroke\else\pgfusepathqfill\fi\fi
+	},%
+	parameters = {%
+		\the\pgfarrowlinewidth,%
+		\the\pgfarrowlength,%
+		\the\pgfarrowwidth,%
+		\the\pgfarrowinset,%
+		\ifpgfarrowharpoon h\fi%
+		\ifpgfarrowopen o\fi%
+		\ifpgfarrowroundjoin j\fi%
+	}%
+}
+\CFrestorecatcode
+\endinput
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                       H I S T O R I Q U E                      %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+v0.1        2010/06/23
+    - Première version publique sur le CTAN
+----------------------------------------------------------------------
+v0.2        2010/08/31
+    - Ajout de la documentation en anglais.
+    - Correction de bugs.
+    - \printatom est désormais une macro publique.
+    - Les espaces sont permis dans les molécules. Ils seront
+      ignorés par défaut puisque les atomes sont composés en
+      mode math par \printatom
+    - Une paire de Lewis peut être représentée ":".
+    - Dans les cycles, une correction de la longueur du trait
+      déporté des liaisons doubles est fait de telle sorte que si
+      l'on écrit \chemfig{*5(=====)}, on obtient deux polygones
+      réguliers concentriques.
+    - La séquence de contrôle \setnodestyle permet de spécifier
+      le style des n?uds dessinés par tikz.
+----------------------------------------------------------------------
+v0.3        2010/11/21
+    - Amélioration de \definesubmol qui accepte les séquences de
+      contrôle. On peut aussi choisir un alias dont la substitution
+      est différente selon l'orientation de la liaison qui lui
+      arrive dessus.
+    - Le caractère "|" force la fin d'un atome. Si on écrit
+      "D|ef" alors, chemfig verra deux atomes "D" et "ef".
+    - Le caractère "#" est reconnu lorsqu'il suit un caractère de
+      liaison. Il doit être suivi d'un argument entre parenthèses
+      qui contient l'offset de début et de fin qui s'appliqueront
+      à cette liaison.
+    - La macro \chemfig admet un argument optionnel qui sera passé
+      à l'environnement tikzpicture dans lequel elle est dessinée
+    - Mise en place de la représentation des mécanismes
+      réactionnels avec la syntaxe "@{<nom>}" devant un atome où
+      "@{<nom>,<coeff>}" au tout début de l'argument d'une liaison.
+      Cette syntaxe permet de placer un n?ud (au sens de tikz) qui
+      deviendra l'extrémité des flèches des mécanismes.
+      Le tracé des flèches est faite par la macro \chemmove dont
+      l'argument optionnel devient celui de l'environnement
+      tikzpicture dans lequel sont faites les flèches.
+    - Pour le mécanisme d'alignement vertical via le \vphantom, la
+      commande \chemskipalign permet d'ignorer le groupe d'atomes
+      dans lequel elle est écrite.
+    - La commande \chemname permet d'afficher un nom sous une
+      molécule. la commande \chemnameinit initialise la plus grande
+      profondeur rencontrée.
+    - La commande \lewis a été modifiée de telle sorte que les
+      dessins des décorations soient proportionnels à la taille
+      de la police.
+----------------------------------------------------------------------
+v0.3a       2011/01/08
+    - Correction d'un bug dans l'argument optionnel de \definesubmol
+      lorsque celui-ci comporte des crochets.
+    - Mise à jour du manuel en anglais.
+    - Ajout de \vflipnext et \hflipnext pour retourner
+      horizontalement ou verticalement la prochaine molécule.
+----------------------------------------------------------------------
+v0.4        2011/03/07
+    - chemfig est désormais écrit en plain-etex et donc
+      utilisable par d'autres formats que LaTeX.
+    - Un peu plus de rigueur avec les catcodes des caractères
+      spéciaux, notamment lorsque la commande \chemfig se trouve
+      dans l'argument de \chemmove, \chemabove, \chembelow, \chemrel.
+      TODO : faut-il \scantoker l'argument de \chemfig pour être
+      définitivement débarrassé de ces histoires de catcode ???
+    - Correction d'un bug dans le calcul de l'angle des liaisons
+----------------------------------------------------------------------
+v0.4a       2011/04/10
+    - Correction d'un bug concernant l'argument optionnel en début
+      de molécule.
+----------------------------------------------------------------------
+v0.4b       2011/04/24
+    - l'argument de \chemfig est tokénisé avec \scantokens ce qui
+      rend caduc tout souci de code de catégorie, à part #.
+    - la commande \setbondstyle permet de définir le style des
+      liaisons.
+    - correction de l'affichage incorrect des doubles liaisons dans
+      les cycles après les commandes \hflipnext et \vflipnext
+    - correction d'un bug lorsqu'un alias commence une molécule
+----------------------------------------------------------------------
+v1.0       2011/06/15
+    - les schémas réactionnels sont désormais disponibles.
+    - \Chemabove et \Chembelow modifient la boite englobante.
+    - \Lewis modifie la boite englobante
+    - les macros \chemleft, \chemright, \chemup et \chemdown
+      affichent des délimiteurs extensibles à gauche, à droite,
+      au dessus et au dessous d'un matériel.
+----------------------------------------------------------------------
+v1.0a      2011/09/18
+    - les macros \Lewis et \lewis admettent un argument optionnel
+    - la macro \setlewisdist règle la distance entre les 2
+      électrons
+----------------------------------------------------------------------
+v1.0b      2011/11/29
+    - la commande \merge est désormais protégée entre
+      \schemestart et \schemestop contre des définitions par d'autres
+      packages.
+    - \box0 est utilisé au lieu du maladroit \unhbox0
+----------------------------------------------------------------------
+v1.0c      2011/11/30
+    - la macro \+ n'est plus explicitement écrite
+    - vérifie que eTeX est le moteur utilisé
+----------------------------------------------------------------------
+v1.0d      2011/12/19
+    - les cercles des cycles étaient tracés au mauvais moment. La
+      longueur de la liaison qui les précédait influait sur le
+      rayon du cercle : \chemfig{-[,0.5]**6(------)} donnait un bug
+      à l'affichage.
+----------------------------------------------------------------------
+v1.0e      2012/01/13
+    - la gestion des espaces dans les groupes d'atomes est
+      désormais plus rigoureuse. Plusieurs bugs ont été
+      corrigé
+----------------------------------------------------------------------
+v1.0f      2012/02/24
+    - correction d'un bug avec \definesubmol, les catcodes n'étaient
+      pas correctement gérés.
+----------------------------------------------------------------------
+v1.0g      2012/11/16
+    - correction d'un bug dans \CF_directarrow pour faire prendre en
+      compte le style des flèche par défaut
+    - correction d'un bug dans \CF_lewisc : la boite *doit* être
+      composée en dehors de l'environnement tikzpicture pour
+      éviter nullfont si jamais \printatom ne passe pas en mode
+      math.
+    - correction d'un bug dans \CF_chemfigc : si une longueur par
+      défaut est modifiée par [,<l>] au début d'une molécule
+      et si des cycles étaient emboités, cette longueur n'était
+      pas appliquée aux sous-cycles.
+    - ré-écriture des macros \chemabove et \chembemow pour
+      prendre en compte le bug (désormais corrigé) dans luatex.
+    - nouvelle macro \setstacksep qui définit l'espacement par
+      défaut dans les macros \chemabove et \chembelow.
+----------------------------------------------------------------------
+v1.0h      2013/11/28
+    - \chemname admet maintenant une version étoilé qui ne tient
+      pas compte des profondeurs précédentes.
+    - \CF_dpmax est géré globalement.
+    - correction d'un bug dans "-U>" : le style de la flèche
+      n'était pris en compte pour l'arc.
+    - correction d'un bug dans \CF_directarrow : l'angle de la
+      flèche n'était pas calculé
+----------------------------------------------------------------------
+v1.1       2015/02/13
+    - correction d'un bug dans \CF_seeksubmol : la macro
+      \CF_molecule est dépouillé de son éventuel espace
+      en première position.
+    - correction d'un bug dans \CF_arrowf : le nom du prochain
+      n?ud courant "end@arrow@i" était erroné dans le cas où une
+      flèche contenait un sous schéma. Ce nom doit dépendre de
+      \CF_schemenest.
+    - la jonction entre deux liaisons consécutives dans l'axe peut
+      être activé avec \enablebondjoin et désactivé avec
+      \disablebondjoin (préférable, état par défaut).
+    - \chemfig suivi d'une "*" demande à ce que les liaisons aient
+      une longueur invariable : la distance inter-atome devient donc
+      variable. Cette fonctionnalité est désactivé dans les
+      cycles afin que les polygones soient réguliers.
+      \enablefixedbondlength permet cette fonctionnalité pour
+      toutes les macros \chemfig (même non étoilée) tandis que
+      \disablefixedbondlength le désactive.
+----------------------------------------------------------------------
+v1.1a      2015/02/23
+    - correction d'un bug dans \CF_grabbondoffset. Si \chemfig est
+      dans l'argument d'une macro, les # sont doublés par l'action
+      de \scantokens de la macro \CF_chemfigb et il faut un
+      argument délimité avant "(" pour absorber tous les #.
+----------------------------------------------------------------------
+v1.2       2015/10/08
+    - correction d'un bug dans le tracé des liaisons de Cram.
+    - création de \setangleincrement.
+    - chargement de "arrows.meta" et définition de la flèche "CF"
+      basée sur "Stealth" et définie avec \pgfdeclarearrow.
+      Les anciennes flèches "CF_full" et "CF_half" sont
+      abandonnées puisque définies avec \pgfarrowsdeclare.
+    - flèche "-U>" corrigée : le placement des labels est
+      maintenant correct dans tous les cas. Ainsi :
+                         -U>[<a>][<b>][<d>][r][a]
+      place le label <a> près du début de la flèche, quels que
+      soient les signes du rayon r et de l'angle a.
+    - \chemrel, \setchemrel et \chemsign sont supprimées.
+    - compatibilité, avec les limitations d'usage, avec la
+      librairie "externalize" : le \begin{tikzpicture} voit
+      désormais le \end{tikzpicture} correspondant dans la macro
+      \CF_chemfigb.
+----------------------------------------------------------------------
+v1.2a      2015/10/21
+    - erreur de copier-coller dans le code: une adresse url était
+      malencontreusement présente en plein milieu d'une ligne de
+      code
+----------------------------------------------------------------------
+v1.2b      2015/11/15
+    - bug dans \CF_seeksubmol qui laissait "*" dans le flux de
+      lecture de TeX. Un message d'erreur est également ajouté
+      en cas de "!" en fin de traitement.
+    - correction d'un bug dans \CF_setbondangle où l'angle [<:a>]
+      n'était pas évalué par \pgfmathsetmacro.
+----------------------------------------------------------------------
+v1.2c      2015/11/20
+    - Correction d'un bug dans \CF_setbondangle : l'angle renvoyé
+      pouvait être négatif
+    - Correction d'un bug dans \CF_directarrow : la macro \CF_ifempty
+      n'est pas correctement développée dans l'argument de
+      \pgfpointanchor
+----------------------------------------------------------------------
+v1.2d      2015/12/01
+    - correction d'un bug dans la flèche "-U"
+    - la version étoilée de \setcrambond dessine les liaisons de
+      Cram en pointillés sous forme de trait large et non pas sous
+      forme de triangle.
+----------------------------------------------------------------------
+v1.2e      2017/05/20
+    - la macro contenant la définition d'une flèche est
+      désormais "\CF_arrow(<nom>)", ainsi la macro \0 n'est plus
+      définie par \definearrow
+    - remerciements rajoutés après une suppression indue, pour ne
+      froisser aucune susceptibilité
+----------------------------------------------------------------------
+v1.3       2018/03/08
+    - tous les paramètres sont désormais passés via \setchemfig qui
+      fait appel à "simplekv". Par conséquent, _toutes_ les macros qui
+      réglaient des paramètres deviennent obsolètes, à savoir :
+          \setcrambond, \setatomsep, \setbondoffset, \setdoublesep,
+          \setangleincrement, \enablefixedbondlength,
+          \disablefixedbondlength, \setnodestyle, \setbondstyle,
+          \setlewis, \setlewisdist, \setstacksep, \setcompoundstyle,
+          \setarrowdefault, \setandsign, \setarrowoffset,
+          \setcompoundsep, \setarrowlabelsep, \enablebondjoin,
+          \disablebondjoin et \schemedebug.
+      et ces macros seront *supprimées* dans une future version.
+    - la version étoilée "\chemfig*" et les deux arguments optionnels
+      de la macro "\chemfig[][]" sont également optionnels et seront
+      *supprimé*s dans une future version afin d'accéder à la syntaxe
+      \chemfig[clés=valeurs]{code}
+    - 6 nouveaux paramètres : "lewis radius", "arrow double sep",
+      "arrow double coeff", "arrow double harpoon", "cycle radius
+      coeff", "arrow head".
+    - correction d'un bug dans \CF_parsemergeopt qui dans certains
+      cas, envoyait vers l'affichage des caractères
+    - petit toilettage du code
+    - macro \polymerdelim (non documentée) expérimentale et encore
+      en phase de tests
+    - suppression d'un registre d'écriture de fichier
+----------------------------------------------------------------------
+v1.31       2018/04/05
+    - correction d'un espace indésirable dans \CF_ifnextchar
+----------------------------------------------------------------------
+v1.32       2018/08/23
+    - définition de \printatom, \CF_begintikzpicture et 
+      \CF_endtikzpicture dans le fichier t-chemfig.tex
+----------------------------------------------------------------------
+v1.33       2018/10/31
+    - les macros définies par \definesubmol peuvent désormais avoir un ou
+      plusieurs arguments
+    - macro \polymerdelim documentée
+----------------------------------------------------------------------
+v1.34       2019/02/23
+    - bug dans la flèche "<->" corrigé
+----------------------------------------------------------------------
+v1.4        2019/04/18
+    - corrections de nombreux bugs
+    - caractère privé "_" et non plus "@" -> modifications à prévoir
+      notamment dans la doc avec les codes spécifiques aux flèches, ça
+      risque de couiner sur tex.stackexchange.com
+    - anciennes macros abandonnées et désormais indéfinies :
+          \setcrambond, \setatomsep, \setbondoffset, \setdoublesep,
+          \setangleincrement, \enablefixedbondlength,
+          \disablefixedbondlength, \setnodestyle, \setbondstyle,
+          \setlewis, \setlewisdist, \setstacksep, \setcompoundstyle,
+          \setarrowdefault, \setandsign, \setarrowoffset,
+          \setcompoundsep, \setarrowlabelsep, \enablebondjoin,
+          \disablebondjoin et \schemedebug
+    - l'ancienne syntaxe \chemfig[][]{} est abandonnée et n'est plus
+      acceptée, désormais c'est 
+      \chemfig[<clés>=<valeurs>]{<code molécule>}
+    - l'ancienne syntaxe \lewis[<coeff>] ou \Lewis[<coeff>] n'est
+      plus acceptée au profit de \lewis[<clés>=<valeurs>]
+----------------------------------------------------------------------
+v1.41       2019/05/21
+    - utilisation de la nouvelle primitive \expanded
+    - nouvelle clé "h align" (true par défaut) pour les délimiteurs
+      de \polymerdelim. Lorsque à false, les délimiteurs ne sont
+      plus alignés horizontalement mais positionnés aux noeuds demandés
+    - nouvelle clé "auto rotate" qui n'a de sens que si h align=false :
+      les délimiteurs sont automatiquement inclinés
+    - nouvelle clé "rotate" qui n'a de sens que si halign=false ET
+      auto rotate=false : l'inclinaison des délimiteurs peut être
+      choisie

@@ -1,6 +1,6 @@
 {
-  "cssTheme": "Minimal",
-  "baseFontSize": 19,
+  "cssTheme": "Primary",
+  "baseFontSize": 23,
   "translucency": false,
   "accentColor": "",
   "interfaceFontFamily": "Karla",
@@ -9,17 +9,10 @@
   "nativeMenus": false,
   "showViewHeader": true,
   "enabledCssSnippets": [
-    "snippet_fonts",
-    "snippet_text",
-    "supercharged-links-gen",
     "minimal-cards",
-    "snippet_vaultname",
-    "Anuppuchin-extended-colorschemes",
     "addin.dracula",
     "addin-headers",
-    "Dracula colors",
-    "Anuppuchin",
-    "snippet_headers"
+    "supercharged-links-gen"
   ],
-  "theme": "obsidian"
+  "theme": "moonstone"
 }

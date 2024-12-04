@@ -3,7 +3,6 @@
   "obsidian-excalidraw-plugin",
   "templater-obsidian",
   "media-extended",
-  "breadcrumbs",
   "buttons",
   "folder-note-plugin",
   "nldates-obsidian",
@@ -16,9 +15,9 @@
   "settings-search",
   "quick-latex",
   "recent-files-obsidian",
-  "obsidian-banners",
-  "obsidian-minimal-settings",
   "supercharged-links-obsidian",
   "obsidian-meta-bind-plugin",
-  "obsidian-style-settings"
+  "obsidian-style-settings",
+  "swiftlatex-render",
+  "hotkey-helper"
 ]

@@ -1,8 +1,10 @@
 ---
-tags: []
-alias: [Longform notes]
-cssclass: [cards, cards-cover]
-banner_icon: 📘
+tags: 
+aliases:
+  - Longform notes
+cssclasses:
+  - cards
+  - cards-cover
 ---
 
 # Longform notes

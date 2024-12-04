@@ -16,7 +16,7 @@ This is an Obsidian vault, targeted for students in STEM, especially for Mathema
 
 ## Resources
 
-- [[Markdown guide]]
+- [[Guide to markdown and beyond]]
 - https://help.obsidian.md/
 - https://publish.obsidian.md/hub
 - [Starting with Obsidian - ℝ²](https://riddyrayes.github.io/notes/starting-with-obsidian/)

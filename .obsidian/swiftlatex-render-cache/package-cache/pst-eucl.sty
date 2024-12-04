@@ -1,0 +1,15 @@
+\RequirePackage{pstricks}
+\RequirePackage{pst-node}
+\RequirePackage{pst-tools}
+\RequirePackage{pst-calculate}
+\ProvidesPackage{pst-eucl}[2014/05/17 package wrapper for PSTricks pst-eucl.tex]
+\DeclareOption{old}{\gdef\psteucl@old{}}%   DR 10/05/2005
+\ProcessOptions
+\input{pst-eucl.tex}
+\ProvidesFile{pst-eucl.tex}
+  [\filedate\space v\fileversion\space `PST-eucl' (dr,hv)]
+\IfFileExists{pst-eucl.pro}{%
+  \ProvidesFile{pst-eucl.pro}
+    [2020/01/29 v. 1.03,  PostScript prologue file (hv)]
+    \@addtofilelist{pst-eucl.pro}}{}%
+\endinput

@@ -2,9 +2,7 @@
   "readableLineLength": false,
   "promptDelete": false,
   "spellcheck": true,
-  "spellcheckLanguages": [
-    "en-GB"
-  ],
+  "spellcheckLanguages": null,
   "tabSize": 3,
   "showFrontmatter": false,
   "trashOption": "local",
@@ -17,7 +15,7 @@
   "communityThemeSortOrder": "download",
   "defaultViewMode": "preview",
   "smartIndentList": true,
-  "showLineNumber": true,
+  "showLineNumber": false,
   "strictLineBreaks": false,
   "rightToLeft": false,
   "showInlineTitle": false,
