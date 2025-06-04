@@ -15,3 +15,5 @@ tags: []
 > - the operation $\star$ is **associative** $$(a\star b)\star c = a \star (b\star c)\ \text{for any}\ a,b,c \in G$$
 > - $G$ has an **identity element**, denoted $i_G$ with the property $$i_G \star g = g \star i_G = g \ \forall g \in G$$
 > - each element $g \in G$ has an **inverse**, that is, an element $h \in G$ such that $$g \star h = h \star g = i_G$$
+
+

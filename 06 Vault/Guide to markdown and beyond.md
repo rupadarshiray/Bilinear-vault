@@ -1,5 +1,3 @@
-# Guide to markdown and beyond
-
 Obsidian understands standard markdown syntaxes, including: **bold**, *italic*, ~~strikethrough~~, ==highlight== and many more:
 
 ## Headings
@@ -88,3 +86,24 @@ fun helloWorld() {
 \end{document}
 
 ```
+
+Copy `tikz-cd` code from https://q.uiver.app/ and press `ALT+E` then `quiver`:
+
+```latexsvg
+\documentclass{standalone}
+\usepackage{tikz-cd}\usepackage{amsfonts}\usepackage{amsmath}\usepackage{quiver}\usepackage{mathrsfs}
+
+\begin{document}
+\tikzcdset{scale cd/.style={every label/.append style={scale=#1},cells={nodes={scale=#1}}}}
+% \begin{tikzcd}[scale cd=0.8]
+
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJBIl0sWzAsMSwiQiJdLFswLDFdXQ==
+\begin{tikzcd}
+	A \\
+	B
+	\arrow[from=1-1, to=2-1]
+\end{tikzcd}
+
+\end{document}
+```
+

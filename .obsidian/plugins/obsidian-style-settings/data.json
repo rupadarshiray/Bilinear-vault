@@ -152,9 +152,9 @@
   "primary-theme@@editor-bgpattern-color@@light": "#F1B4B0",
   "primary-theme@@editor-border-width": "2px",
   "primary-theme@@editor-border-color@@light": "#F1B4B0",
-  "primary-theme@@editor-file-header": "file-header-hover",
+  "primary-theme@@editor-file-header": "file-header-default",
   "primary-theme@@file-header-border-color@@light": "#F1B4B0",
-  "primary-theme@@interface_status-bar-style": "sb-style-slideupfull",
+  "primary-theme@@interface_status-bar-style": "sb-style-floating",
   "primary-theme@@interface_status-bar-item-display": "sb-word-count-only",
   "primary-theme@@h1-text-align": "center",
   "primary-theme@@h1-text-transform": "normal",
@@ -166,5 +166,6 @@
   "primary-theme@@alt-folder-icons": true,
   "primary-theme@@colorful-folders_text": true,
   "primary-theme@@colorful-folders_indentation-guide": true,
-  "primary-theme@@colorful-folders_inherit-color": true
+  "primary-theme@@colorful-folders_inherit-color": true,
+  "minimal-style@@base@@light": "#6D6D6D"
 }

@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "28f5c2fe9385988a",
+        "id": "04bd5e153608fce1",
         "type": "tabs",
         "children": [
           {
-            "id": "2269337aa0f0c770",
+            "id": "d8f49e13e911c20c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -20,23 +20,8 @@
               "icon": "lucide-file",
               "title": "Home"
             }
-          },
-          {
-            "id": "c4b1667efdcbfb07",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "06 Vault/Guide to markdown and beyond.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Guide to markdown and beyond"
-            }
           }
         ],
-        "currentTab": 1,
         "stacked": true
       }
     ],
@@ -56,7 +41,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": true
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -68,7 +54,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#lecture",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -77,16 +63,6 @@
               },
               "icon": "lucide-search",
               "title": "Search"
-            }
-          },
-          {
-            "id": "44d5032b4bb07835",
-            "type": "leaf",
-            "state": {
-              "type": "recent-files",
-              "state": {},
-              "icon": "clock",
-              "title": "Recent Files"
             }
           },
           {
@@ -107,6 +83,16 @@
               "state": {},
               "icon": "clock",
               "title": "Recent Files"
+            }
+          },
+          {
+            "id": "ff38b1f72cb92629",
+            "type": "leaf",
+            "state": {
+              "type": "structured-tree-view",
+              "state": {},
+              "icon": "structured-activity-bar",
+              "title": "Structured Tree"
             }
           }
         ]
@@ -129,7 +115,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "00 Longform notes/00 Longform notes.md",
+                "file": "Home.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +125,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 00 Longform notes"
+              "title": "Backlinks for Home"
             }
           },
           {
@@ -148,12 +134,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00 Longform notes/00 Longform notes.md",
+                "file": "Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 00 Longform notes"
+              "title": "Outgoing links from Home"
             }
           },
           {
@@ -163,7 +149,9 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-tags",
               "title": "Tags"
@@ -175,39 +163,32 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00 Longform notes/00 Longform notes.md"
+                "file": "Home.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 00 Longform notes"
+              "title": "Outline of Home"
             }
-          }
-        ],
-        "currentTab": 3
-      },
-      {
-        "id": "384e5599efbdaada",
-        "type": "tabs",
-        "children": [
+          },
           {
-            "id": "c67d438edf228ec5",
+            "id": "45cd66e135f65f41",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "footnotes",
               "state": {
-                "file": "Home.md",
-                "mode": "preview",
-                "source": false
+                "file": "Home.md"
               },
-              "icon": "lucide-file",
-              "title": "Home"
+              "icon": "lucide-file-signature",
+              "title": "Footnotes"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 311.5,
-    "collapsed": true
+    "width": 311.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -220,41 +201,42 @@
       "random-note:Open random note": false,
       "audio-recorder:Start/stop recording": false,
       "workspaces:Manage workspace layouts": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
       "templater-obsidian:Templater": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
       "media-extended:Open media": false,
       "obsidian-kanban:Create new board": false,
-      "obsidian-excalidraw-plugin:Create new drawing": false
+      "structured-tree:Open Structured Tree": false
     }
   },
-  "active": "c4b1667efdcbfb07",
+  "active": "d8f49e13e911c20c",
   "lastOpenFiles": [
-    "Home.md",
-    "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md",
-    "04 Academia/04-04 Problems/04-04 Problems.md",
-    "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md",
-    "04 Academia/04-03 Notes/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
-    "04 Academia/04-01 Library/04-01 Library.md",
-    "06 Vault/Guide to markdown and beyond.md",
-    "06 Vault/06 Vault.md",
-    "06 Vault/Templates/% course-note.md",
-    "06 Vault/Templates/% daily note.md",
-    "06 Vault/Templates/% excalidraw.md",
-    "06 Vault/Templates/% lecture-note.md",
-    "06 Vault/Templates/% new.md",
-    "06 Vault/Templates/% problem.md",
-    "06 Vault/Templates/% new longform.md",
     "readme.md",
-    "23 Uni/23 Uni.md",
+    "Home.md",
     "2312 RXB23/2312 RXB23.md",
-    "01 Life/01 Life.md",
-    "07 Entertainment/07 Entertainment.md",
+    "2309 Uni Sem 1/2309 Uni Sem 1.md",
+    "23 Uni/23 Uni.md",
     "2309 Uni Sem 1/MTH101/MTH101.md",
+    "07 Entertainment/07 Entertainment.md",
     "00 Longform notes/00 Longform notes.md",
-    "08 Gardening/08 Gardening.md",
+    "00 Longform notes/math/root.md",
+    "06 Vault/Guide to markdown and beyond.md",
+    "00 Longform notes/math/str.md",
+    "00 Longform notes/math/str.group.md",
     "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md",
-    "00 Longform notes/math/math.md",
+    "06 Vault/06 Vault.md",
+    "06 Vault/Templates/% new quiver.md",
+    "06 Vault/Templates/Template - new quiver.md",
+    "08 Gardening/08 Gardening.md",
+    "06 Vault/Templates/% new longform.md",
+    "02 Creative A/02 Creative A.md",
+    "03 Creative B/03 Creative B.md",
+    "01 Life/01 Life.md",
+    "01 Life/01-01 Daily notes/2023/2023-04-06.md",
+    "00 Longform notes/physics/physics.md",
     "00 Longform notes/programming/programming.md",
+    "00 Longform notes/math/math.md",
+    "04 Academia/04-01 Library/04-01 Library.md",
+    "2309 Uni Sem 1/MTH101/Lectures",
     "05 Work A",
     "04 Academia/04-03 Notes",
     "04 Academia/04-02 Studying",

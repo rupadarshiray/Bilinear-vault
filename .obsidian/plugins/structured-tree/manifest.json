@@ -1,0 +1,11 @@
+{
+  "id": "structured-tree",
+  "name": "Structured Tree",
+  "version": "2.4.0",
+  "minAppVersion": "1.1.0",
+  "description": "Explore, manage and navigate hierarchical notes",
+  "author": "Marius Svarverud",
+  "authorUrl": "https://github.com/Rudtrack",
+  "fundingUrl": "https://github.com/sponsors/Rudtrack",
+  "isDesktopOnly": false
+}

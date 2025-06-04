@@ -1,120 +1,68 @@
 {
   "recentFiles": [
     {
-      "basename": "Guide to markdown and beyond",
-      "path": "06 Vault/Guide to markdown and beyond.md"
-    },
-    {
       "basename": "Home",
       "path": "Home.md"
-    },
-    {
-      "basename": "PROBLEM 2023-04-06-How to glue together spaces",
-      "path": "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md"
-    },
-    {
-      "basename": "04-04 Problems",
-      "path": "04 Academia/04-04 Problems/04-04 Problems.md"
-    },
-    {
-      "basename": "STUDY Algebra",
-      "path": "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md"
-    },
-    {
-      "basename": "COURSE Abstract Algebra",
-      "path": "04 Academia/04-03 Notes/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md"
-    },
-    {
-      "basename": "04-01 Library",
-      "path": "04 Academia/04-01 Library/04-01 Library.md"
-    },
-    {
-      "basename": "06 Vault",
-      "path": "06 Vault/06 Vault.md"
-    },
-    {
-      "basename": "% course-note",
-      "path": "06 Vault/Templates/% course-note.md"
-    },
-    {
-      "basename": "% daily note",
-      "path": "06 Vault/Templates/% daily note.md"
-    },
-    {
-      "basename": "% excalidraw",
-      "path": "06 Vault/Templates/% excalidraw.md"
-    },
-    {
-      "basename": "% lecture-note",
-      "path": "06 Vault/Templates/% lecture-note.md"
-    },
-    {
-      "basename": "% new",
-      "path": "06 Vault/Templates/% new.md"
-    },
-    {
-      "basename": "% problem",
-      "path": "06 Vault/Templates/% problem.md"
-    },
-    {
-      "basename": "% new longform",
-      "path": "06 Vault/Templates/% new longform.md"
     },
     {
       "basename": "readme",
       "path": "readme.md"
     },
     {
-      "basename": "23 Uni",
-      "path": "23 Uni/23 Uni.md"
-    },
-    {
       "basename": "2312 RXB23",
       "path": "2312 RXB23/2312 RXB23.md"
     },
     {
-      "basename": "01 Life",
-      "path": "01 Life/01 Life.md"
+      "basename": "2309 Uni Sem 1",
+      "path": "2309 Uni Sem 1/2309 Uni Sem 1.md"
     },
     {
-      "basename": "07 Entertainment",
-      "path": "07 Entertainment/07 Entertainment.md"
+      "basename": "23 Uni",
+      "path": "23 Uni/23 Uni.md"
     },
     {
       "basename": "MTH101",
       "path": "2309 Uni Sem 1/MTH101/MTH101.md"
     },
     {
+      "basename": "07 Entertainment",
+      "path": "07 Entertainment/07 Entertainment.md"
+    },
+    {
       "basename": "00 Longform notes",
       "path": "00 Longform notes/00 Longform notes.md"
     },
     {
-      "basename": "08 Gardening",
-      "path": "08 Gardening/08 Gardening.md"
+      "basename": "root",
+      "path": "00 Longform notes/math/root.md"
     },
     {
-      "basename": "math 20220925133922.excalidraw",
-      "path": "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md"
+      "basename": "Guide to markdown and beyond",
+      "path": "06 Vault/Guide to markdown and beyond.md"
     },
     {
-      "basename": "math",
-      "path": "00 Longform notes/math/math.md"
-    },
-    {
-      "basename": "programming",
-      "path": "00 Longform notes/programming/programming.md"
-    },
-    {
-      "basename": "physics",
-      "path": "00 Longform notes/physics/physics.md"
+      "basename": "str",
+      "path": "00 Longform notes/math/str.md"
     },
     {
       "basename": "str.group",
       "path": "00 Longform notes/math/str.group.md"
     },
     {
-      "basename": "str",
-      "path": "00 Longform notes/math/str.md"
+      "basename": "math 20220925133922.excalidraw",
+      "path": "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md"
+    },
+    {
+      "basename": "06 Vault",
+      "path": "06 Vault/06 Vault.md"
+    },
+    {
+      "basename": "08 Gardening",
+      "path": "08 Gardening/08 Gardening.md"
+    },
+    {
+      "basename": "% new longform",
+      "path": "06 Vault/Templates/% new longform.md"
     },
     {
       "basename": "02 Creative A",
@@ -125,36 +73,81 @@
       "path": "03 Creative B/03 Creative B.md"
     },
     {
-      "basename": "05 Work A",
-      "path": "05 Work A/05 Work A.md"
+      "basename": "01 Life",
+      "path": "01 Life/01 Life.md"
     },
     {
       "basename": "2023-04-06",
       "path": "01 Life/01-01 Daily notes/2023/2023-04-06.md"
     },
     {
+      "basename": "04-01 Library",
+      "path": "04 Academia/04-01 Library/04-01 Library.md"
+    },
+    {
+      "basename": "STUDY Algebra",
+      "path": "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md"
+    },
+    {
+      "basename": "05 Work A",
+      "path": "05 Work A/05 Work A.md"
+    },
+    {
+      "basename": "COURSE Abstract Algebra",
+      "path": "04 Academia/04-03 Notes/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md"
+    },
+    {
+      "basename": "04-04 Problems",
+      "path": "04 Academia/04-04 Problems/04-04 Problems.md"
+    },
+    {
+      "basename": "PROBLEM 2023-04-06-How to glue together spaces",
+      "path": "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md"
+    },
+    {
       "basename": "MTH101.L01",
       "path": "2309 Uni Sem 1/MTH101/MTH101.L01.md"
     },
     {
-      "basename": "MTH101.L01.Drawing 221007182040",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md"
+      "basename": "% problem",
+      "path": "06 Vault/Templates/% problem.md"
     },
     {
-      "basename": "MTH101.L02",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L02.md"
+      "basename": "% excalidraw",
+      "path": "06 Vault/Templates/% excalidraw.md"
     },
     {
       "basename": "List of files",
       "path": "06 Vault/List of files.md"
     },
     {
-      "basename": "05 2309 Uni Sem 1",
-      "path": "2309 Uni Sem 1/05 2309 Uni Sem 1.md"
+      "basename": "MTH101.L01.Drawing 221007182040",
+      "path": "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md"
+    },
+    {
+      "basename": "% course-note",
+      "path": "06 Vault/Templates/% course-note.md"
+    },
+    {
+      "basename": "% daily note",
+      "path": "06 Vault/Templates/% daily note.md"
+    },
+    {
+      "basename": "% lecture-note",
+      "path": "06 Vault/Templates/% lecture-note.md"
+    },
+    {
+      "basename": "% new",
+      "path": "06 Vault/Templates/% new.md"
+    },
+    {
+      "basename": "MTH101.L02",
+      "path": "2309 Uni Sem 1/MTH101/MTH101.L02.md"
     }
   ],
   "omittedPaths": [],
   "omittedTags": [],
+  "updateOn": "file-open",
   "omitBookmarks": false,
   "maxLength": null,
   "openType": "tab"

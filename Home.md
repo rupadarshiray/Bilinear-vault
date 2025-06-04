@@ -1,10 +1,4 @@
----
-my_name: Pikachu
-my_birth_date:
-- year:
-- month:
-- date:
----
+
 
 ```dataviewjs
 const currentHour = moment().format('HH');
@@ -88,7 +82,7 @@ dv.span(`
 
 
 
-## Some specifications chosen for this vault
+%%## Some specifications chosen for this vault
 
 - Focused on having unique note titles.
 - Folder
@@ -99,7 +93,9 @@ dv.span(`
 ## Personalize your vault
 
 - Change your date of birth and name in [[Home]]
-
+%%
 ## Learn how to use Obsidian
 
-![[Guide to markdown and beyond]]
+[[Guide to markdown and beyond]]
+
+![[readme#More resources]]

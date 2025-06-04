@@ -12,7 +12,10 @@
     "minimal-cards",
     "addin.dracula",
     "addin-headers",
-    "supercharged-links-gen"
+    "supercharged-links-gen",
+    "snippet_text2",
+    "snippet_text"
   ],
-  "theme": "moonstone"
+  "theme": "moonstone",
+  "showRibbon": false
 }

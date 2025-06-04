@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "dotfiles/Templates",
+  "templates_folder": "06 Vault/Templates",
   "templates_pairs": [
     [
       "",
@@ -23,12 +23,21 @@
       "template": "dotfiles/Templates/% new longform.md"
     }
   ],
+  "enable_file_templates": false,
+  "file_templates": [
+    {
+      "regex": ".*",
+      "template": ""
+    }
+  ],
   "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
     ""
   ],
   "startup_templates": [
     ""
   ],
+  "intellisense_render": 1,
   "enable_ribbon_icon": true
 }

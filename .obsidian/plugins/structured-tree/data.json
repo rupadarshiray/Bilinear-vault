@@ -1,0 +1,29 @@
+{
+  "vaultList": [
+    {
+      "path": "00 Longform notes/math",
+      "name": "math",
+      "isSecret": false
+    }
+  ],
+  "autoReveal": true,
+  "customResolver": false,
+  "customGraph": false,
+  "enableCanvasSupport": true,
+  "hierarchySeparator": ".",
+  "autoGenerateFrontmatter": true,
+  "generateTags": false,
+  "generateId": false,
+  "generateTitle": true,
+  "generateDesc": true,
+  "generateCreated": false,
+  "idKey": "id",
+  "titleKey": "title",
+  "descKey": "desc",
+  "createdKey": "created",
+  "createdFormat": "yyyy-mm-dd",
+  "fuzzySearchFileNameWeight": 0.6,
+  "fuzzySearchThreshold": 0.2,
+  "excludedPaths": [],
+  "pluginIcon": "structured-activity-bar"
+}

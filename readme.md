@@ -7,4 +7,4 @@ This is an Obsidian vault, targeted for students in STEM, especially for Mathema
 
 - https://help.obsidian.md/
 - https://publish.obsidian.md/hub
-- [Starting with Obsidian - ℝ²](https://riddyrayes.github.io/notes/starting-with-obsidian/)
+- [A workstation with Obsidian and LaTeX](https://rupadarshiray.github.io/workstation/obsidian-and-latex)
