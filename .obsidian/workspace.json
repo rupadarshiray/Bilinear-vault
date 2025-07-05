@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "04bd5e153608fce1",
+        "id": "d79f3eb51a6d2de7",
         "type": "tabs",
         "children": [
           {
-            "id": "d8f49e13e911c20c",
+            "id": "4f6520218eb5cbf4",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Home.md",
-                "mode": "preview",
+                "file": "2309 Uni Sem 1/2309 Uni Sem 1.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Home"
+              "title": "2309 Uni Sem 1"
             }
           }
         ],
@@ -115,7 +115,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Home.md",
+                "file": "2309 Uni Sem 1/2309 Uni Sem 1.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +125,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Home"
+              "title": "Backlinks for 2309 Uni Sem 1"
             }
           },
           {
@@ -208,34 +208,34 @@
       "structured-tree:Open Structured Tree": false
     }
   },
-  "active": "d8f49e13e911c20c",
+  "active": "4f6520218eb5cbf4",
   "lastOpenFiles": [
-    "readme.md",
-    "Home.md",
-    "2312 RXB23/2312 RXB23.md",
+    "04 Academia/04-04 Problems/04-04 Problems.md",
+    "04 Academia/04-04 Problems/PROBLEM 2023-04-06-How to glue together spaces.md",
+    "04 Academia/04-01 Library/04-01 Library.md",
+    "04 Academia/04-03 Notes/STUDY Algebra/STUDY Algebra.md",
+    "05 Work A/05 Work A.md",
+    "03 Creative B/03 Creative B.md",
+    "02 Creative A/02 Creative A.md",
+    "01 Life/01 Life.md",
+    "00 Longform notes/00 Longform notes.md",
     "2309 Uni Sem 1/2309 Uni Sem 1.md",
+    "06 Vault/06 Vault.md",
+    "07 Entertainment/07 Entertainment.md",
+    "08 Gardening/08 Gardening.md",
     "23 Uni/23 Uni.md",
     "2309 Uni Sem 1/MTH101/MTH101.md",
-    "07 Entertainment/07 Entertainment.md",
-    "00 Longform notes/00 Longform notes.md",
+    "2312 RXB23/2312 RXB23.md",
+    "06 Vault/Templates/% daily note.md",
+    "Home.md",
+    "readme.md",
     "00 Longform notes/math/root.md",
     "06 Vault/Guide to markdown and beyond.md",
     "00 Longform notes/math/str.md",
     "00 Longform notes/math/str.group.md",
     "00 Longform notes/math/Attachments/math 20220925133922.excalidraw.md",
-    "06 Vault/06 Vault.md",
     "06 Vault/Templates/% new quiver.md",
     "06 Vault/Templates/Template - new quiver.md",
-    "08 Gardening/08 Gardening.md",
-    "06 Vault/Templates/% new longform.md",
-    "02 Creative A/02 Creative A.md",
-    "03 Creative B/03 Creative B.md",
-    "01 Life/01 Life.md",
-    "01 Life/01-01 Daily notes/2023/2023-04-06.md",
-    "00 Longform notes/physics/physics.md",
-    "00 Longform notes/programming/programming.md",
-    "00 Longform notes/math/math.md",
-    "04 Academia/04-01 Library/04-01 Library.md",
     "2309 Uni Sem 1/MTH101/Lectures",
     "05 Work A",
     "04 Academia/04-03 Notes",

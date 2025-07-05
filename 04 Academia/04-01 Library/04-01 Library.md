@@ -5,7 +5,7 @@ alias: []
 
 # Library
 
-*add your files in this folder and see the magic!*
+*add your PDF files in this folder and see the magic!*
 
 ```dataviewjs
 
