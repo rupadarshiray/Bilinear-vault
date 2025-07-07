@@ -24,6 +24,9 @@
     "excalidraw-embeddable-theme": "text",
     "excalidraw-open-md": "checkbox",
     "resolved": "checkbox",
-    "semester": "text"
+    "semester": "text",
+    "created": "datetime",
+    "modified": "datetime",
+    "course": "multitext"
   }
 }

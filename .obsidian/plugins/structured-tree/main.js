@@ -6460,7 +6460,7 @@ var LookupSuggestionManager = class {
     );
     const lookupResults = results.slice(0, 10);
     if (!exactMatch && query.trim().length > 0) {
-      lookupResults.unshift({ type: "create_new" });
+      lookupResults.push({ type: "create_new" });
     }
     return lookupResults;
   }
@@ -10331,7 +10331,7 @@ async function openParentNote(app, workspace) {
     new import_obsidian30.Notice("File is not in a structured vault");
     return;
   }
-  const note = vault.tree.getFromFileName(activeFile2.basename, this.settings);
+  const note = vault.tree.getFromFileName(activeFile2.basename, workspace.settings);
   if (!note) {
     new import_obsidian30.Notice("Cannot find note in structured tree");
     return;

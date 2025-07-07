@@ -1,0 +1,8 @@
+.cm-preview-code-block:hover .lmat-block-flair {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.lmat-block-container-flair {
+    overflow: auto;
+}

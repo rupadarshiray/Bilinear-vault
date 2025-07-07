@@ -1,6 +1,6 @@
 {
-  "folder": "01 Life/01-01 Daily notes",
-  "template": "dotfiles/Templates/% daily note",
+  "folder": "Life/Daily notes",
+  "template": "Vault/Templates/% daily note",
   "autorun": false,
   "format": "YYYY/YYYY-MM-DD"
 }

@@ -1,5 +1,57 @@
 {
-  "userAdmonitions": {},
+  "userAdmonitions": {
+    "theorem": {
+      "type": "theorem",
+      "color": "255, 224, 66",
+      "icon": {
+        "name": "book",
+        "type": "font-awesome"
+      },
+      "command": true,
+      "title": "Theorem",
+      "injectColor": true,
+      "noTitle": false,
+      "copy": false
+    },
+    "definition": {
+      "type": "definition",
+      "color": "0, 235, 196",
+      "icon": {
+        "name": "location-arrow",
+        "type": "font-awesome"
+      },
+      "command": true,
+      "title": "Definition",
+      "injectColor": true,
+      "noTitle": false,
+      "copy": false
+    },
+    "exercise": {
+      "type": "exercise",
+      "color": "255, 115, 0",
+      "icon": {
+        "type": "obsidian",
+        "name": "pencil"
+      },
+      "command": false,
+      "title": null,
+      "injectColor": true,
+      "noTitle": false,
+      "copy": false
+    },
+    "intuition": {
+      "type": "intuition",
+      "color": "0, 238, 255",
+      "icon": {
+        "name": "volleyball-ball",
+        "type": "font-awesome"
+      },
+      "command": false,
+      "title": "Intuition",
+      "injectColor": true,
+      "noTitle": false
+    }
+  },
   "syntaxHighlight": false,
   "copyButton": false,
   "version": "10.3.2",
@@ -7,7 +59,7 @@
   "defaultCollapseType": "open",
   "injectColor": true,
   "parseTitles": true,
-  "dropShadow": true,
+  "dropShadow": false,
   "hideEmpty": false,
   "open": {
     "admonitions": true,

@@ -1,0 +1,6 @@
+---
+tags: []
+aliases: []
+---
+
+# Life

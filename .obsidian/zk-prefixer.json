@@ -1,5 +1,5 @@
 {
-  "folder": "Fleeting notes",
-  "template": "dotfiles/% new",
+  "folder": "Vacuum",
+  "template": "Vault/Templates/% new",
   "format": "YYYYMMDDHHmmss"
 }

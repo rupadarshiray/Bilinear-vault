@@ -7,13 +7,25 @@
     [
       "c2d3c37b0925d40ade83630f7928a321",
       [
-        "06 Vault/Guide to markdown and beyond.md"
+        "Vault/Guide to markdown and beyond.md"
       ]
     ],
     [
       "660770fb9e047eb6421b79d0b90974b0",
       [
-        "06 Vault/Guide to markdown and beyond.md"
+        "Vault/Guide to markdown and beyond.md"
+      ]
+    ],
+    [
+      "908bc0457f583072afa9ec2af26b0b9f",
+      [
+        "Vault/Templates/% new quiver.md"
+      ]
+    ],
+    [
+      "ea1f72b5ce283efae17539c248d394f1",
+      [
+        "Vacuum/20250707191510.md"
       ]
     ]
   ],
@@ -21,7 +33,7 @@
     {
       "26/tikzlibraryarrows.meta.code.tex": 1,
       "26/main.aux": 1,
-      "33/cmmi10.vf": 1
+      "33/cmsy10.vf": 1
     },
     {
       "10/swiftlatexpdftex.fmt": "/tex/swiftlatexpdftex.fmt",

@@ -4,7 +4,7 @@
   "translucency": false,
   "accentColor": "",
   "interfaceFontFamily": "Karla",
-  "textFontFamily": "Karla",
+  "textFontFamily": "Latin Modern Sans,Latin Modern Sans 10",
   "monospaceFontFamily": "",
   "nativeMenus": false,
   "showViewHeader": true,

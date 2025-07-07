@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "06 Vault/Templates",
+  "templates_folder": "",
   "templates_pairs": [
     [
       "",
@@ -15,12 +15,16 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
-      "folder": "/",
-      "template": "dotfiles/Templates/% new.md"
+      "folder": "Longform notes",
+      "template": "Vault/Templates/% new longform.md"
     },
     {
-      "folder": "00 Bilinear notes",
-      "template": "dotfiles/Templates/% new longform.md"
+      "folder": "/",
+      "template": "Vault/Templates/% new.md"
+    },
+    {
+      "folder": "Academia/Problems",
+      "template": "Vault/Templates/% problem.md"
     }
   ],
   "enable_file_templates": false,

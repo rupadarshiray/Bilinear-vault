@@ -1,9 +1,0 @@
-{
-  "folderNoteHide": true,
-  "folderNoteType": "inside",
-  "folderNoteName": "_about_",
-  "folderNoteKey": "ctrl",
-  "folderNoteAutoRename": true,
-  "folderDelete2Note": false,
-  "folderNoteStrInit": "---\ncreated: <% tp.file.creation_date(\"YYYY-MM-DDTHH:mm:ss\") %>\nmodified: <% tp.file.last_modified_date(\"YYYY-MM-DDTHH:mm:ss\") %>\ntags: []\nalias: []\n---\n<%*\n  let title = tp.file.title\n  if (title.startsWith(\"Untitled\")) {\n    title = await tp.system.prompt(\"Title\");\n\tif (title) {\n\ttitle = title\n\t} else {\n\ttitle = tp.file.creation_date(\"YYYYMMDDHHmmss\")\n\t}\n    await tp.file.rename(title);\n  } \n%>\n# <%* tR += `${title}` %>\n<% tp.file.cursor() %>"
-}
