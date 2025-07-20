@@ -19,5 +19,6 @@
   "strictLineBreaks": false,
   "rightToLeft": false,
   "showInlineTitle": false,
-  "newFileLocation": "current"
+  "newFileLocation": "current",
+  "propertiesInDocument": "visible"
 }

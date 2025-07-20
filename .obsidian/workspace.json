@@ -4,25 +4,45 @@
     "type": "split",
     "children": [
       {
-        "id": "30a7192ac863d351",
+        "id": "3c62fecc0a8f5508",
         "type": "tabs",
         "children": [
           {
-            "id": "e36a5249ca8afb28",
+            "id": "6ce26486ff7229f1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2309 Uni Sem 1/MTH101/MTH101.L01.md",
+                "file": "Longform notes/Longform notes.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "MTH101.L01"
+              "title": "Longform notes"
             }
           }
         ],
         "stacked": true
+      },
+      {
+        "id": "6e07186aa7fca7e8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6888fb9fff5483cc",
+            "type": "leaf",
+            "state": {
+              "type": "webviewer",
+              "state": {
+                "url": "https://rupadarshiray.github.io/workstation/obsidian-and-latex",
+                "title": "A workstation with Obsidian and LaTeX",
+                "mode": "webview"
+              },
+              "icon": "globe-2",
+              "title": "A workstation with Obsidian and LaTeX"
+            }
+          }
+        ]
       }
     ],
     "direction": "vertical"
@@ -85,12 +105,11 @@
               "title": "Recent Files"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 264.5,
+    "width": 229,
     "collapsed": true
   },
   "right": {
@@ -100,6 +119,7 @@
       {
         "id": "596afe819dcd1016",
         "type": "tabs",
+        "dimension": 59.55882352941176,
         "children": [
           {
             "id": "6bcf0f8c8dc0b093",
@@ -107,7 +127,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Longform notes/Longform notes.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -117,11 +136,11 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Longform notes"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "ff38b1f72cb92629",
+            "id": "7789cbdabf6b85cb",
             "type": "leaf",
             "state": {
               "type": "structured-tree-view",
@@ -136,27 +155,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Home"
-            }
-          },
-          {
-            "id": "ca748387a47005d1",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "Tags"
+              "title": "Outgoing links"
             }
           },
           {
@@ -165,13 +168,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Home.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Home"
+              "title": "Outline"
             }
           },
           {
@@ -179,33 +181,60 @@
             "type": "leaf",
             "state": {
               "type": "footnotes",
-              "state": {
-                "file": "Home.md"
-              },
+              "state": {},
               "icon": "lucide-file-signature",
               "title": "Footnotes"
-            }
-          },
-          {
-            "id": "fd76a241268d844e",
-            "type": "leaf",
-            "state": {
-              "type": "all-properties",
-              "state": {
-                "sortOrder": "alphabetical",
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-archive",
-              "title": "All properties"
             }
           }
         ],
         "currentTab": 1
+      },
+      {
+        "id": "7f56f2a681e47bb5",
+        "type": "tabs",
+        "dimension": 40.44117647058824,
+        "children": [
+          {
+            "id": "32f8d9ba87ceebbc",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 1,
+                  "close": true
+                }
+              },
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 476,
+    "width": 356,
     "collapsed": true
   },
   "left-ribbon": {
@@ -224,36 +253,37 @@
       "structured-tree:Open Structured Tree": false
     }
   },
-  "active": "e36a5249ca8afb28",
+  "active": "6888fb9fff5483cc",
   "lastOpenFiles": [
-    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
-    "Vault/preamble.sty",
-    "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md",
-    "Vacuum/20250707191510.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 250707191441.md",
-    "Vacuum/Drawing 250707191434.md",
-    "Vacuum",
-    "Vault/Vault.md",
-    "23 Uni/23 Uni.md",
     "Longform notes/Longform notes.md",
-    "Longform notes/math/root.md",
-    "Longform notes/math/root.Drawing 250707191238.md",
-    "2309 Uni Sem 1/2309 Uni Sem 1.md",
-    "2312 RXB23/2312 RXB23.md",
-    "Life/Life.md",
-    "Longform notes/math/str.group.md",
     "Longform notes/math/str.md",
     "Longform notes/math/math Drawing.md",
-    "Longform notes/math/this.md",
-    "Longform notes/th.md",
-    "Longform notes",
-    "Longform/Untitled.md",
-    "Vacuum/Drawing 250707190457.md",
+    "Longform notes/math/root.md",
+    "Longform notes/math/str.group.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L02.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md",
+    "2309 Uni Sem 1/MTH101/MTH101.md",
+    "Vacuum/Drawing 250720020753.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L03.md",
+    "2309 Uni Sem 1/2309 Uni Sem 1.md",
     "Home.md",
+    "Vault/Guide to markdown and beyond.md",
+    "Vault/this.md",
+    "2312 RXB23/2312 RXB23.md",
+    "Life/Life.md",
     "readme.md",
-    "Vacuum/Drawing 250707190238.md",
-    "20250707190142.md",
-    "Vacuum/Drawing 250707190300.md",
+    "Vault/List of files.md",
+    "Vault/Vault.md",
+    "Academia/List of problems.md",
+    "Academia/this is a problem.md",
+    "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
+    "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L01.md",
+    "Academia/STUDY Algebra/STUDY Algebra.md",
+    "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L02.md",
+    "Vault/preamble.sty",
+    "Vacuum",
+    "Longform notes",
     "Longform notes/math",
     "Longform notes/th",
     "Academia/Problems",

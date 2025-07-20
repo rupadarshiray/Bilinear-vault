@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "",
+  "templates_folder": "Vault/Templates",
   "templates_pairs": [
     [
       "",
@@ -37,7 +37,7 @@
   "syntax_highlighting": true,
   "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
-    ""
+    "Vault/Templates/% lecture-note.md"
   ],
   "startup_templates": [
     ""

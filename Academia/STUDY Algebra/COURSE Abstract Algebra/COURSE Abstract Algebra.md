@@ -37,7 +37,7 @@ dv.paragraph(createButton({
 	el: this.container, 
 	args: {
 		name: "New lecture note: "+j, 
-		type: "note("+fname+") template", 
+		type: "note("+fname+") template split", 
 		action: "% lecture-note", 
 		color: "yellow",
 	}

@@ -43,9 +43,9 @@ const endOfYear = {
 
 const lifespan = { year: 99 } 
 const birthday = DateTime.fromObject({
-    year: 2004,
-    month: 9,
-    day: 16
+    year: 2003,
+    month: 4,
+    day: 26
 });
 const deathday = birthday.plus(lifespan)
 

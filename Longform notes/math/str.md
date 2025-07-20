@@ -10,4 +10,5 @@ tags: []
 # Mathematical Structures
 
 > [!danger] Algebraic structures
-> - [[str.group]]
+> - [[str.group|groups]]
+

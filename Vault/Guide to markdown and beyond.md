@@ -12,12 +12,17 @@ Obsidian understands standard markdown syntaxes, including: **bold**, *italic*, 
 ```
 
 ## Links
+
 Links use a set of square brackets (`[]`) for describing the link text, followed by regular parentheses (`()`) containing the URL.
 
 [Rick and Morty](https://www.imdb.com/title/tt2861424/).
 
+Also link to other files [[Guide to markdown and beyond]]
+
 ## Lists
+
 Press supports ordered (numbered) and unordered (bulleted) lists. Unordered lists use "-".
+
 
 - National Treasure
 - Ghost Rider
@@ -31,6 +36,7 @@ Ordered lists use numbers followed by periods:
 3. Cyberpunk 2077
 
 ### Thematic breaks
+
 Lines starting with three asterisks (`*`), hyphens (`-`) or underscores (`_`) are rendered as horizontal rules, a.k.a. “thematic breaks”.
 
 ---
@@ -44,8 +50,10 @@ Lines starting with three asterisks (`*`), hyphens (`-`) or underscores (`_`) ar
 > [!warning] 
 > Callout
 
+
 ## Code blocks
-```python
+
+```
 fun helloWorld() {
   println("""
     Code blocks are wrapped inside
@@ -56,6 +64,7 @@ fun helloWorld() {
 
 
 ## Tables
+
 | Title              | Watched |
 | ------------------ | ------- |
 | Brooklyn Nine-Nine | ✅       |

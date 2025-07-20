@@ -7,6 +7,10 @@ aliases:
 ---
 
 # University
+
+
+## university life progress bar
+
 ```dataviewjs
 var a = moment("2022-01-03");
 var b = moment("2026-06-14");

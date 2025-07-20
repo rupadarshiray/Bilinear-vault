@@ -11,9 +11,13 @@
   "supercharged-links-obsidian",
   "obsidian-style-settings",
   "swiftlatex-render",
-  "structured-tree",
   "better-export-pdf",
   "folder-notes",
   "recent-files-obsidian",
-  "obsidian-latex"
+  "obsidian-latex",
+  "structured-tree",
+  "buttons",
+  "latex-math",
+  "obsidian-copy-block-link",
+  "obsidian-structured-plugin"
 ]
