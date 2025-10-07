@@ -4,45 +4,25 @@
     "type": "split",
     "children": [
       {
-        "id": "3c62fecc0a8f5508",
+        "id": "5560cd339504a6e2",
         "type": "tabs",
         "children": [
           {
-            "id": "6ce26486ff7229f1",
+            "id": "8f9b76a3e3f34168",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Longform notes/Longform notes.md",
+                "file": "Vault/Guide to markdown and beyond.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Longform notes"
+              "title": "Guide to markdown and beyond"
             }
           }
         ],
         "stacked": true
-      },
-      {
-        "id": "6e07186aa7fca7e8",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "6888fb9fff5483cc",
-            "type": "leaf",
-            "state": {
-              "type": "webviewer",
-              "state": {
-                "url": "https://rupadarshiray.github.io/workstation/obsidian-and-latex",
-                "title": "A workstation with Obsidian and LaTeX",
-                "mode": "webview"
-              },
-              "icon": "globe-2",
-              "title": "A workstation with Obsidian and LaTeX"
-            }
-          }
-        ]
       }
     ],
     "direction": "vertical"
@@ -104,6 +84,16 @@
               "icon": "clock",
               "title": "Recent Files"
             }
+          },
+          {
+            "id": "58a5222dd98bef99",
+            "type": "leaf",
+            "state": {
+              "type": "webviewer-history",
+              "state": {},
+              "icon": "lucide-clock",
+              "title": "Web history"
+            }
           }
         ]
       }
@@ -119,7 +109,7 @@
       {
         "id": "596afe819dcd1016",
         "type": "tabs",
-        "dimension": 59.55882352941176,
+        "dimension": 59.558823529411754,
         "children": [
           {
             "id": "6bcf0f8c8dc0b093",
@@ -182,8 +172,22 @@
             "state": {
               "type": "footnotes",
               "state": {},
-              "icon": "lucide-file-signature",
-              "title": "Footnotes"
+              "icon": "lucide-file",
+              "title": "Plugin no longer active"
+            }
+          },
+          {
+            "id": "dcd9137423b81863",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
             }
           }
         ],
@@ -200,6 +204,7 @@
             "state": {
               "type": "localgraph",
               "state": {
+                "file": "Vault/Guide to markdown and beyond.md",
                 "options": {
                   "collapse-filter": true,
                   "search": "",
@@ -227,7 +232,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "title": "Graph of Guide to markdown and beyond"
             }
           }
         ]
@@ -239,6 +244,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -253,33 +259,33 @@
       "structured-tree:Open Structured Tree": false
     }
   },
-  "active": "6888fb9fff5483cc",
+  "active": "8f9b76a3e3f34168",
   "lastOpenFiles": [
-    "Longform notes/Longform notes.md",
-    "Longform notes/math/str.md",
-    "Longform notes/math/math Drawing.md",
-    "Longform notes/math/root.md",
-    "Longform notes/math/str.group.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L02.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md",
-    "2309 Uni Sem 1/MTH101/MTH101.md",
-    "Vacuum/Drawing 250720020753.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L03.md",
-    "2309 Uni Sem 1/2309 Uni Sem 1.md",
-    "Home.md",
-    "Vault/Guide to markdown and beyond.md",
-    "Vault/this.md",
-    "2312 RXB23/2312 RXB23.md",
-    "Life/Life.md",
-    "readme.md",
-    "Vault/List of files.md",
     "Vault/Vault.md",
-    "Academia/List of problems.md",
-    "Academia/this is a problem.md",
+    "2312 RXB23/2312 RXB23.md",
     "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
     "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L01.md",
     "Academia/STUDY Algebra/STUDY Algebra.md",
+    "Life/Life.md",
+    "Longform notes/math/root.md",
+    "Longform notes/math/math Drawing.md",
+    "Longform notes/math/str.group.md",
+    "Longform notes/math/str.md",
+    "Longform notes/Longform notes.md",
+    "Home.md",
+    "readme.md",
+    "Vault/List of files.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L02.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md",
+    "2309 Uni Sem 1/2309 Uni Sem 1.md",
+    "2309 Uni Sem 1/MTH101/MTH101.md",
+    "Vacuum/Drawing 250720020753.md",
+    "2309 Uni Sem 1/MTH101/MTH101.L03.md",
+    "Vault/Guide to markdown and beyond.md",
+    "Vault/this.md",
+    "Academia/List of problems.md",
+    "Academia/this is a problem.md",
     "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L02.md",
     "Vault/preamble.sty",
     "Vacuum",

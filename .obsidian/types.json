@@ -27,6 +27,7 @@
     "semester": "text",
     "created": "datetime",
     "modified": "datetime",
-    "course": "multitext"
+    "course": "multitext",
+    "excalidraw-embed-md": "checkbox"
   }
 }

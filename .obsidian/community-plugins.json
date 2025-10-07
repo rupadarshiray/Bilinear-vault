@@ -10,14 +10,13 @@
   "quick-latex",
   "supercharged-links-obsidian",
   "obsidian-style-settings",
-  "swiftlatex-render",
   "better-export-pdf",
   "folder-notes",
   "recent-files-obsidian",
   "obsidian-latex",
   "structured-tree",
   "buttons",
-  "latex-math",
   "obsidian-copy-block-link",
-  "obsidian-structured-plugin"
+  "obsidian-structured-plugin",
+  "swiftlatex-render"
 ]
