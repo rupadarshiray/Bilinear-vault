@@ -12,18 +12,22 @@
   "enableCanvasSupport": true,
   "hierarchySeparator": ".",
   "autoGenerateFrontmatter": false,
-  "generateTags": false,
-  "generateId": false,
-  "generateTitle": false,
-  "generateDesc": false,
-  "generateCreated": false,
+  "generateTags": true,
+  "generateId": true,
+  "generateTitle": true,
+  "generateDesc": true,
+  "generateCreated": true,
   "idKey": "id",
   "titleKey": "title",
   "descKey": "desc",
   "createdKey": "created",
   "createdFormat": "yyyy-mm-dd",
-  "fuzzySearchFileNameWeight": 0.6,
-  "fuzzySearchThreshold": 0.2,
-  "excludedPaths": [],
-  "pluginIcon": "structured-activity-bar"
+  "fuzzySearchFileNameWeight": 1,
+  "fuzzySearchThreshold": 0,
+  "excludedPaths": [
+    "*.pdf",
+    "Drawing"
+  ],
+  "pluginIcon": "structured-activity-bar",
+  "deleteMethod": "moveToTrash"
 }

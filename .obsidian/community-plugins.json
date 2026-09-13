@@ -7,16 +7,17 @@
   "obsidian-completr",
   "obsidian-latex-suite",
   "obsidian-admonition",
-  "quick-latex",
   "supercharged-links-obsidian",
   "obsidian-style-settings",
   "better-export-pdf",
   "folder-notes",
   "recent-files-obsidian",
-  "obsidian-latex",
   "structured-tree",
   "buttons",
   "obsidian-copy-block-link",
-  "obsidian-structured-plugin",
-  "swiftlatex-render"
+  "latex-render",
+  "anything-as-md",
+  "harper",
+  "obsidian-latex",
+  "calendar"
 ]

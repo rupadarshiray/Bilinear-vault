@@ -1,0 +1,29 @@
+{
+  "command": "latex -interaction=nonstopmode -halt-on-error \"{file-path}\" && dvisvgm --no-fonts \"{file-path}\"",
+  "timeout": 10000,
+  "enableCache": true,
+  "cache": [
+    [
+      "c0b49aa3258786f7755f56949486981a",
+      [
+        "Vault/Guide to markdown and beyond.md"
+      ]
+    ],
+    [
+      "f68ba52b6133d86ddab20048d11e09e9",
+      [
+        "Vault/Guide to markdown and beyond.md"
+      ]
+    ],
+    [
+      "606c6527e7b4a506bd6f2bc78a9f9318",
+      [
+        "Vault/Templates/% new quiver.md"
+      ]
+    ]
+  ],
+  "cacheFolder": ".obsidian/svg-cache",
+  "additionalPackages": "\\usepackage{tikz-cd}\n\\usepackage{amsfonts}\n\\usepackage{amsmath}\n\\usepackage{quiver}\n\\usepackage{mathrsfs}\n",
+  "pngCopy": false,
+  "pngScale": "4"
+}

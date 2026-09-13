@@ -1,36 +1,44 @@
 {
   "recentFiles": [
     {
-      "basename": "Guide to markdown and beyond",
-      "path": "Vault/Guide to markdown and beyond.md"
+      "basename": "Home",
+      "path": "Home.md"
     },
     {
-      "basename": "Vault",
-      "path": "Vault/Vault.md"
-    },
-    {
-      "basename": "2312 RXB23",
-      "path": "2312 RXB23/2312 RXB23.md"
-    },
-    {
-      "basename": "COURSE Abstract Algebra",
-      "path": "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md"
-    },
-    {
-      "basename": "STUDY Algebra",
-      "path": "Academia/STUDY Algebra/STUDY Algebra.md"
+      "basename": "readme",
+      "path": "readme.md"
     },
     {
       "basename": "Life",
       "path": "Life/Life.md"
     },
     {
-      "basename": "root",
-      "path": "Longform notes/math/root.md"
+      "basename": "Longform notes",
+      "path": "Longform notes/Longform notes.md"
     },
     {
-      "basename": "math Drawing",
-      "path": "Longform notes/math/math Drawing.md"
+      "basename": "Vault",
+      "path": "Vault/Vault.md"
+    },
+    {
+      "basename": "spaces.R",
+      "path": "Longform notes/math/spaces.R.md"
+    },
+    {
+      "basename": "2406 Uni Sem 1",
+      "path": "2406 Uni Sem 1/2406 Uni Sem 1.md"
+    },
+    {
+      "basename": "math",
+      "path": "Longform notes/math/math.md"
+    },
+    {
+      "basename": "2405 Uni",
+      "path": "2405 Uni/2405 Uni.md"
+    },
+    {
+      "basename": "2609 RXB23",
+      "path": "2609 RXB23/2609 RXB23.md"
     },
     {
       "basename": "str.group",
@@ -41,40 +49,68 @@
       "path": "Longform notes/math/str.md"
     },
     {
-      "basename": "Longform notes",
-      "path": "Longform notes/Longform notes.md"
+      "basename": "spaces",
+      "path": "Longform notes/math/spaces.md"
     },
     {
-      "basename": "Home",
-      "path": "Home.md"
+      "basename": "RXB23_main",
+      "path": "2609 RXB23/RXB23_main.tex"
     },
     {
-      "basename": "readme",
-      "path": "readme.md"
+      "basename": "RXB23_main",
+      "path": "2609 RXB23/RXB23_main.pdf"
+    },
+    {
+      "basename": "preamble",
+      "path": "Vault/preamble.sty"
+    },
+    {
+      "basename": "COURSE Abstract Algebra",
+      "path": "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md"
+    },
+    {
+      "basename": "STUDY Algebra",
+      "path": "Academia/STUDY Algebra/STUDY Algebra.md"
+    },
+    {
+      "basename": "% excalidraw",
+      "path": "Vault/Templates/% excalidraw.md"
+    },
+    {
+      "basename": "math Drawing",
+      "path": "Drawings/math Drawing.md"
+    },
+    {
+      "basename": "Guide to markdown and beyond",
+      "path": "Vault/Guide to markdown and beyond.md"
+    },
+    {
+      "basename": "% new quiver",
+      "path": "Vault/Templates/% new quiver.md"
     },
     {
       "basename": "List of files",
       "path": "Vault/List of files.md"
     },
     {
+      "basename": "% lecture-note",
+      "path": "Vault/Templates/% lecture-note.md"
+    },
+    {
       "basename": "MTH101.L01",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L01.md"
-    },
-    {
-      "basename": "MTH101.L02",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L02.md"
-    },
-    {
-      "basename": "MTH101.L02.Drawing 250720020850",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md"
-    },
-    {
-      "basename": "2309 Uni Sem 1",
-      "path": "2309 Uni Sem 1/2309 Uni Sem 1.md"
+      "path": "2406 Uni Sem 1/MTH101/MTH101.L01.md"
     },
     {
       "basename": "MTH101",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.md"
+      "path": "2406 Uni Sem 1/MTH101/MTH101.md"
+    },
+    {
+      "basename": "MTH101.L02",
+      "path": "2406 Uni Sem 1/MTH101/MTH101.L02.md"
+    },
+    {
+      "basename": "MTH101.L02.Drawing 250720020850",
+      "path": "2406 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md"
     },
     {
       "basename": "List of problems",
@@ -85,10 +121,6 @@
       "path": "Vault/Templates/% problem.md"
     },
     {
-      "basename": "% lecture-note",
-      "path": "Vault/Templates/% lecture-note.md"
-    },
-    {
       "basename": "% new",
       "path": "Vault/Templates/% new.md"
     },
@@ -97,24 +129,12 @@
       "path": "Academia/Library/Library.md"
     },
     {
-      "basename": "23 Uni",
-      "path": "23 Uni/23 Uni.md"
-    },
-    {
       "basename": "MTH101.L01.Drawing 221007182040",
-      "path": "2309 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md"
-    },
-    {
-      "basename": "% excalidraw",
-      "path": "Vault/Templates/% excalidraw.md"
+      "path": "2406 Uni Sem 1/MTH101/MTH101.L01.Drawing 221007182040.md"
     },
     {
       "basename": "% daily note",
       "path": "Vault/Templates/% daily note.md"
-    },
-    {
-      "basename": "% new quiver",
-      "path": "Vault/Templates/% new quiver.md"
     },
     {
       "basename": "% new longform",

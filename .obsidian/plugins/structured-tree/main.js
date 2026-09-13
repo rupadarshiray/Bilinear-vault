@@ -4138,12 +4138,6 @@ function attr(node, attribute, value) {
 function children(element2) {
   return Array.from(element2.childNodes);
 }
-function set_data(text2, data) {
-  data = "" + data;
-  if (text2.data === data)
-    return;
-  text2.data = data;
-}
 function toggle_class(element2, name, toggle) {
   element2.classList[toggle ? "add" : "remove"](name);
 }
@@ -4847,7 +4841,7 @@ var Note = class {
     if (notes.length === 1)
       return original ? notes[0].originalName : notes[0].name;
     for (const note of notes) {
-      if (!note.parent && note.name === "root")
+      if (!note.parent)
         continue;
       component.push(original ? note.originalName : note.name);
     }
@@ -6774,8 +6768,8 @@ var import_obsidian6 = require("obsidian");
 
 // src/engine/noteTree.ts
 var NoteTree = class {
-  constructor(settings) {
-    this.root = new Note("root", true, settings);
+  constructor(settings, rootName = "root") {
+    this.root = new Note(rootName, true, settings);
   }
   sort() {
     this.root.sortChildren(true);
@@ -6783,14 +6777,14 @@ var NoteTree = class {
   static getPathFromFileName(name, separator) {
     return name.split(separator || ".");
   }
-  static isRootPath(path) {
-    return path.length === 1 && path[0] === "root";
+  isRootPath(path) {
+    return path.length === 1 && path[0].toLowerCase() === this.root.name.toLowerCase();
   }
   addFile(file, settings, sort = false) {
     const titlecase = isUseTitleCase(file.basename);
     const path = NoteTree.getPathFromFileName(file.basename, settings.hierarchySeparator);
     let currentNote = this.root;
-    if (!NoteTree.isRootPath(path))
+    if (!this.isRootPath(path))
       for (const name of path) {
         let note = currentNote.findChildren(name);
         if (!note) {
@@ -6817,7 +6811,7 @@ var NoteTree = class {
   }
   getFromFileName(name, settings) {
     const path = NoteTree.getPathFromFileName(name, settings.hierarchySeparator);
-    if (NoteTree.isRootPath(path))
+    if (this.isRootPath(path))
       return this.root;
     let currentNote = this.root;
     for (const name2 of path) {
@@ -7020,6 +7014,9 @@ var StructuredVault = class {
       return;
     }
     this.folder = root;
+    const folderName = root.name;
+    this.tree = new NoteTree(this.settings, folderName);
+    this.noteRenamer = new NoteRenamer(this.app, this.noteFinder, this.tree, this.settings);
     for (const child of root.children)
       if (child instanceof import_obsidian6.TFile && this.isNote(child.extension))
         this.tree.addFile(child, this.settings).syncMetadata(this.resolveMetadata(child));
@@ -7267,9 +7264,9 @@ async function moveNoteToVault(app, workspace, file) {
 // src/components/NoteComponent.svelte
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[34] = list[i];
-  child_ctx[35] = list;
-  child_ctx[36] = i;
+  child_ctx[36] = list[i];
+  child_ctx[37] = list;
+  child_ctx[38] = i;
   return child_ctx;
 }
 function create_if_block_2(ctx) {
@@ -7293,10 +7290,10 @@ function create_if_block_2(ctx) {
       if (!mounted) {
         dispose = [
           action_destroyer(icon_action = /*icon*/
-          ctx[11].call(null, div)),
+          ctx[12].call(null, div)),
           listen(div, "click", stop_propagation(
             /*click_handler*/
-            ctx[20]
+            ctx[21]
           ))
         ];
         mounted = true;
@@ -7351,7 +7348,7 @@ function create_if_block(ctx) {
   );
   const get_key = (ctx2) => (
     /*child*/
-    ctx2[34].name
+    ctx2[36].name
   );
   for (let i = 0; i < each_value.length; i += 1) {
     let child_ctx = get_each_context(ctx, each_value, i);
@@ -7380,13 +7377,13 @@ function create_if_block(ctx) {
             div,
             "introstart",
             /*expandTransitionStart*/
-            ctx[15]
+            ctx[16]
           ),
           listen(
             div,
             "introend",
             /*introend_handler*/
-            ctx[25]
+            ctx[26]
           )
         ];
         mounted = true;
@@ -7445,28 +7442,28 @@ function create_each_block(key_1, ctx) {
   let updating_focusNotes;
   let child = (
     /*child*/
-    ctx[34]
+    ctx[36]
   );
   let current;
   function notecomponent_focusNotes_binding(value) {
-    ctx[22](
+    ctx[23](
       value,
       /*child*/
-      ctx[34]
+      ctx[36]
     );
   }
   const assign_notecomponent = () => (
     /*notecomponent_binding*/
-    ctx[23](notecomponent, child)
+    ctx[24](notecomponent, child)
   );
   const unassign_notecomponent = () => (
     /*notecomponent_binding*/
-    ctx[23](null, child)
+    ctx[24](null, child)
   );
   let notecomponent_props = {
     note: (
       /*child*/
-      ctx[34]
+      ctx[36]
     ),
     vault: (
       /*vault*/
@@ -7477,13 +7474,13 @@ function create_each_block(key_1, ctx) {
     /*childrenFocus*/
     ctx[5][
       /*child*/
-      ctx[34].name
+      ctx[36].name
     ] !== void 0
   ) {
     notecomponent_props.focusNotes = /*childrenFocus*/
     ctx[5][
       /*child*/
-      ctx[34].name
+      ctx[36].name
     ];
   }
   notecomponent = new NoteComponent({ props: notecomponent_props });
@@ -7492,7 +7489,7 @@ function create_each_block(key_1, ctx) {
   notecomponent.$on(
     "openNote",
     /*openNote_handler*/
-    ctx[24]
+    ctx[25]
   );
   return {
     key: key_1,
@@ -7510,17 +7507,17 @@ function create_each_block(key_1, ctx) {
     p(new_ctx, dirty) {
       ctx = new_ctx;
       if (child !== /*child*/
-      ctx[34]) {
+      ctx[36]) {
         unassign_notecomponent();
         child = /*child*/
-        ctx[34];
+        ctx[36];
         assign_notecomponent();
       }
       const notecomponent_changes = {};
       if (dirty[0] & /*note*/
       1)
         notecomponent_changes.note = /*child*/
-        ctx[34];
+        ctx[36];
       if (dirty[0] & /*vault*/
       4)
         notecomponent_changes.vault = /*vault*/
@@ -7531,7 +7528,7 @@ function create_each_block(key_1, ctx) {
         notecomponent_changes.focusNotes = /*childrenFocus*/
         ctx[5][
           /*child*/
-          ctx[34].name
+          ctx[36].name
         ];
         add_flush_callback(() => updating_focusNotes = false);
       }
@@ -7560,16 +7557,9 @@ function create_fragment(ctx) {
   let div1;
   let t0;
   let div0;
-  let t1_value = (
-    /*note*/
-    ctx[0].title + /*isRoot*/
-    (ctx[1] && /*$showVaultPath*/
-    ctx[10] ? ` (${/*vault*/
-    ctx[2].config.name})` : "")
-  );
+  let mathTitle_action;
   let t1;
   let t2;
-  let t3;
   let current;
   let mounted;
   let dispose;
@@ -7592,11 +7582,10 @@ function create_fragment(ctx) {
         if_block0.c();
       t0 = space();
       div0 = element("div");
-      t1 = text(t1_value);
-      t2 = space();
+      t1 = space();
       if (if_block1)
         if_block1.c();
-      t3 = space();
+      t2 = space();
       if (if_block2)
         if_block2.c();
       attr(div0, "class", "tree-item-inner");
@@ -7628,34 +7617,43 @@ function create_fragment(ctx) {
         if_block0.m(div1, null);
       append(div1, t0);
       append(div1, div0);
-      append(div0, t1);
-      append(div1, t2);
+      append(div1, t1);
       if (if_block1)
         if_block1.m(div1, null);
-      ctx[21](div1);
-      append(div2, t3);
+      ctx[22](div1);
+      append(div2, t2);
       if (if_block2)
         if_block2.m(div2, null);
       current = true;
       if (!mounted) {
         dispose = [
+          action_destroyer(mathTitle_action = /*mathTitle*/
+          ctx[11].call(
+            null,
+            div0,
+            /*note*/
+            ctx[0].title + /*isRoot*/
+            (ctx[1] && /*$showVaultPath*/
+            ctx[10] ? ` (${/*vault*/
+            ctx[2].config.name})` : "")
+          )),
           listen(
             div1,
             "click",
             /*handleClick*/
-            ctx[12]
+            ctx[13]
           ),
           listen(
             div1,
             "dblclick",
             /*handleDoubleClick*/
-            ctx[13]
+            ctx[14]
           ),
           listen(
             div1,
             "contextmenu",
             /*openMenu*/
-            ctx[14]
+            ctx[15]
           )
         ];
         mounted = true;
@@ -7677,13 +7675,16 @@ function create_fragment(ctx) {
         if_block0.d(1);
         if_block0 = null;
       }
-      if ((!current || dirty[0] & /*note, isRoot, $showVaultPath, vault*/
-      1031) && t1_value !== (t1_value = /*note*/
-      ctx2[0].title + /*isRoot*/
-      (ctx2[1] && /*$showVaultPath*/
-      ctx2[10] ? ` (${/*vault*/
-      ctx2[2].config.name})` : "")))
-        set_data(t1, t1_value);
+      if (mathTitle_action && is_function(mathTitle_action.update) && dirty[0] & /*note, isRoot, $showVaultPath, vault*/
+      1031)
+        mathTitle_action.update.call(
+          null,
+          /*note*/
+          ctx2[0].title + /*isRoot*/
+          (ctx2[1] && /*$showVaultPath*/
+          ctx2[10] ? ` (${/*vault*/
+          ctx2[2].config.name})` : "")
+        );
       if (!/*note*/
       ctx2[0].file) {
         if (if_block1) {
@@ -7765,7 +7766,7 @@ function create_fragment(ctx) {
         if_block0.d();
       if (if_block1)
         if_block1.d();
-      ctx[21](null);
+      ctx[22](null);
       if (if_block2)
         if_block2.d();
       mounted = false;
@@ -7778,9 +7779,42 @@ function instance($$self, $$props, $$invalidate) {
   let $selectedNotes;
   let $activeFile;
   let $showVaultPath;
-  component_subscribe($$self, selectedNotes, ($$value) => $$invalidate(18, $selectedNotes = $$value));
-  component_subscribe($$self, activeFile, ($$value) => $$invalidate(19, $activeFile = $$value));
+  component_subscribe($$self, selectedNotes, ($$value) => $$invalidate(19, $selectedNotes = $$value));
+  component_subscribe($$self, activeFile, ($$value) => $$invalidate(20, $activeFile = $$value));
   component_subscribe($$self, showVaultPath, ($$value) => $$invalidate(10, $showVaultPath = $$value));
+  function renderMathTitle(node, title) {
+    node.empty();
+    const mathPattern = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = mathPattern.exec(title)) !== null) {
+      if (match.index > lastIndex) {
+        node.appendText(title.slice(lastIndex, match.index));
+      }
+      const raw = match[1];
+      const isDisplay = raw.startsWith("$$");
+      const latex = isDisplay ? raw.slice(2, -2).trim() : raw.slice(1, -1).trim();
+      try {
+        const mathEl = (0, import_obsidian9.renderMath)(latex, isDisplay);
+        (0, import_obsidian9.finishRenderMath)(mathEl);
+        node.appendChild(mathEl);
+      } catch (_a) {
+        node.appendText(raw);
+      }
+      lastIndex = match.index + raw.length;
+    }
+    if (lastIndex < title.length) {
+      node.appendText(title.slice(lastIndex));
+    }
+  }
+  const mathTitle = (node, title) => {
+    renderMathTitle(node, title);
+    return {
+      update(newTitle) {
+        renderMathTitle(node, newTitle);
+      }
+    };
+  };
   let { note } = $$props;
   let { isRoot = false } = $$props;
   let { vault } = $$props;
@@ -8036,12 +8070,12 @@ function instance($$self, $$props, $$invalidate) {
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*note, $activeFile*/
-    524289) {
+    1048577) {
       $:
         $$invalidate(9, isActive = note.file && $activeFile === note.file);
     }
     if ($$self.$$.dirty[0] & /*$selectedNotes, note*/
-    262145) {
+    524289) {
       $:
         $$invalidate(7, isSelected = $selectedNotes.includes(note));
     }
@@ -8058,6 +8092,7 @@ function instance($$self, $$props, $$invalidate) {
     expandTransitionEnd,
     isActive,
     $showVaultPath,
+    mathTitle,
     icon,
     handleClick,
     handleDoubleClick,
@@ -8088,18 +8123,18 @@ var NoteComponent = class extends SvelteComponent {
         note: 0,
         isRoot: 1,
         vault: 2,
-        collapseAllButTop: 16,
-        focusNotes: 17
+        collapseAllButTop: 17,
+        focusNotes: 18
       },
       null,
       [-1, -1]
     );
   }
   get collapseAllButTop() {
-    return this.$$.ctx[16];
+    return this.$$.ctx[17];
   }
   get focusNotes() {
-    return this.$$.ctx[17];
+    return this.$$.ctx[18];
   }
 };
 var NoteComponent_default = NoteComponent;
@@ -10336,17 +10371,23 @@ async function openParentNote(app, workspace) {
     new import_obsidian30.Notice("Cannot find note in structured tree");
     return;
   }
-  const parentNote = note.parent;
-  if (!parentNote || parentNote === vault.tree.root) {
+  if (!note.parent) {
     new import_obsidian30.Notice("This is a root note");
     return;
   }
-  if (parentNote.file instanceof import_obsidian30.TFile) {
-    const leaf = app.workspace.getLeaf();
-    await leaf.openFile(parentNote.file);
-  } else {
-    new import_obsidian30.Notice("Parent note file not found");
+  let ancestor = note.parent;
+  while (ancestor) {
+    if (ancestor.file instanceof import_obsidian30.TFile) {
+      const leaf = app.workspace.getLeaf();
+      await leaf.openFile(ancestor.file);
+      return;
+    }
+    if (ancestor === vault.tree.root) {
+      break;
+    }
+    ancestor = ancestor.parent;
   }
+  new import_obsidian30.Notice("No parent note file found in hierarchy");
 }
 
 // src/commands/exportNotes.ts
@@ -10703,5 +10744,3 @@ moment/moment.js:
   (*! license : MIT *)
   (*! momentjs.com *)
 */
-
-/* nosourcemap */

@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5560cd339504a6e2",
+        "id": "ecae043078a141b9",
         "type": "tabs",
         "children": [
           {
-            "id": "8f9b76a3e3f34168",
+            "id": "cea8f013ba4d15c3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Vault/Guide to markdown and beyond.md",
+                "file": "Home.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Guide to markdown and beyond"
+              "title": "Home"
             }
           }
         ],
@@ -34,6 +34,7 @@
       {
         "id": "685989a420103fc2",
         "type": "tabs",
+        "dimension": 34.790528233151186,
         "children": [
           {
             "id": "742e7d10ad13cf23",
@@ -42,7 +43,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": true
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -54,7 +55,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "latex",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -96,39 +97,12 @@
             }
           }
         ]
-      }
-    ],
-    "direction": "horizontal",
-    "width": 229,
-    "collapsed": true
-  },
-  "right": {
-    "id": "fadd98a1a2dfcea5",
-    "type": "split",
-    "children": [
+      },
       {
-        "id": "596afe819dcd1016",
+        "id": "e88f59f92c07765e",
         "type": "tabs",
-        "dimension": 59.558823529411754,
+        "dimension": 65.20947176684882,
         "children": [
-          {
-            "id": "6bcf0f8c8dc0b093",
-            "type": "leaf",
-            "state": {
-              "type": "backlink",
-              "state": {
-                "collapseAll": false,
-                "extraContext": false,
-                "sortOrder": "alphabetical",
-                "showSearch": false,
-                "searchQuery": "",
-                "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "Backlinks"
-            }
-          },
           {
             "id": "7789cbdabf6b85cb",
             "type": "leaf",
@@ -138,65 +112,21 @@
               "icon": "structured-activity-bar",
               "title": "Structured Tree"
             }
-          },
-          {
-            "id": "06d1817092beb00e",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "Outgoing links"
-            }
-          },
-          {
-            "id": "37a000c0ecea40a9",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-list",
-              "title": "Outline"
-            }
-          },
-          {
-            "id": "45cd66e135f65f41",
-            "type": "leaf",
-            "state": {
-              "type": "footnotes",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
-            }
-          },
-          {
-            "id": "dcd9137423b81863",
-            "type": "leaf",
-            "state": {
-              "type": "all-properties",
-              "state": {
-                "sortOrder": "frequency",
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-archive",
-              "title": "All properties"
-            }
           }
-        ],
-        "currentTab": 1
-      },
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 302
+  },
+  "right": {
+    "id": "fadd98a1a2dfcea5",
+    "type": "split",
+    "children": [
       {
-        "id": "7f56f2a681e47bb5",
+        "id": "da63d9de566009da",
         "type": "tabs",
-        "dimension": 40.44117647058824,
+        "dimension": 30.446194225721783,
         "children": [
           {
             "id": "32f8d9ba87ceebbc",
@@ -204,7 +134,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Vault/Guide to markdown and beyond.md",
+                "file": "Home.md",
                 "options": {
                   "collapse-filter": true,
                   "search": "",
@@ -232,15 +162,105 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "Graph of Guide to markdown and beyond"
+              "title": "Graph of Home"
+            }
+          },
+          {
+            "id": "f0fbd44ac7ec390c",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
             }
           }
-        ]
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "596afe819dcd1016",
+        "type": "tabs",
+        "dimension": 69.5538057742782,
+        "children": [
+          {
+            "id": "6bcf0f8c8dc0b093",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "06d1817092beb00e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Longform notes/math/str.group.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from str.group"
+            }
+          },
+          {
+            "id": "37a000c0ecea40a9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          },
+          {
+            "id": "45cd66e135f65f41",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "Home.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "Footnotes"
+            }
+          },
+          {
+            "id": "8d1c046a0f55283e",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          }
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 356,
-    "collapsed": true
+    "width": 356
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -259,43 +279,43 @@
       "structured-tree:Open Structured Tree": false
     }
   },
-  "active": "8f9b76a3e3f34168",
+  "active": "742e7d10ad13cf23",
   "lastOpenFiles": [
+    "readme.md",
+    "Life/Life.md",
+    "Life/x.md",
+    "Life/s.md",
+    "Longform notes/Longform notes.md",
     "Vault/Vault.md",
-    "2312 RXB23/2312 RXB23.md",
+    "Longform notes/math/spaces.R.md",
+    "2406 Uni Sem 1/2406 Uni Sem 1.md",
+    "Longform notes/math/math.md",
+    "2405 Uni/2405 Uni.md",
+    "2609 RXB23/2609 RXB23.md",
+    "Longform notes/math/str.group.md",
+    "Longform notes/math/str.md",
+    "Longform notes/math/spaces.md",
+    "2609 RXB23/RXB23_main.tex",
+    "2609 RXB23/RXB23_main.pdf",
+    "2312 RXB23/RXB23_main.synctex(busy)",
+    "2312 RXB23/pdflatex101634.fls",
+    "2609 RXB23/RXB23_main.synctex.gz",
+    "2609 RXB23/RXB23_main.log",
+    "2609 RXB23/RXB23_main.fls",
+    "2312 RXB23/pdflatex101633.fls",
+    "2609 RXB23/RXB23_main.fdb_latexmk",
+    "2609 RXB23/RXB23_main.aux",
     "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.md",
     "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L01.md",
     "Academia/STUDY Algebra/STUDY Algebra.md",
-    "Life/Life.md",
-    "Longform notes/math/root.md",
-    "Longform notes/math/math Drawing.md",
-    "Longform notes/math/str.group.md",
-    "Longform notes/math/str.md",
-    "Longform notes/Longform notes.md",
-    "Home.md",
-    "readme.md",
-    "Vault/List of files.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L01.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L02.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L02.Drawing 250720020850.md",
-    "2309 Uni Sem 1/2309 Uni Sem 1.md",
-    "2309 Uni Sem 1/MTH101/MTH101.md",
-    "Vacuum/Drawing 250720020753.md",
-    "2309 Uni Sem 1/MTH101/MTH101.L03.md",
+    "Drawings/Drawing 260913145409.md",
+    "Longform notes/math/Drawing 260913145337.md",
+    "Vault/Templates/% excalidraw.md",
+    "Drawings/math Drawing.md",
     "Vault/Guide to markdown and beyond.md",
-    "Vault/this.md",
-    "Academia/List of problems.md",
-    "Academia/this is a problem.md",
-    "Academia/STUDY Algebra/COURSE Abstract Algebra/COURSE Abstract Algebra.L02.md",
-    "Vault/preamble.sty",
-    "Vacuum",
-    "Longform notes",
-    "Longform notes/math",
-    "Longform notes/th",
-    "Academia/Problems",
-    "Academia/STUDY Algebra/COURSE Abstract Algebra/Lectures",
-    "Academia/PROBLEM 2025-07-07-this",
-    "Academia/04-04 Problems",
-    "2309 Uni Sem 1/MTH101/Lectures"
+    "Vault/Templates/% new quiver.md",
+    "Home.md",
+    "Vault/List of files.md",
+    "Vault/Templates/% lecture-note.md"
   ]
 }

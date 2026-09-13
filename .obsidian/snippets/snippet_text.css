@@ -44,14 +44,11 @@
       font-style: normal;
 }
 
-.block-language-latexsvg svg {
-	width: initial;
-	zoom: 3;
-	display: block;
-	overflow: visible;
-	margin-left: auto;
-	margin-right: auto;
+.block-language-latex {
+    zoom: 2;
+    padding: 5px;
 }
+
 
 .callout[data-callout="definition"]>.callout-title>.callout-icon::after {
       content: "Definition." !important;

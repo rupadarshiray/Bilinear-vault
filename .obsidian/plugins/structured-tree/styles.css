@@ -253,3 +253,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* MathJax rendering in tree item titles */
+.tree-item-inner mjx-container {
+  display: inline !important;
+  margin: 0 !important;
+  vertical-align: middle;
+}
+
+.tree-item-inner mjx-container[display="true"] {
+  display: inline !important;
+}

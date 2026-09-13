@@ -53,7 +53,7 @@ Lines starting with three asterisks (`*`), hyphens (`-`) or underscores (`_`) ar
 
 ## Code blocks
 
-```
+```python
 fun helloWorld() {
   println("""
     Code blocks are wrapped inside
@@ -73,9 +73,8 @@ fun helloWorld() {
 ## *full-on* LaTeX
 
 
+```latex
 
-```latexsvg
-\documentclass{standalone}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 
@@ -98,8 +97,7 @@ fun helloWorld() {
 
 Copy `tikz-cd` code from https://q.uiver.app/ and press `ALT+E` then `quiver`:
 
-```latexsvg
-\documentclass{standalone}
+```latex
 \usepackage{tikz-cd}\usepackage{amsfonts}\usepackage{amsmath}\usepackage{quiver}\usepackage{mathrsfs}
 
 \begin{document}

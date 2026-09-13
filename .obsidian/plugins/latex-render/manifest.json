@@ -1,0 +1,9 @@
+{
+	"id": "latex-render",
+	"name": "Latex Render",
+	"version": "0.1.2",
+	"minAppVersion": "0.15.0",
+	"description": "Render snippets of latex code as SVG files.",
+	"author": "jvsteiner",
+	"isDesktopOnly": true
+}

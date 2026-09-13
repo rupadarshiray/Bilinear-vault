@@ -1,0 +1,11 @@
+.block-language-latex {
+	/* filter: invert(100%); */
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+
+.latex-render-settings > * > textarea {
+	width: 40em;
+	min-height: 5em;
+}

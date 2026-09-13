@@ -1,13 +1,13 @@
 ---
 id: wA8vz4SpNMUDINONAItfUw
-title: Mathematical Structures
+title: Mathematical structures
 desc: ""
 aliases:
-  - Mathematical Structures
+  - Mathematical structures
 tags: []
 ---
 
-# Mathematical Structures
+# Mathematical structures
 
 > [!danger] Algebraic structures
 > - [[str.group|groups]]

@@ -1,0 +1,10 @@
+/* reload message shows when extensions list has been changed */
+.anything-as-md-reload-hint {
+	margin-top: 0.75em;
+}
+.anything-as-md-reload-hint .anything-as-md-reload-text {
+	margin-right: 0.5em;
+}
+.anything-as-md-reload-btn {
+	margin-left: 0.25em;
+}
